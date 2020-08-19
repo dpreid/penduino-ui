@@ -1,0 +1,97 @@
+<template>
+<div class="container">
+    <div class="row mb-5 justify-content-center">
+    <input type="text" id="search" v-on:keyup="search" v-model="search_field" placeholder="Search the table...">
+
+    <table class="table">
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Time/s</th>
+            <th scope="col">X</th>
+            <th scope="col">Y</th>
+            <th scope="col">V_x</th>
+            <th scope="col">V_y</th>
+            <th scope="col">A_x</th>
+            <th scope="col">A_y</th>
+        </tr>
+        <tr v-for="row in tableData" :key="row.id">
+            <td>{{row.id}}</td>
+            <td>{{row.t}}</td>
+            <td>{{row.x}}</td>
+            <td>{{row.y}}</td>
+            <td>{{row.vx}}</td>
+            <td>{{row.vy}}</td>
+            <td>{{row.ax}}</td>
+            <td>{{row.ay}}</td>
+
+        </tr>
+                            
+    </table> 
+
+    </div>
+</div>
+</template>
+
+<script>
+import { store } from "../store.js";
+
+export default {
+    name: 'TableOutput',
+    data(){
+        return{
+            tableData: store.state.data,
+            searchData:[],
+            search_field:"",
+            selected_row_id: "0",
+        }
+    },
+    methods: {
+        addData(data){
+            this.tableData = data;
+            this.searchData = data;
+        },
+        search(){
+            if(this.search_field == ""){
+                this.searchData = Array.from(this.tableData);
+            } else{
+                this.searchData = [];
+                let d;
+                let string_data_row;
+                // Loop through all tableData, create a string of all elements in the table row, search if the current search_field text is contained and set hidden appropriately.
+                for (let i = 0; i < this.tableData.length; i++) {
+                    d = this.tableData[i];
+                    string_data_row = d.id + d.mass + d.name + d.reclat + d.reclong + d.recclass;
+
+                    if (string_data_row.toUpperCase().indexOf(this.search_field.toUpperCase()) > -1) {
+                        this.searchData.push(d);
+                }    else {
+                        //tr[i].style.display = "none";
+            }
+        
+    }
+            }
+            
+        },
+        changeSelected(id){
+            this.selected_row_id = id;
+            var elmnt = document.getElementById(id);
+            elmnt.scrollIntoView(); 
+        }
+      },
+      computed:{
+            
+      },
+      mounted() {
+        
+        
+      },
+      created(){
+            // eventBus.$on('addnewmappoints', this.addData)
+            // eventBus.$on('newselectedobject', this.changeSelected)
+      }
+}
+</script>
+
+<style scoped>
+
+</style>

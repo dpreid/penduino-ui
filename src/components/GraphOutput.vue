@@ -1,0 +1,401 @@
+<template>
+<div class="container">
+    <div class="row m-5 justify-content-center" id="chart-canvas">
+        <label for="graph">Choose a graph:</label>
+
+            <select name="graph" id="graph" v-model="currentDataParameter" @change="getData">
+            <option value="x">X Position</option>
+            <option value="y">Y Position</option>
+            <option value="vx">X Velocity</option>
+            <option value="vy">Y Velocity</option>
+            <option value="ax">X Acceleration</option>
+            <option value="ay">Y Acceleration</option>
+            </select> 
+
+        
+            <canvas :id="id" @mousedown="startLine" @mouseup="endDrag" @mousemove="endLine"></canvas>
+        
+    </div>
+    <div class="row m-5 justify-content-center">
+        <div class="col-2">
+            
+            <label for="gradient">Gradient</label>
+            <input id="gradient" :value="gradient" readonly size="3"> 
+            
+        </div>
+        <div class="col-4">
+            <div>
+                <label for="graph">Plot function:</label>
+
+                <select name="function" id="function" v-model="currentFunction">
+                    <option value="linear">Linear</option>
+                    <option value="quadratic">Quadratic</option>
+                    <option value="trigonometric">Trigonometric</option>
+                    <option value="exponential">Exponential</option>
+                </select> 
+
+            </div>
+            <div v-if="currentFunction === 'linear'">
+                <label for="func_a">y=</label>
+                <input id="func_a" v-model="func_a" size="3">
+                <label for="func_b">x + </label>
+                <input id="func_b" v-model="func_b" size="3"> 
+                <button @click="plotFunc(linear)">Plot</button>
+                <button @click="deleteFunctionDataset">Clear</button>
+            </div>
+             <div v-else-if="currentFunction === 'quadratic'">
+                <label for="func_a">y=</label>
+                <input id="func_a" v-model="func_a" size="3">
+                <label for="func_b">x<sup>2</sup> + </label>
+                <input id="func_b" v-model="func_b" size="3"> 
+                <button @click="plotFunc(quadratic)">Plot</button>
+                <button @click="deleteFunctionDataset">Clear</button>
+            </div>
+            <div v-else-if="currentFunction === 'trigonometric'">
+                <label for="func_a">y=</label>
+                <input id="func_a" v-model="func_a" size="2">
+                <label for="func_b">sin(</label>
+                <input id="func_b" v-model="func_b" size="2"> 
+                <label for="func_c"> t + </label>
+                <input id="func_c" v-model="func_c" size="2"> 
+                <label> ) </label>
+                <button @click="plotFunc(trigonometric)">Plot</button>
+                <button @click="deleteFunctionDataset">Clear</button>
+            </div>
+            <div v-else-if="currentFunction === 'exponential'">
+                <label for="func_a">y=</label>
+                <input id="func_a" v-model="func_a" size="3">
+                <label for="func_b">exp(</label>
+                <input id="func_b" v-model="func_b" size="3"> 
+                <label for="func_b"> t)</label>
+                <button @click="plotFunc(exponential)">Plot</button>
+                <button @click="deleteFunctionDataset">Clear</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+</template>
+
+<script>
+import { store } from "../store.js";
+import { Chart } from 'chart.js';
+import { eventBus } from "../main.js";
+
+export default {
+    
+    name: 'GraphOutput',
+    props: ['type', 'id'],
+    data(){
+        return{
+            chart: null,
+            currentDataParameter: 'x',
+            chartData: [],
+            total_num_charts: store.state.num_graphs,
+            gradient_start_point: {x:0, y:0},
+            gradient_end_point: {x:0, y:0},
+            gradient: 0,
+            mouseDragging: false,
+            currentFunction: "linear",
+            func_a: 0,
+            func_b: 0,
+            func_c: 0,
+            funcTimeStep: 0.1,
+            YAxisMax: 0,
+            YAxisMin: 0,
+            XAxisMax: 0,
+            XAxisMin: 0,
+
+        }
+    },
+    methods: {
+        createChart() {
+          const ctx = document.getElementById(this.id).getContext('2d');
+          var scatterChart = new Chart(ctx, {
+            type: 'scatter',
+            data: {
+                datasets: [{
+                    label: this.type,
+                    data: this.chartData
+                }]
+            },
+            options: {
+                legend:{
+                    display: false
+                },
+                scales: {
+                    xAxes: [{
+                        scaleLabel:{
+                            display: true,
+                            labelString: 'time/s'
+                        },
+                        type: 'linear',
+                        position: 'bottom',
+                        ticks: {
+                            callback : (value,index,values) => {
+                                this.updateXAxisMax(value, index, values);
+                                this.updateXAxisMin(value, index);
+                                return value;
+                            }
+                        },
+                    }],
+                    yAxes: [{
+                        scaleLabel:{
+                            display: true,
+                            labelString: this.currentDataParameter
+                        },
+                        type: 'linear',
+                        position: 'left',
+                        ticks: {
+                            callback : (value,index,values) => {
+                                this.updateYAxisMax(value, index);
+                                this.updateYAxisMin(value, index, values);
+                                return value;
+                            }
+                        },
+                    }],
+                },
+                responsive: true
+            }
+        });
+            this.chart = scatterChart;
+        },
+        updateYAxisMax(value, index){
+            if(index == 0){
+                this.YAxisMax = value;
+            }
+            
+        },
+        updateYAxisMin(value,index,values){
+            if(index == values.length - 1){
+                this.YAxisMin = value;
+            }
+        },
+        updateXAxisMin(value, index){
+            if(index == 0){
+                this.XAxisMin = value;
+            }
+            
+        },
+        updateXAxisMax(value,index,values){
+            if(index == values.length - 1){
+                this.XAxisMax = value;
+            }
+        },
+        addDataToChart(data) {
+            this.chart.data.datasets.forEach((dataset) => {
+                dataset.data.push(data);
+            });
+            this.chart.update();
+            this.chart.options.scales.yAxes[0].scaleLabel.labelString = this.currentDataParameter;
+        },
+        clearData(){
+            this.chartData = [];
+            this.chart.data.datasets[0].data = this.chartData;
+            //this.chart.reset();
+            this.chart.update();
+        },
+        getData(){
+                
+                this.clearData();
+                
+                for(let i=0; i<store.state.data.length;i++){
+                    let y_data;
+                    let x_data = store.state.data[i].t;
+                    switch(this.currentDataParameter){
+                        case 'x':
+                            y_data = store.state.data[i].x;
+                            break;
+                        case 'y':
+                            y_data = store.state.data[i].y;
+                            break;
+                        case 'vx':
+                            y_data = store.state.data[i].vx;
+                            break;
+                        case 'vy':
+                            y_data = store.state.data[i].vy;
+                            break;
+                        case 'ax':
+                            y_data = store.state.data[i].ax;
+                            break;
+                        case 'ay':
+                            y_data = store.state.data[i].ay;
+                            break;
+
+                    }
+                    this.addDataToChart({x: x_data, y: y_data});
+                    
+                }
+                
+            },
+            chartAdded(){
+                this.total_num_charts = store.state.num_graphs;
+            },
+            removeChart(){
+                this.chart.destroy();
+            },
+            startLine(event){
+                this.gradient_start_point.x = event.offsetX;
+                this.gradient_start_point.y = event.offsetY;
+
+                this.mouseDragging = true;
+                
+            },
+            endDrag(){
+                this.mouseDragging = false;
+            },
+            endLine(event){
+                if(this.mouseDragging){
+                    //get ratio of y axis to x axis scales, get ratio of y difference in mouse positions and x difference in mouse positions.
+                    this.gradient_end_point.x = event.offsetX;
+                    this.gradient_end_point.y = event.offsetY;
+
+                    let pointer_ratio = (this.gradient_start_point.y - this.gradient_end_point.y) / (this.gradient_end_point.x - this.gradient_start_point.x);  //pointer ratio
+
+                    let canvas_offset = 32;         //might need to change/check this 
+                    let canvas = document.getElementById(this.id);
+                    let canvas_height = canvas.clientHeight - canvas_offset;
+                    let canvas_width = canvas.clientWidth;
+                    let canvas_ratio = canvas_height/canvas_width;      //canvas ratio
+                    
+                    
+                    // let min_x = Infinity;
+                    // let min_y = Infinity;
+                    // let max_x = -Infinity;
+                    // let max_y = -Infinity;
+                    // this.chartData.forEach(element => {
+                    //     if(element.x < min_x){
+                    //         min_x = element.x;
+                    //     }
+                    //     if(element.x > max_x){
+                    //         max_x = element.x;
+                    //     }
+
+                    //     if(element.y < min_y){
+                    //         min_y = element.y;
+                    //     }
+                    //     if(element.y > max_y){
+                    //         max_y = element.y;
+                    //     }
+
+                    // });
+
+                    // if(min_x > 0){       //if two data points set then limits are set to min and max dataset points
+                    //     min_x = 0;
+                    // }
+                    // if(min_y > 0){
+                    //     min_y = 0;
+                    // }
+
+                    // let y_diff = max_y - min_y;
+                    // let x_diff = max_x - min_x;
+                    let y_diff = this.YAxisMax - this.YAxisMin;
+                    let x_diff = this.XAxisMax - this.XAxisMin;
+                    let axis_ratio = y_diff/x_diff;         //axis ratio
+
+                    if(this.chartData.length > 1){
+                        this.gradient = axis_ratio*pointer_ratio/canvas_ratio;
+                        this.drawLine(this.gradient_start_point, this.gradient_end_point);
+                    }
+                }
+                
+            },
+            drawLine(from, to){
+                
+                //draw the gradient line
+                //only draw anything if at least 2 data points have been plotted
+                let canvas = document.getElementById(this.id);
+                const context = canvas.getContext('2d');
+                context.clearRect(0, 0, canvas.width, canvas.height);
+                this.chart.update(0);       //instantly update with no animation
+
+                context.beginPath(); 
+                // Staring point 
+                context.moveTo(from.x, from.y);
+                // End point 
+                context.lineTo(to.x, to.y);
+                context.lineWidth = 5;
+                // set line color
+                context.strokeStyle = 'red';
+                // Make the line visible
+                context.stroke();
+                
+            },
+            plotFunc(func){
+                // let min = store.getMinTime();
+                // let max = store.getMaxTime();
+                let min = this.XAxisMin;
+                let max = this.XAxisMax;
+                let t_delta = max-min;
+                let num_plots = t_delta/this.funcTimeStep;
+                let new_data = [];
+                let new_t;
+                let new_y;
+                for(let i=0; i<num_plots;i++){
+                    new_t = min + i*this.funcTimeStep;
+                    new_y = func(new_t);
+                    let data = {
+                        x: new_t,
+                        y: new_y
+                    };
+                    new_data.push(data);
+                }
+                
+                this.addNewDataSet('rgba(255, 0, 0, 0.5)', new_data);
+            },
+            linear(t){
+                return (parseFloat(this.func_a)*t + parseFloat(this.func_b));
+            },
+            quadratic(t){
+                return parseFloat(this.func_a)*t*t + parseFloat(this.func_b);
+            },
+            trigonometric(t){
+                return parseFloat(this.func_a)*Math.sin(parseFloat(this.func_b)*t + parseFloat(this.func_c));
+            },
+            exponential(t){
+                return parseFloat(this.func_a)*Math.exp(parseFloat(this.func_b)*t);
+            },
+            addNewDataSet(colour, data){
+                this.chart.data.datasets.push({
+                    label:"plotted function",
+                    pointBackgroundColor: colour,
+                    data: data
+                    });
+                this.chart.update(0);
+            },
+            deleteFunctionDataset(){
+                this.chart.data.datasets = this.chart.data.datasets.filter(set => set.label !== "plotted function");
+                this.chart.update(0);
+            },
+
+      },
+      computed:{
+            getClass(){
+                if(this.total_num_charts == 1){
+                    return {"col-12": true, "col-6": false, "col-4": false}
+                } else if(this.total_num_charts==2){
+                    return {"col-12": false, "col-6": true, "col-4": false};
+                } else {
+                    return {"col-12": false, "col-6": false, "col-4": true};
+                }
+            },
+      },
+      mounted() {
+        this.createChart();
+        this.getData();
+      },
+      created(){
+        eventBus.$on('updateGraph', this.getData );
+        eventBus.$on('newgraphadded', this.chartAdded);
+        //eventBus.$on('clearalldata', this.clearData )
+        
+
+      }
+}
+</script>
+
+
+
+<style scoped>
+
+</style>

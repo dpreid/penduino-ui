@@ -1,5 +1,9 @@
 # pendvueino
 
+Based upon 'penduino-ui' by Tim Drysdale https://github.com/timdrysdale/penduino-ui
+
+This is a Vue.js app providing a UI for the penduino remote lab https://github.com/timdrysdale/penduino
+
 ## Project setup
 ```
 npm install
