@@ -43,6 +43,8 @@ export default {
         }
     },
     mounted(){
+        shapes = [];        //ensure when mounted again that the shapes are not redrawn
+
         canvas = document.getElementById("workspace");
         canvas2 = document.getElementById("workspace2");
     
@@ -56,6 +58,7 @@ export default {
        
         //setInterval(() => {this.draw()}, 10);         //not constantly animating, but instead call draw when click and mouse move
         this.addImages();
+        
 
         //the rectangle shape added to shapes array
         shapes.push({x:rect_top_left_x, y:rect_top_left_y, width:rect_width, height:rect_height, image:null, angle:0});
@@ -63,6 +66,7 @@ export default {
         //add a shift key press modifier to the window
         window.addEventListener('keydown', this.updateMode, false);
         window.addEventListener('keyup', this.updateMode, false);
+
 
     },
     methods:{
