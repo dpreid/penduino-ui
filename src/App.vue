@@ -1,6 +1,8 @@
 <template>
   <div id="app">
-
+  <div>
+    <webcam-stream />
+  </div>
     <div v-if="isWorkspaceOn">
       <workspace />
     </div>
@@ -45,6 +47,7 @@ import GraphOutput from "./components/GraphOutput.vue";
 import TableOutput from "./components/TableOutput.vue";
 import Stopwatch from "./components/Stopwatch.vue";
 import Workspace from "./components/Workspace.vue";
+import WebcamStream from "./components/WebcamStream.vue";
 
 export default {
   name: 'App',
@@ -53,7 +56,8 @@ export default {
     GraphOutput,
     TableOutput,
     Stopwatch,
-    Workspace
+    Workspace,
+    WebcamStream
   },
   methods:{
     
