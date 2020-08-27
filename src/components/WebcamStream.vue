@@ -1,16 +1,16 @@
 <template>
 <div>
     <canvas id="video-canvas"></canvas>
-    <p>Webcam Stream here </p>
 </div>
 </template>
 
 <script>
 //import * as pendulum from "../pendulum";
 //import { eventBus } from "../main";
+import { JSMpeg } from "../../public/js/jsmpeg.min.js";
 
-
-
+//playerUrl = scheme + host + ':' + port + '/' + stream;
+//let playerUrl = 'ws://video.practable.io:8080/out/dpr/video0';
 
 export default {
     name: "WebcamStream",
@@ -20,9 +20,16 @@ export default {
         }
     },
     created(){
-        
+		
+	},
+	mounted(){
+		let canvas = document.getElementById("video-canvas");
+		let playerUrl = 'wss://video.practable.io:443/out/dpr/video0';
+		console.log(playerUrl);
+		let player = new JSMpeg.Player(playerUrl, {canvas: canvas});
+		console.log(player);
 
-    },
+	},
 }
 
 
