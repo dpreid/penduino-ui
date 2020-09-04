@@ -2,22 +2,29 @@
   <div id="app">
      <div class="container-fluid" >
       <div class="row" id="optionsMenu">
-        <label for="graphcheck">Add graph</label>
+        <label id="menuLabel" for="graphcheck">Add graph</label>
         <input type="checkbox" id="graphcheck" name="graphcheck" v-model="isGraphOn">
-        <label for="tablecheck">Add table</label>
+        <label id="menuLabel" for="tablecheck">Add table</label>
         <input type="checkbox" id="tablecheck" name="tablecheck" v-model="isTableOn">
-        <label for="stopwatchcheck">Add stopwatch</label><br>
+        <label id="menuLabel" for="stopwatchcheck">Add stopwatch</label><br>
         <input type="checkbox" id="stopwatchcheck" name="stopwatchcheck" v-model="isStopwatchOn">
-        <label for="workspacecheck">Add workspace</label><br>
+        <label id="menuLabel" for="workspacecheck">Add workspace</label><br>
         <input type="checkbox" id="workspacecheck" name="workspacecheck" v-model="isWorkspaceOn">
       </div>
 
 
-  <div>
-    <webcam-stream />
-  </div>
-  <div>
-    <control-panel />
+  <div class="row">
+    <div class="col-6">
+
+      <webcam-stream />
+      <control-panel />
+
+    </div>
+    <div class="col-6" v-if="isGraphOn">
+      <graph-output type="graph" id="0" />
+      <data-recorder />
+    </div>
+
 </div>
 
     <div v-if="isWorkspaceOn">
@@ -26,7 +33,7 @@
 
       <div class="row">
         <div class="col-6">
-          <user-input />
+          <!-- <user-input /> -->
           <div v-if="isTableOn">
             <table-output />
           </div>
@@ -34,11 +41,7 @@
             <stopwatch />
           </div>
         </div>
-        <div class="col-6">
-          <div v-if="isGraphOn">
-            <graph-output type="graph" id="0" />
-          </div>
-        </div>
+        
       </div>
     </div>
   </div>
@@ -46,24 +49,26 @@
 
 <script>
 
-import UserInput from "./components/UserInput.vue";
+//import UserInput from "./components/UserInput.vue";
 import GraphOutput from "./components/GraphOutput.vue";
 import TableOutput from "./components/TableOutput.vue";
 import Stopwatch from "./components/Stopwatch.vue";
 import Workspace from "./components/Workspace.vue";
 import WebcamStream from "./components/WebcamStream.vue";
 import ControlPanel from "./components/ControlPanel.vue";
+import DataRecorder from "./components/DataRecorder.vue";
 
 export default {
   name: 'App',
   components: {
-    UserInput,
+    //UserInput,
     GraphOutput,
     TableOutput,
     Stopwatch,
     Workspace,
     WebcamStream,
     ControlPanel,
+    DataRecorder,
   },
   methods:{
     
@@ -109,7 +114,7 @@ html, body {
   padding-right: 20px;
 }
 
-label{
+#menuLabel{
   padding: 15px 15px;
 	font-size: 24px;
 	text-align: center;
@@ -121,7 +126,7 @@ label{
 	border-radius: 15px;
 }
 
-label:active{
+#menuLabel:active{
   background-color: #3e8e41;
 }
 

@@ -2,14 +2,28 @@
 
 export const store = {
   state: {
+     current_angle: 0,
+     current_time: 0,
+     start_time: 0,
+     isCaliperSet: false,
      data: [],
      num_graphs: 0
+     },
+     clearAllData(){
+      this.state.data = [];
+     },
+     getNumData(){
+         return this.state.data.length;
      },
      addData(object){
         this.state.data.push(object);
      },
      deleteData (dataId) {
         this.state.data.splice(dataId, 1);
+      },
+      getTime(){
+         console.log("start time = " + this.state.start_time);
+         return (this.state.current_time - this.state.start_time)/1000;    //in seconds
       },
       getMaxTime(){
          let time_max = -Infinity;
@@ -38,6 +52,8 @@ export const store = {
 // {
 //     id: 1,
 //      t: 0,
+//       theta: 0,
+//       omega: 0,
 //     x: 1,
 //     y: 1,
 //     vx: 1,

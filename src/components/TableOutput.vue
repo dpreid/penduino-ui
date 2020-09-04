@@ -5,24 +5,15 @@
 
     <table class="table">
         <tr>
-            <th scope="col">ID</th>
+            <!-- <th scope="col">ID</th> -->
             <th scope="col">Time/s</th>
-            <th scope="col">X</th>
-            <th scope="col">Y</th>
-            <th scope="col">V_x</th>
-            <th scope="col">V_y</th>
-            <th scope="col">A_x</th>
-            <th scope="col">A_y</th>
+            <th scope="col">Theta</th>
+            
         </tr>
         <tr v-for="row in tableData" :key="row.id">
-            <td>{{row.id}}</td>
+            <!-- <td>{{row.id}}</td> -->
             <td>{{row.t}}</td>
-            <td>{{row.x}}</td>
-            <td>{{row.y}}</td>
-            <td>{{row.vx}}</td>
-            <td>{{row.vy}}</td>
-            <td>{{row.ax}}</td>
-            <td>{{row.ay}}</td>
+            <td>{{row.theta}}</td>
 
         </tr>
                             

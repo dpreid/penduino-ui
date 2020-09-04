@@ -1,55 +1,67 @@
 <template>
-<div class="container">
-    <div class="row m-5 justify-content-center" id="chart-canvas">
-        <label for="graph">Choose a graph:</label>
-
-            <select name="graph" id="graph" v-model="currentDataParameter" @change="getData">
-            <option value="x">X Position</option>
-            <option value="y">Y Position</option>
-            <option value="vx">X Velocity</option>
-            <option value="vy">Y Velocity</option>
-            <option value="ax">X Acceleration</option>
-            <option value="ay">Y Acceleration</option>
-            </select> 
-
-        
+<div class="container-fluid">
+    <div class="row mb-5 justify-content-center" id="chart-canvas">
+        <div class="col">
             <canvas :id="id" @mousedown="startLine" @mouseup="endDrag" @mousemove="endLine"></canvas>
-        
+        </div>
     </div>
-    <div class="row m-5 justify-content-center">
-        <div class="col-2">
-            
-            <label for="gradient">Gradient</label>
-            <input id="gradient" :value="gradient" readonly size="3"> 
+
+    <div class="row mb-5 justify-content-center" id="chart-functions">
+        <div class="col">
+            <div class="row justify-content-center">
+                <label for="graphSelect">Graph:</label>
+            </div>
+
+            <select name="graphSelect" id="graphSelect" v-model="currentDataParameter" @change="getData">
+                <option value="theta">Angle</option>
+                <option value="x">X Position</option>
+                <option value="y">Y Position</option>
+                <option value="vx">X Velocity</option>
+                <option value="vy">Y Velocity</option>
+                <option value="ax">X Acceleration</option>
+                <option value="ay">Y Acceleration</option>
+            </select> 
             
         </div>
-        <div class="col-4">
-            <div>
-                <label for="graph">Plot function:</label>
 
-                <select name="function" id="function" v-model="currentFunction">
-                    <option value="linear">Linear</option>
-                    <option value="quadratic">Quadratic</option>
-                    <option value="trigonometric">Trigonometric</option>
-                    <option value="exponential">Exponential</option>
-                </select> 
-
+        <div class="col">
+            <div class="row justify-content-center">
+                <label for="gradient">Gradient</label>
             </div>
+            <div class="row justify-content-center">
+                <input id="gradient" :value="gradient" readonly size="3"> 
+            </div>
+        </div>
+        
+        <div class="col">
+            <label for="graph">Plot function:</label>
+
+            <select name="function" id="function" v-model="currentFunction">
+                <option value="linear">Linear</option>
+                <option value="quadratic">Quadratic</option>
+                <option value="trigonometric">Trigonometric</option>
+                <option value="exponential">Exponential</option>
+            </select> 
+
             <div v-if="currentFunction === 'linear'">
                 <label for="func_a">y=</label>
                 <input id="func_a" v-model="func_a" size="3">
                 <label for="func_b">x + </label>
                 <input id="func_b" v-model="func_b" size="3"> 
-                <button @click="plotFunc(linear)">Plot</button>
-                <button @click="deleteFunctionDataset">Clear</button>
+                <div class="row justify-content-center">
+                    <button id="plotFunctionButton" @click="plotFunc(linear)">Plot</button>
+                    <button id="clearFunctionButton" @click="deleteFunctionDataset">Clear</button>
+                </div>
             </div>
-             <div v-else-if="currentFunction === 'quadratic'">
+                <div v-else-if="currentFunction === 'quadratic'">
                 <label for="func_a">y=</label>
                 <input id="func_a" v-model="func_a" size="3">
                 <label for="func_b">x<sup>2</sup> + </label>
                 <input id="func_b" v-model="func_b" size="3"> 
-                <button @click="plotFunc(quadratic)">Plot</button>
-                <button @click="deleteFunctionDataset">Clear</button>
+                <div class="row justify-content-center">
+                    <button id="plotFunctionButton" @click="plotFunc(quadratic)">Plot</button>
+                    <button id="clearFunctionButton" @click="deleteFunctionDataset">Clear</button>
+                </div>
             </div>
             <div v-else-if="currentFunction === 'trigonometric'">
                 <label for="func_a">y=</label>
@@ -59,8 +71,10 @@
                 <label for="func_c"> t + </label>
                 <input id="func_c" v-model="func_c" size="2"> 
                 <label> ) </label>
-                <button @click="plotFunc(trigonometric)">Plot</button>
-                <button @click="deleteFunctionDataset">Clear</button>
+                <div class="row justify-content-center">
+                    <button id="plotFunctionButton" @click="plotFunc(trigonometric)">Plot</button>
+                    <button id="clearFunctionButton" @click="deleteFunctionDataset">Clear</button>
+                </div>
             </div>
             <div v-else-if="currentFunction === 'exponential'">
                 <label for="func_a">y=</label>
@@ -68,13 +82,16 @@
                 <label for="func_b">exp(</label>
                 <input id="func_b" v-model="func_b" size="3"> 
                 <label for="func_b"> t)</label>
-                <button @click="plotFunc(exponential)">Plot</button>
-                <button @click="deleteFunctionDataset">Clear</button>
+                <div class="row justify-content-center">
+                    <button id="plotFunctionButton" @click="plotFunc(exponential)">Plot</button>
+                    <button id="clearFunctionButton" @click="deleteFunctionDataset">Clear</button>
+                </div>
             </div>
         </div>
 
     </div>
 </div>
+
 </template>
 
 <script>
@@ -89,7 +106,7 @@ export default {
     data(){
         return{
             chart: null,
-            currentDataParameter: 'x',
+            currentDataParameter: 'theta',
             chartData: [],
             total_num_charts: store.state.num_graphs,
             gradient_start_point: {x:0, y:0},
@@ -116,7 +133,8 @@ export default {
             data: {
                 datasets: [{
                     label: this.type,
-                    data: this.chartData
+                    data: this.chartData,
+                    pointBackgroundColor: 'rgba(0, 0, 0, 1)',
                 }]
             },
             options: {
@@ -186,7 +204,7 @@ export default {
             this.chart.data.datasets.forEach((dataset) => {
                 dataset.data.push(data);
             });
-            this.chart.update();
+            this.chart.update(0);       //instantly update with 0 parameter, no animation
             this.chart.options.scales.yAxes[0].scaleLabel.labelString = this.currentDataParameter;
         },
         clearData(){
@@ -203,6 +221,9 @@ export default {
                     let y_data;
                     let x_data = store.state.data[i].t;
                     switch(this.currentDataParameter){
+                        case 'theta':
+                            y_data = store.state.data[i].theta;
+                            break;
                         case 'x':
                             y_data = store.state.data[i].x;
                             break;
@@ -227,6 +248,37 @@ export default {
                     
                 }
                 
+            },
+            getLatestData(){
+                
+                let index = store.getNumData() - 1;
+                let y_data;
+                let x_data = store.state.data[index].t;
+                switch(this.currentDataParameter){
+                        case 'theta':
+                            y_data = store.state.data[index].theta;
+                            break;
+                        case 'x':
+                            y_data = store.state.data[index].x;
+                            break;
+                        case 'y':
+                            y_data = store.state.data[index].y;
+                            break;
+                        case 'vx':
+                            y_data = store.state.data[index].vx;
+                            break;
+                        case 'vy':
+                            y_data = store.state.data[index].vy;
+                            break;
+                        case 'ax':
+                            y_data = store.state.data[index].ax;
+                            break;
+                        case 'ay':
+                            y_data = store.state.data[index].ay;
+                            break;
+
+                    }
+                    this.addDataToChart({x: x_data, y: y_data});
             },
             chartAdded(){
                 this.total_num_charts = store.state.num_graphs;
@@ -367,6 +419,7 @@ export default {
                 this.chart.data.datasets = this.chart.data.datasets.filter(set => set.label !== "plotted function");
                 this.chart.update(0);
             },
+            
 
       },
       computed:{
@@ -385,9 +438,10 @@ export default {
         this.getData();
       },
       created(){
-        eventBus.$on('updateGraph', this.getData );
+        //eventBus.$on('updateGraph', this.getData );
+        eventBus.$on('updateGraph', this.getLatestData );
         eventBus.$on('newgraphadded', this.chartAdded);
-        //eventBus.$on('clearalldata', this.clearData )
+        eventBus.$on('clearalldata', this.clearData )
         
 
       }
@@ -397,5 +451,59 @@ export default {
 
 
 <style scoped>
+button {
+	padding: 10px, 10px;
+	font-size: 24px;
+	text-align: center;
+	cursor: pointer;
+	outline: none;
+	color: rgb(255, 255, 255);
+
+	border: none;
+	border-radius: 15px;
+	box-shadow: 0 9px #999;
+}
+
+/*	background-color: #4CAF50;
+ .button:hover {background-color: #3e8e41}*/
+
+button:active {
+	background-color: #3e8e41;
+	box-shadow: 0 5px #666;
+	transform: translateY(4px);
+}
+
+
+#plotFunctionButton       {background-color: #4CAF50FF;}
+#plotFunctionButton:hover {background-color: #3e8e41} 
+
+#clearFunctionButton        {background-color: #e13131ff;}
+#clearFunctionButton:hover {background-color: #cc1e1eff;}
+
+#clearButton  {background-color: #e17a31ff;}
+#clearButton:hover  {background-color: #cc661eff;}
+
+#outputButton        {background-color: #e1b131ff;}
+#outputButton:hover  {background-color: #cc9d1eff;}
+
+label {
+    font-size:16px;
+    color: #0501f7;
+    font-weight: bold;
+    display: inline-block;
+    /* vertical-align: middle; */
+    /* width: 20px; */
+    /* padding-top: 20px; */
+    /* float: left; */
+}
+
+select{
+    color: white;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    
+    background-color: #4490d8;
+}
+
 
 </style>
