@@ -1,10 +1,10 @@
 <template>
     <div>
-        <div class="row">
-            <input id="stopwatch" :value="time_string" readonly size=10>
+        <div class="row justify-content-center">
+            <input id="stopwatch" :value="time_string" readonly size=8>
         </div>
-        <div class="row">
-            <button v-if="!isTiming" id="start/pause" @click="startTimer">Start</button>
+        <div class="row mb-5 justify-content-center">
+            <button v-if="!isTiming" id="start" @click="startTimer">Start</button>
             <button v-if="isTiming" id="pause" @click="pauseTimer">Pause</button>
             <button id="reset" @click="resetTimer">Reset</button>
         </div>
@@ -82,5 +82,51 @@ export default {
 </script>
 
 <style scoped>
+button {
+	padding: 15px 25px;
+	font-size: 24px;
+	text-align: center;
+	cursor: pointer;
+	outline: none;
+	color: rgb(255, 255, 255);
 
+	border: none;
+	border-radius: 15px;
+	box-shadow: 0 9px #999;
+}
+
+/*	background-color: #4CAF50;
+ .button:hover {background-color: #3e8e41}*/
+
+button:active {
+	background-color: #3e8e41;
+	box-shadow: 0 5px #666;
+	transform: translateY(4px);
+}
+
+#stopwatch{
+    font-size: 36px;
+    text-align: left;
+}
+
+
+#start       {background-color: #4CAF50FF;}
+#start:hover {background-color: #3e8e41} 
+
+#pause       {background-color: #e13131ff;}
+#pause:hover {background-color: #cc1e1eff;}
+
+#reset  {background-color: #e17a31ff;}
+#reset:hover  {background-color: #cc661eff;}
+
+label {
+    font-size:20px;
+    color: #0501f7;
+    font-weight: bold;
+    display: inline-block;
+    vertical-align: middle;
+    width: 60px;
+    padding-top: 20px;
+    /* float: left; */
+}
 </style>

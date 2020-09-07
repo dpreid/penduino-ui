@@ -68,7 +68,7 @@
 		<div class="row">
 			<div class="column1-3  sliderlabel"> Report every {{dataParam}}ms</div> 
 			<div class="column2-3">
-				<input type="range" min="50" max="200" v-model="dataParam" class="slider" id="dataSlider" @change="updateDataParam">
+				<input type="range" min="20" max="200" v-model="dataParam" class="slider" id="dataSlider" @change="updateDataParam">
 			</div>
 			</div>
 		</div>
@@ -87,7 +87,7 @@
 <script>
 //import * as pendulum from "../pendulum";
 import { store } from "../store.js";
-//import { eventBus } from "../main";
+import { eventBus } from "../main";
 //import ReconnectingWebSocket from '../../public/js/reconnecting-websocket.min.js';
 import ReconnectingWebSocket from 'reconnecting-websocket';
 //import { SmoothieChart } from '../../public/js/smoothie.js';
@@ -112,14 +112,15 @@ export default {
 			brakeParam: 50,
 
 			dataSlider: null,
-			dataParam: 0,
+			dataParam: 50,
 
 			canvas: null,
 
         }
     },
     created(){
-		
+		eventBus.$on('startcommand', this.start);
+		eventBus.$on('freecommand', this.free);
 	},
         
     mounted(){

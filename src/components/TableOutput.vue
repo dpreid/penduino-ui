@@ -1,7 +1,7 @@
 <template>
 <div class="container">
     <div class="row mb-5 justify-content-center">
-    <input type="text" id="search" v-on:keyup="search" v-model="search_field" placeholder="Search the table...">
+    <!-- <input type="text" id="search" v-on:keyup="search" v-model="search_field" placeholder="Search the table..."> -->
 
     <table class="table">
         <tr>
@@ -10,11 +10,11 @@
             <th scope="col">Theta</th>
             
         </tr>
-        <tr v-for="row in tableData" :key="row.id">
+        <tr v-for="row in tableData" :id="row.id" :key="row.id" v-bind:class="[row.id == selected_row_id ? 'selected-row' : '']" @click="changeSelected(row.id)">
             <!-- <td>{{row.id}}</td> -->
             <td>{{row.t}}</td>
-            <td>{{row.theta}}</td>
-
+            <td>{{row.theta.toFixed(2)}}</td>
+            <td>{{row.omega.toFixed(2)}}</td>
         </tr>
                             
     </table> 
@@ -25,6 +25,7 @@
 
 <script>
 import { store } from "../store.js";
+import { eventBus } from "../main.js";
 
 export default {
     name: 'TableOutput',
@@ -78,11 +79,15 @@ export default {
       },
       created(){
             // eventBus.$on('addnewmappoints', this.addData)
-            // eventBus.$on('newselectedobject', this.changeSelected)
+            eventBus.$on('newselectedobject', this.changeSelected)
       }
 }
 </script>
 
 <style scoped>
 
+.selected-row{
+    background-color: red;
+    color: white;
+}
 </style>

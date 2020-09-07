@@ -60,7 +60,14 @@ export default {
           this.data_points_count++;
           let angle = store.state.current_angle;
           let time = store.getTime();
-          let data_object = {id: store.state.data.length, t: parseFloat(time), theta: parseFloat(angle)};
+          let ang_vel = store.calculateAngularVelocity();
+          
+          let index = store.getNumData() - 1;
+          if(index >= 0){
+              store.state.data[index].omega = ang_vel;  //update previous ang_vel
+          }
+          
+          let data_object = {id: store.state.data.length, t: parseFloat(time), theta: parseFloat(angle), omega: NaN};   //omega will be updated in next cycle
           store.addData(data_object);
           eventBus.$emit('updateGraph');
           this.hasPlotted = true;
@@ -76,12 +83,14 @@ export default {
           this.hasPlotted = false;
       },
       outputToCSV(){
-          let csv = 'Time/s,Angle/deg\n';
+          let csv = 'Time/s,Angle/deg,AngVel/deg/s\n';
           let data = store.state.data;
           data.forEach(function(d){
               csv += d.t.toString();
               csv += ",";
               csv += d.theta.toString();
+              csv += ',';
+              csv += d.omega.toString();
               csv += "\n";
           });
           //console.log(csv);

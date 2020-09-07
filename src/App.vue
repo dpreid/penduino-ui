@@ -20,8 +20,14 @@
       <control-panel />
 
     </div>
-    <div class="col-6" v-if="isGraphOn">
-      <graph-output type="graph" id="0" />
+    
+    <div class="col-6">
+      <div v-if="isStopwatchOn">
+            <stopwatch />
+      </div>
+    <div v-if="isGraphOn">
+        <graph-output type="graph" id="0" />
+      </div>
       <data-recorder />
     </div>
 
@@ -32,16 +38,13 @@
     </div>
 
       <div class="row">
-        <div class="col-6">
-          <!-- <user-input /> -->
-          <div v-if="isTableOn">
+        <div class="col-6" v-if="isTableOn">
             <table-output />
-          </div>
-          <div v-if="isStopwatchOn">
-            <stopwatch />
-          </div>
         </div>
-        
+        <div class="col-6">
+            <auto-command />
+        </div>
+
       </div>
     </div>
   </div>
@@ -57,6 +60,7 @@ import Workspace from "./components/Workspace.vue";
 import WebcamStream from "./components/WebcamStream.vue";
 import ControlPanel from "./components/ControlPanel.vue";
 import DataRecorder from "./components/DataRecorder.vue";
+import AutoCommand from "./components/AutoCommand.vue";
 
 export default {
   name: 'App',
@@ -69,6 +73,7 @@ export default {
     WebcamStream,
     ControlPanel,
     DataRecorder,
+    AutoCommand,
   },
   methods:{
     

@@ -9,6 +9,23 @@ export const store = {
      data: [],
      num_graphs: 0
      },
+     calculateAngularVelocity(){
+        let current_index = this.state.data.length - 1;
+        let current_data = this.state.data[current_index];
+        let previous_data = this.state.data[current_index - 1];
+        if(current_data && previous_data){
+            let theta_delta = current_data.theta - previous_data.theta;
+            let time_delta = current_data.t - previous_data.t;
+            let ang_vel = theta_delta / time_delta;
+            return ang_vel;
+        } 
+        else{
+           
+           return NaN;
+        }
+        
+
+     },
      clearAllData(){
       this.state.data = [];
      },
@@ -54,10 +71,4 @@ export const store = {
 //      t: 0,
 //       theta: 0,
 //       omega: 0,
-//     x: 1,
-//     y: 1,
-//     vx: 1,
-//      vy: 1,
-//       ax: 1,
-//       ay: 1
 //   },

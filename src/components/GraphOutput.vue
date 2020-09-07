@@ -14,12 +14,8 @@
 
             <select name="graphSelect" id="graphSelect" v-model="currentDataParameter" @change="getData">
                 <option value="theta">Angle</option>
-                <option value="x">X Position</option>
-                <option value="y">Y Position</option>
-                <option value="vx">X Velocity</option>
-                <option value="vy">Y Velocity</option>
-                <option value="ax">X Acceleration</option>
-                <option value="ay">Y Acceleration</option>
+                <option value="omega">Angular Velocity</option>
+                
             </select> 
             
         </div>
@@ -117,7 +113,7 @@ export default {
             func_a: 0,
             func_b: 0,
             func_c: 0,
-            funcTimeStep: 0.1,
+            funcTimeStep: 0.01,
             YAxisMax: 0,
             YAxisMin: 0,
             XAxisMax: 0,
@@ -127,8 +123,9 @@ export default {
     },
     methods: {
         createChart() {
-          const ctx = document.getElementById(this.id).getContext('2d');
-          var scatterChart = new Chart(ctx, {
+            const canvas = document.getElementById(this.id);
+            const ctx = canvas.getContext('2d');
+            var scatterChart = new Chart(ctx, {
             type: 'scatter',
             data: {
                 datasets: [{
@@ -177,6 +174,14 @@ export default {
             }
         });
             this.chart = scatterChart;
+
+            canvas.onclick = function(event){
+                let active_points = scatterChart.getElementsAtEvent(event);
+                if(active_points[0]){
+                    eventBus.$emit('newselectedobject', active_points[0]._index);       //data point selected so send event to let other elements know.
+                }
+                
+            };
         },
         updateYAxisMax(value, index){
             if(index == 0){
@@ -224,24 +229,8 @@ export default {
                         case 'theta':
                             y_data = store.state.data[i].theta;
                             break;
-                        case 'x':
-                            y_data = store.state.data[i].x;
-                            break;
-                        case 'y':
-                            y_data = store.state.data[i].y;
-                            break;
-                        case 'vx':
-                            y_data = store.state.data[i].vx;
-                            break;
-                        case 'vy':
-                            y_data = store.state.data[i].vy;
-                            break;
-                        case 'ax':
-                            y_data = store.state.data[i].ax;
-                            break;
-                        case 'ay':
-                            y_data = store.state.data[i].ay;
-                            break;
+                        case 'omega':
+                            y_data = store.state.data[i].omega;
 
                     }
                     this.addDataToChart({x: x_data, y: y_data});
@@ -253,32 +242,21 @@ export default {
                 
                 let index = store.getNumData() - 1;
                 let y_data;
-                let x_data = store.state.data[index].t;
-                switch(this.currentDataParameter){
-                        case 'theta':
-                            y_data = store.state.data[index].theta;
-                            break;
-                        case 'x':
-                            y_data = store.state.data[index].x;
-                            break;
-                        case 'y':
-                            y_data = store.state.data[index].y;
-                            break;
-                        case 'vx':
-                            y_data = store.state.data[index].vx;
-                            break;
-                        case 'vy':
-                            y_data = store.state.data[index].vy;
-                            break;
-                        case 'ax':
-                            y_data = store.state.data[index].ax;
-                            break;
-                        case 'ay':
-                            y_data = store.state.data[index].ay;
-                            break;
+                if(index >= 0){
+                    let x_data = store.state.data[index].t;
+                    switch(this.currentDataParameter){
+                            case 'theta':
+                                y_data = store.state.data[index].theta;
+                                break;
+                            case 'omega':
+                                y_data = store.state.data[index].omega;
 
+                        }
+                        this.addDataToChart({x: x_data, y: y_data});
+                    } else{
+                        console.log("no data");
                     }
-                    this.addDataToChart({x: x_data, y: y_data});
+                
             },
             chartAdded(){
                 this.total_num_charts = store.state.num_graphs;
