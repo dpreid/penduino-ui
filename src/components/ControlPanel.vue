@@ -120,7 +120,11 @@ export default {
     },
     created(){
 		eventBus.$on('startcommand', this.start);
+		eventBus.$on('updatedrivecommand', this.updateDriveParam);
 		eventBus.$on('freecommand', this.free);
+		eventBus.$on('brakecommand', this.brake);
+		eventBus.$on('updatebrakecommand', this.updateBrakeParam);
+		eventBus.$on('loadcommand', this.load);
 	},
         
     mounted(){
@@ -293,14 +297,23 @@ export default {
 			console.log("start", this.startParam);
 			//don't send as it will make it start
 		},
-		updateDriveParam(){
+		updateDriveParam(val = null){
+			if(val !== null){
+				this.driveParam = val;
+			}
+
 			console.log("Driving " + this.driveParam);
 			this.dataSocket.send(JSON.stringify({
 				cmd: "drive",
 				param: this.driveParam
 			}));
+			
 		},
-		updateBrakeParam(){
+		updateBrakeParam(val = null){
+			if(val !== null){
+				this.brakeParam = val;
+			}
+
 			console.log("Braking " + this.brakeParam);
 			this.dataSocket.send(JSON.stringify({
 				cmd: "brake",
