@@ -3,7 +3,7 @@
         <div class="row justify-content-center">
             <label for="addCommand">Command</label>
 
-            <select name="addCommand" id="addCommand" v-model="command_to_add">
+            <select name="addCommand" id="addCommand" v-model="command_to_add" @change="checkCommandParameter">
                 <option value="start">Start</option>
                 <option value="updatedrive">Drive Param</option>
                 <option value="brake">Brake</option>
@@ -24,13 +24,15 @@
         </div>
 
         <div class="row justify-content-center" v-for="command in commands" :key="command.id">     <!--command structure command = {id=0, com:"start", time: 5, parameter: 0} -->
-            <p>{{command.com}}</p>
-            <p>{{command.time}}</p>
+            <h3>{{command.com}} after {{command.time}} seconds &nbsp;</h3>
+            <h3 v-if="command.parameter != null">: parameter value {{command.parameter}}</h3>
+
         </div>
 
         <div class="row justify-content-center">
             <button id="startCommands" @click="runCommands">Start</button>
             <button id="stopCommands" @click="stopCommands">Stop</button>
+            <button id="clearCommands" @click="clearCommands">Clear</button>
         </div>
 
 
@@ -100,6 +102,14 @@ export default {
          let index = this.commands.length - 1;
          this.commands.splice(index, 1);
      },
+     clearCommands(){
+         this.commands = [];
+     },
+     checkCommandParameter(){
+         if(this.command_to_add != "updatedrive" && this.command_to_add != "updatebrake"){
+             this.command_parameter = null;
+         }
+     },
   }
 }
 </script>
@@ -146,6 +156,9 @@ button:active {
 
 #stopCommands        {background-color: #e1b131ff;}
 #stopCommands:hover  {background-color: #cc9d1eff;}
+
+#clearCommands        {background-color: #e13131ff;}
+#clearCommands:hover  {background-color: #cc1e1eff;}
 
 label {
     font-size:20px;

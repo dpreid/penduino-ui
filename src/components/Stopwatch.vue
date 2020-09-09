@@ -1,9 +1,9 @@
 <template>
     <div>
-        <div class="row justify-content-center">
+        <div class="row pt-1 pb-1">
             <input id="stopwatch" :value="time_string" readonly size=8>
         </div>
-        <div class="row mb-5 justify-content-center">
+        <div class="row mb-5">
             <button v-if="!isTiming" id="start" @click="startTimer">Start</button>
             <button v-if="isTiming" id="pause" @click="pauseTimer">Pause</button>
             <button id="reset" @click="resetTimer">Reset</button>

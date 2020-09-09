@@ -5,11 +5,11 @@
 	</div>
 	<div id="buttons">
 		<article>
-			<button id="start" class="button" @click="start">Start</button>
-			<button id="brake" class="button" @click="brake">Brake</button>
-			<button id="load" class="button" @click="load">Load</button>
-			<button id="free" class="button" @click="free">Free</button>
-			<button id="cal" class="button" @click="calibrate">Cal</button>
+			<button id="start" class="button" @click="start"><tooltip id="tooltip0" :active_height="tooltip_height" :active_width="tooltip_width">Start the pendulum</tooltip>Start</button>
+			<button id="brake" class="button" @click="brake"><tooltip id="tooltip0" :active_height="tooltip_height" :active_width="tooltip_width">Slow the pendulum</tooltip>Brake</button>
+			<button id="load" class="button" @click="load"><tooltip id="tooltip0" :active_height="tooltip_height" :active_width="tooltip_width">Stop the pendulum quickly</tooltip>Load</button>
+			<button id="free" class="button" @click="free"><tooltip id="tooltip0" :active_height="tooltip_height" :active_width="tooltip_width">Remove the EM driver</tooltip>Free</button>
+			<button id="cal" class="button" @click="calibrate"><tooltip id="tooltip0" :active_height="tooltip_height" :active_width="tooltip_width">Recalibrate</tooltip>Cal</button>
 		</article>
 	</div>
 
@@ -24,7 +24,7 @@
 		<div class="row">
 			<div class="column1-3  sliderlabel"> Drive ({{driveParam}}%)</div>
 			<div class="column2-3">
-				<input type="range" min="0" max="100" v-model="driveParam" class="slider" id="driveSlider" @change="updateDriveParam">
+				<input type="range" min="0" max="100" v-model="driveParam" class="slider" id="driveSlider" @change="updateDriveParam(null)">
 			</div>
 		</div>
 	</div>
@@ -42,7 +42,7 @@
 		<div class="row">
 			<div class="column1-3  sliderlabel"> Brake ({{brakeParam}}%)</div>
 		<div class="column2-3">
-			<input type="range" min="0" max="100" v-model="brakeParam" class="slider" id="brakeSlider" @change="updateBrakeParam">
+			<input type="range" min="0" max="100" v-model="brakeParam" class="slider" id="brakeSlider" @change="updateBrakeParam(null)">
 		</div>
 	</div>
 	</div>
@@ -95,9 +95,15 @@ import ReconnectingWebSocket from 'reconnecting-websocket';
 import { SmoothieChart } from 'smoothie';
 import { TimeSeries } from 'smoothie';
 
+import Tooltip from "./Tooltip.vue";
+//import PopupMenu from "./PopupMenu.vue";
 
 export default {
-    name: "ControlPanel",
+	name: "ControlPanel",
+	components:{
+		Tooltip,
+		//PopupMenu,
+	},
     data(){
         return{
 			dataSocket: null,
@@ -115,6 +121,9 @@ export default {
 			dataParam: 50,
 
 			canvas: null,
+
+			tooltip_width: "50px",
+			tooltip_height: "40px",
 
         }
     },
@@ -297,7 +306,7 @@ export default {
 			console.log("start", this.startParam);
 			//don't send as it will make it start
 		},
-		updateDriveParam(val = null){
+		updateDriveParam(val){
 			if(val !== null){
 				this.driveParam = val;
 			}
@@ -309,7 +318,7 @@ export default {
 			}));
 			
 		},
-		updateBrakeParam(val = null){
+		updateBrakeParam(val){
 			if(val !== null){
 				this.brakeParam = val;
 			}
@@ -330,7 +339,11 @@ export default {
 		hotkey(event){
 			if(event.key == "f"){
 				this.free();
-            } 
+            } else if(event.key == "b"){
+				this.brake();
+			} else if(event.key == "l"){
+				this.load();
+			}
 		}
 
 	},

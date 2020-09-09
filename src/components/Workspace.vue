@@ -1,6 +1,6 @@
 <template>
 <div>
-    <canvas id="workspace" @mousedown="checkClick" @mousemove="moveClicked" @mouseup="mouseUnclick"></canvas>
+    <canvas :class="workspace_canvas_clickable ? 'clickable' : 'unclickable'" id="workspace" @mousedown="checkClick" @mousemove="moveClicked" @mouseup="mouseUnclick"></canvas>
     <img id="protractor" src="../../public/images/protractor.png" hidden>
     <img id="ruler" src="../../public/images/ruler.png" hidden>
     <img id="caliper" src="../../public/images/caliper.png" hidden>
@@ -39,6 +39,7 @@ export default {
             selected_offset_y: 0,
             rotateMode: false,
             isCaliperActive: false,
+            workspace_canvas_clickable: true,
         }
     },
     mounted(){
@@ -57,7 +58,7 @@ export default {
         //the rectangle shape added to shapes array
         //shapes.push({x:rect_top_left_x, y:rect_top_left_y, width:rect_width, height:rect_height, image:null, angle:0});
 
-        //add a shift key press modifier to the window
+        //add a key press modifiers to the window
         window.addEventListener('keydown', this.updateMode, false);
         window.addEventListener('keyup', this.updateMode, false);
 
@@ -139,6 +140,10 @@ export default {
                 else if(event.key == "c")
                 {
                     this.isCaliperActive = !this.isCaliperActive;
+                } 
+                else if(event.key == "w" && event.type == 'keydown'){
+                    console.log(event);
+                    this.workspace_canvas_clickable = !this.workspace_canvas_clickable;
                 }
                 // console.log(event);
                 // console.log(this.rotateMode);
@@ -214,6 +219,17 @@ export default {
     position:absolute;
     left:0px;
     top:100px;
+    /* pointer-events: none; */
+}
+
+.unclickable{
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+.clickable{
+    pointer-events: all;
+    opacity: 1;
 }
 
 

@@ -6,14 +6,29 @@
         <input type="checkbox" id="graphcheck" name="graphcheck" v-model="isGraphOn">
         <label id="menuLabel" for="tablecheck">Add table</label>
         <input type="checkbox" id="tablecheck" name="tablecheck" v-model="isTableOn">
-        <label id="menuLabel" for="stopwatchcheck">Add stopwatch</label><br>
+        <label id="menuLabel" for="stopwatchcheck">Add stopwatch</label>
         <input type="checkbox" id="stopwatchcheck" name="stopwatchcheck" v-model="isStopwatchOn">
-        <label id="menuLabel" for="workspacecheck">Add workspace</label><br>
+        <label id="menuLabel" for="workspacecheck">Add workspace</label>
         <input type="checkbox" id="workspacecheck" name="workspacecheck" v-model="isWorkspaceOn">
+        <label id="menuLabel" for="autocommandcheck">Add AutoCommands</label>
+        <input type="checkbox" id="autocommandcheck" name="autocommandcheck" v-model="isAutoCommandOn">
+        
+        <label id="menuLabel"><popup-menu id="help" active_height='40px' active_width='40px'>
+          Hotkeys:<br>
+          Press s to start pendulum<br>
+          Press f to enter free mode<br>
+          Press b to brake.<br>
+          On workspace hold r and drag object to rotate.<br>
+          On workspace press w to allow objects to be interactable.<br>
+          </popup-menu>
+          
+          Help</label>
+        
       </div>
 
-
+<!-- UPPER ROW -->
   <div class="row">
+    <!-- LEFT HAND COLUMN -->
     <div class="col-6">
 
       <webcam-stream />
@@ -21,14 +36,19 @@
 
     </div>
     
+    <!-- RIGHT HAND COLUMN -->
     <div class="col-6">
-      <div v-if="isStopwatchOn">
-            <stopwatch />
+      <div class="row">
+        <data-recorder />
+          <div v-if="isStopwatchOn">
+                <stopwatch />
+          </div>
       </div>
+
     <div v-if="isGraphOn">
         <graph-output type="graph" id="0" />
       </div>
-      <data-recorder />
+      
     </div>
 
 </div>
@@ -37,11 +57,14 @@
       <workspace />
     </div>
 
+<!-- LOWER ROW -->
+<!-- LEFT HAND COLUMN -->
       <div class="row">
         <div class="col-6" v-if="isTableOn">
             <table-output />
         </div>
-        <div class="col-6">
+        <!-- RIGHT HAND COLUMN -->
+        <div class="col-6" v-if="isAutoCommandOn">
             <auto-command />
         </div>
 
@@ -61,6 +84,7 @@ import WebcamStream from "./components/WebcamStream.vue";
 import ControlPanel from "./components/ControlPanel.vue";
 import DataRecorder from "./components/DataRecorder.vue";
 import AutoCommand from "./components/AutoCommand.vue";
+import PopupMenu from "./components/PopupMenu.vue";
 
 export default {
   name: 'App',
@@ -74,6 +98,7 @@ export default {
     ControlPanel,
     DataRecorder,
     AutoCommand,
+    PopupMenu,
   },
   methods:{
     
@@ -84,6 +109,7 @@ export default {
       isGraphOn: false,
       isStopwatchOn: false,
       isWorkspaceOn: false,
+      isAutoCommandOn: false,
     }
   }
 }
@@ -139,5 +165,7 @@ input[type=checkbox] {
   position: left;
   cursor: pointer;
 }
+
+
 
 </style>

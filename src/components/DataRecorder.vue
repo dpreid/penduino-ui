@@ -1,17 +1,15 @@
 <template>
-    <div class="container">
-        <div class="row mb-5 justify-content-center">
-            <button v-if="!isRecording" id="recordButton" @click="record">Record</button>
-            <button v-if="isRecording" id="stopButton" @click="stopRecording">Stop</button>
-            <button v-if="hasPlotted" id="clearButton" @click="clearGraph">Reset</button>
-            <label for="time_interval">Every</label>
-            <input id="time_interval" v-model="time_interval" size="3"> 
-            <label for="time_interval">s</label>
+    <div class="p-3">
+    <!-- <div class="row mb-5"> -->
+        <button v-if="!isRecording" id="recordButton" @click="record">Record</button>
+        <button v-if="isRecording" id="stopButton" @click="stopRecording">Stop</button>
+        <button v-if="hasPlotted" id="clearButton" @click="clearGraph">Reset</button>
+        <label for="time_interval">Every</label>
+        <input id="time_interval" v-model="time_interval" size="3"> 
+        <label for="time_interval">s</label>
 
-        </div>
-        <div class="row mb-5 justify-content-center">
-            <button v-if="hasData" id="outputButton" @click="outputToCSV">Download CSV</button>
-        </div>
+        <button v-if="hasData" id="outputButton" @click="outputToCSV">Download CSV</button>
+    <!-- </div> -->
   
   </div>
 </template>
