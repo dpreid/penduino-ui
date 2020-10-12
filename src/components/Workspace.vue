@@ -3,14 +3,14 @@
     <canvas :class="workspace_canvas_clickable ? 'clickable' : 'unclickable'" id="workspace" @mousedown="checkClick" @mousemove="moveClicked" @mouseup="mouseUnclick"></canvas>
     <img id="protractor" src="../../public/images/protractor.png" hidden>
     <img id="ruler" src="../../public/images/ruler.png" hidden>
-    <img id="caliper" src="../../public/images/caliper.png" hidden>
+    <!-- <img id="caliper" src="../../public/images/caliper.png" hidden> -->
 </div>
 </template>
 
 <script>
 //import * as pendulum from "../pendulum";
-import { eventBus } from "../main";
-import { store } from "../store.js";
+// import { eventBus } from "../main";
+// import { store } from "../store.js";
 
 var canvas;
 var ctx;
@@ -25,9 +25,11 @@ var ctx;
 
 let protractor = new Image();
 let ruler = new Image();
-let caliper = new Image();
+// let caliper = new Image();
 
 let shapes = [];        //the added objects to canvas
+
+
 
 export default {
     name: "Workspace",
@@ -38,7 +40,7 @@ export default {
             selected_offset_x: 0,
             selected_offset_y: 0,
             rotateMode: false,
-            isCaliperActive: false,
+            // isCaliperActive: false,
             workspace_canvas_clickable: true,
         }
     },
@@ -119,15 +121,15 @@ export default {
             };
             ruler.src = document.getElementById("ruler").src;
 
-            caliper.onload = function() {
-                let x = 100;
-                let y= 400;
-                let w=100;
-                let h=100;
-                ctx.drawImage(caliper, x, y, w, h);
-                shapes.push( {x:x, y:y, width:w, height:h, image:caliper, angle:0} );
-            };
-            caliper.src = document.getElementById("caliper").src;
+            // caliper.onload = function() {
+            //     let x = 100;
+            //     let y= 400;
+            //     let w=100;
+            //     let h=100;
+            //     ctx.drawImage(caliper, x, y, w, h);
+            //     shapes.push( {x:x, y:y, width:w, height:h, image:caliper, angle:0} );
+            // };
+            // caliper.src = document.getElementById("caliper").src;
             
         },
         updateMode(event){
@@ -137,10 +139,10 @@ export default {
                 if(event.key == "r"){
                     this.rotateMode = !this.rotateMode;
                 } 
-                else if(event.key == "c")
-                {
-                    this.isCaliperActive = !this.isCaliperActive;
-                } 
+                // else if(event.key == "c")
+                // {
+                //     this.isCaliperActive = !this.isCaliperActive;
+                // } 
                 else if(event.key == "w" && event.type == 'keydown'){
                     console.log(event);
                     this.workspace_canvas_clickable = !this.workspace_canvas_clickable;
@@ -153,24 +155,81 @@ export default {
         checkClick(event){
             //console.log(event);
             for(let i=0; i<shapes.length;i++){
-                if(event.offsetX >= shapes[i].x && event.offsetX <= shapes[i].x + shapes[i].width){
-                    if(event.offsetY >= shapes[i].y && event.offsetY <= shapes[i].y + shapes[i].height){
-                        this.isSelected = true;
-                        this.selected_index = i;
-                        this.selected_offset_x = event.offsetX - shapes[i].x;
-                        this.selected_offset_y = event.offsetY - shapes[i].y;
-                    }
-                
-            }
-            }
 
-            if(shapes[this.selected_index].image == caliper){
-                if(this.isCaliperActive){
-                    this.outputData();
+                let origin = [0,0];
+                let centre = [shapes[i].x + shapes[i].width/2, shapes[i].y + shapes[i].height/2];
+
+                //click position relative to the centre of the shape.
+                let clickPos = [event.offsetX - centre[0], event.offsetY - centre[1]];
+                //let clickPos = [event.offsetX, event.offsetY];
+
+                //from the centre of the shape
+                let vertices = [];
+                let vertex1 = [shapes[i].x - centre[0], shapes[i].y - centre[1]];
+                let vertex2 = [shapes[i].x + shapes[i].width - centre[0], shapes[i].y - centre[1]];
+                let vertex3 = [shapes[i].x + shapes[i].width - centre[0], shapes[i].y + shapes[i].height - centre[1]];
+                let vertex4 = [shapes[i].x - centre[0], shapes[i].y + shapes[i].height - centre[1]];
+                vertices.push(vertex1);
+                vertices.push(vertex2);
+                vertices.push(vertex3);
+                vertices.push(vertex4);
+
+                let angle = shapes[i].angle;
+
+                //rotate the vertices around the centre of the shape
+                for(let i=0;i<4;i++){
+                    let x_prev = vertices[i][0];
+                    let y_prev = vertices[i][1];
+
+                    vertices[i][0] = x_prev*Math.cos(angle) - y_prev*Math.sin(angle);
+                    vertices[i][1] = x_prev*Math.sin(angle) + y_prev*Math.cos(angle);
                 }
                 
+                if(!this.doIntersect(origin,clickPos,vertices[0], vertices[1]) && !this.doIntersect(origin,clickPos,vertices[1], vertices[2]) && !this.doIntersect(origin,clickPos,vertices[2], vertices[3]) && !this.doIntersect(origin,clickPos,vertices[3], vertices[0])){
+                    this.isSelected = true;
+                    this.selected_index = i;
+                    this.selected_offset_x = event.offsetX - shapes[i].x;
+                    this.selected_offset_y = event.offsetY - shapes[i].y;
+                }
+
             }
+
+            // if(shapes[this.selected_index].image == caliper){
+            //     if(this.isCaliperActive){
+            //         this.outputData();
+            //     }
+                
+            // }
             
+        },
+        // To find orientation of ordered triplet (p, q, r). 
+        // The function returns following values 
+        // 0 --> p, q and r are colinear 
+        // 1 --> Clockwise 
+        // 2 --> Counterclockwise 
+        checkOrientation(q, p, r){
+            // See https://www.geeksforgeeks.org/orientation-3-ordered-points/ 
+                // for details of below formula. 
+                let val = (q[1] - p[1]) * (r[0] - q[0]) - 
+                        (q[0] - p[0]) * (r[1] - q[1]); 
+            
+                if (val == 0) return 0;  // colinear 
+            
+                return (val > 0) ? 1: 2; // clock or counterclock wise 
+        },
+        doIntersect(p1,q1,p2,q2){
+            let o1 = this.checkOrientation(p1, q1, p2); 
+            let o2 = this.checkOrientation(p1, q1, q2); 
+            let o3 = this.checkOrientation(p2, q2, p1); 
+            let o4 = this.checkOrientation(p2, q2, q1); 
+  
+            // General case 
+            if (o1 != o2 && o3 != o4) {
+                return true;
+            } else{
+                return false;
+            }
+                 
         },
         moveClicked(event){
             if(this.isSelected){
@@ -197,15 +256,15 @@ export default {
             this.isSelected = false;
             this.selected_index = null;
         },
-        outputData(){
-                console.log("output data");
-                let angle = store.state.current_angle;
-                let time = store.getTime();
-                console.log(time);
-                let data_object = {id: store.state.data.length, t: parseFloat(time), theta: parseFloat(angle)};
-                store.addData(data_object);
-                eventBus.$emit('updateGraph');
-            },
+        // outputData(){
+        //         console.log("output data");
+        //         let angle = store.state.current_angle;
+        //         let time = store.getTime();
+        //         console.log(time);
+        //         let data_object = {id: store.state.data.length, t: parseFloat(time), theta: parseFloat(angle)};
+        //         store.addData(data_object);
+        //         eventBus.$emit('updateGraph');
+        //     },
     }
 }
 

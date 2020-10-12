@@ -7,8 +7,8 @@
         <tr>
             <!-- <th scope="col">ID</th> -->
             <th scope="col">Time/s</th>
-            <th scope="col">Theta</th>
-            
+            <th scope="col">Angle/deg</th>
+            <th scope="col">Angular Velocity/deg/s</th>
         </tr>
         <tr v-for="row in tableData" :id="row.id" :key="row.id" v-bind:class="[row.id == selected_row_id ? 'selected-row' : '']" @click="changeSelected(row.id)">
             <!-- <td>{{row.id}}</td> -->
