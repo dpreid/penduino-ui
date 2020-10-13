@@ -61,27 +61,31 @@ export default {
           let ang_vel = store.calculateAngularVelocity();
           
           let index = store.getNumData() - 1;
+          //should the ang_vel calculated this loop be placed in the previous data point? Or this one?!!!!!!!!!!!!!!!
           if(index >= 0){
+              console.log("index = " + index);
+              console.log("ang vel = " + ang_vel);
               store.state.data[index].omega = ang_vel;  //update previous ang_vel
           }
           
           let data_object = {id: store.state.data.length, t: parseFloat(time), theta: parseFloat(angle), omega: NaN};   //omega will be updated in next cycle
           store.addData(data_object);
           eventBus.$emit('updateGraph');
+          eventBus.$emit('updatetable');
           this.hasPlotted = true;
           
 
       },
-      addToGraph(){
-          eventBus.$emit('updateGraph');
-      },
+    //   addToGraph(){
+    //       eventBus.$emit('updateGraph');
+    //   },
       clearGraph(){
           store.clearAllData();
           eventBus.$emit('clearalldata');
           this.hasPlotted = false;
       },
       outputToCSV(){
-          let csv = 'Time/s,Angle/deg,AngVel/deg/s\n';
+          let csv = 'Time/s,Angle/rad,AngVel/rad/s\n';
           let data = store.state.data;
           data.forEach(function(d){
               csv += d.t.toString();

@@ -233,11 +233,11 @@ export default {
 				enc = Math.atan2(Math.sin(obj.enc / (encoderPPR/2) * Math.PI), Math.cos(obj.enc / (encoderPPR/2) * Math.PI)) / Math.PI * 180
 				enc = Math.min(135, enc)
 				enc = Math.max(-135, enc)
-				store.state.current_angle = enc;		//for output graph
+				store.state.current_angle = enc * Math.PI / 180;		//for output graph, convert to radians
 				}
 				else{ //convert to degrees only
 					enc = enc * 360.0 / encoderPPR;
-					store.state.current_angle = enc;		//for output graph
+					store.state.current_angle = enc * Math.PI / 180;		//for data storage, convert to radians
 				}
 
 				thisTime = msgTime + delay

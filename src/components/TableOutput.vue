@@ -7,8 +7,8 @@
         <tr>
             <!-- <th scope="col">ID</th> -->
             <th scope="col">Time/s</th>
-            <th scope="col">Angle/deg</th>
-            <th scope="col">Angular Velocity/deg/s</th>
+            <th scope="col">Angle/rad</th>
+            <th scope="col">Angular Velocity/rad/s</th>
         </tr>
         <tr v-for="row in tableData" :id="row.id" :key="row.id" v-bind:class="[row.id == selected_row_id ? 'selected-row' : '']" @click="changeSelected(row.id)">
             <!-- <td>{{row.id}}</td> -->
@@ -38,9 +38,9 @@ export default {
         }
     },
     methods: {
-        addData(data){
-            this.tableData = data;
-            this.searchData = data;
+        addData(){
+            this.tableData = store.state.data;
+            //this.searchData = data;
         },
         search(){
             if(this.search_field == ""){
@@ -78,7 +78,7 @@ export default {
         
       },
       created(){
-            // eventBus.$on('addnewmappoints', this.addData)
+          eventBus.$on('updatetable', this.addData);
             eventBus.$on('newselectedobject', this.changeSelected)
       }
 }

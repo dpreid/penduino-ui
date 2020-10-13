@@ -219,7 +219,7 @@ export default {
             this.chart.update();
         },
         getData(){
-                
+                console.log("getting ALL DATA");
                 this.clearData();
                 
                 for(let i=0; i<store.state.data.length;i++){
@@ -239,7 +239,7 @@ export default {
                 
             },
             getLatestData(){
-                
+                console.log("getting LATEST DATA");
                 let index = store.getNumData() - 1;
                 let y_data;
                 if(index >= 0){
@@ -249,7 +249,11 @@ export default {
                                 y_data = store.state.data[index].theta;
                                 break;
                             case 'omega':
-                                y_data = store.state.data[index].omega;
+                                //data for omega is calculated after the next timestep, so latest is 1 index position behind
+                                if(index > 0){
+                                    y_data = store.state.data[index - 1].omega;
+                                }
+                                break;
 
                         }
                         this.addDataToChart({x: x_data, y: y_data});
