@@ -1,5 +1,5 @@
 <template>
-<div class="container-fluid">
+<div class='container-sm m-2 bg-white border rounded'>
     <div class="row mb-5 justify-content-center" id="chart-canvas">
         <div class="col">
             <canvas :id="id" @mousedown="startLine" @mouseup="endDrag" @mousemove="endLine"></canvas>

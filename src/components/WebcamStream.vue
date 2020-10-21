@@ -1,5 +1,5 @@
 <template>
-<div id="video">
+<div class='m-2 bg-white border rounded' id="video">
     <canvas id="video-canvas"></canvas>
 	
 </div>

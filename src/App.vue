@@ -1,7 +1,8 @@
 <template>
   <div id="app">
-     <div class="container-fluid" >
-      <div class="row" id="optionsMenu">
+     <div class='container-fluid-sm m-0' >
+       <navigation-bar />
+      <!-- <div class="row" id="optionsMenu">
         <label id="menuLabel" for="graphcheck">Add graph</label>
         <input type="checkbox" id="graphcheck" name="graphcheck" v-model="isGraphOn">
         <label id="menuLabel" for="tablecheck">Add table</label>
@@ -24,31 +25,34 @@
           
           Help</label>
         
-      </div>
+      </div> -->
 
-<!-- UPPER ROW -->
   <div class="row">
     <!-- LEFT HAND COLUMN -->
     <div class="col-6">
-
       <webcam-stream />
       <control-panel />
+
+      <div v-if="isTableOn">
+            <table-output />
+        </div>
 
     </div>
     
     <!-- RIGHT HAND COLUMN -->
     <div class="col-6">
-      <div class="row">
-        <data-recorder />
+      <div class='row'>
+      <data-recorder />
           <div v-if="isStopwatchOn">
                 <stopwatch />
           </div>
       </div>
-
     <div v-if="isGraphOn">
         <graph-output type="graph" id="0" />
       </div>
-      
+      <div v-if="isAutoCommandOn">
+            <auto-command />
+        </div>
     </div>
 
 </div>
@@ -60,13 +64,8 @@
 <!-- LOWER ROW -->
 <!-- LEFT HAND COLUMN -->
       <div class="row">
-        <div class="col-6" v-if="isTableOn">
-            <table-output />
-        </div>
         <!-- RIGHT HAND COLUMN -->
-        <div class="col-6" v-if="isAutoCommandOn">
-            <auto-command />
-        </div>
+        
 
       </div>
     </div>
@@ -84,7 +83,9 @@ import WebcamStream from "./components/WebcamStream.vue";
 import ControlPanel from "./components/ControlPanel.vue";
 import DataRecorder from "./components/DataRecorder.vue";
 import AutoCommand from "./components/AutoCommand.vue";
-import PopupMenu from "./components/PopupMenu.vue";
+import NavigationBar from "./components/NavigationBar.vue";
+//import PopupMenu from "./components/PopupMenu.vue";
+import { eventBus } from "./main.js";
 
 export default {
   name: 'App',
@@ -98,10 +99,16 @@ export default {
     ControlPanel,
     DataRecorder,
     AutoCommand,
-    PopupMenu,
+    NavigationBar,
+    //PopupMenu,
   },
-  methods:{
-    
+  mounted(){
+    eventBus.$on('togglegraph', this.toggleGraph);
+    eventBus.$on('toggleworkspace', this.toggleWorkspace);
+    eventBus.$on('toggletable', this.toggleTable);
+    eventBus.$on('togglestopwatch', this.toggleStopwatch);
+    eventBus.$on('toggleautocommands', this.toggleAutoCommands);
+    eventBus.$on('clearworkspace', this.clearWorkspace);
   },
   data() {
     return {
@@ -111,7 +118,27 @@ export default {
       isWorkspaceOn: false,
       isAutoCommandOn: false,
     }
-  }
+  },
+  methods:{
+    toggleGraph(){
+      this.isGraphOn = !this.isGraphOn;
+    },
+    toggleWorkspace(){
+      this.isWorkspaceOn = !this.isWorkspaceOn;
+    },
+    toggleTable(){
+      this.isTableOn = !this.isTableOn;
+    },
+    toggleStopwatch(){
+      this.isStopwatchOn = !this.isStopwatchOn;
+    },
+    toggleAutoCommands(){
+      this.isAutoCommandOn = !this.isAutoCommandOn;
+    },
+    clearWorkspace(){
+      this.isWorkspaceOn = false;
+    }
+  },
 }
 </script>
 
@@ -124,6 +151,7 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 0px;
+  background-color: rgba(161, 161, 161, 0.39);
 }
 
 html, body {
@@ -166,6 +194,8 @@ input[type=checkbox] {
   cursor: pointer;
 }
 
-
+.border{
+  box-shadow: 0 1px 20px 0 rgba(0, 0, 0, 0.637);
+}
 
 </style>

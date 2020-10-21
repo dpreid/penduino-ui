@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class='m-2 p-3 align-items-center align-content-center bg-white border rounded'>
         <div class="row pt-1 pb-1">
             <input id="stopwatch" :value="time_string" readonly size=8>
         </div>

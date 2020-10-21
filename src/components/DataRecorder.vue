@@ -1,5 +1,5 @@
 <template>
-    <div class="p-3">
+    <div class='p-3 m-2 bg-white border rounded'>
     <!-- <div class="row mb-5"> -->
         <button v-if="!isRecording" id="recordButton" @click="record">Record</button>
         <button v-if="isRecording" id="stopButton" @click="stopRecording">Stop</button>
