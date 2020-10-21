@@ -20,6 +20,13 @@
             <b-dropdown-item @click='toggleComponent("autocommands")'>Autocommands</b-dropdown-item>
             <b-dropdown-item @click='toggleComponent("table")'>Table</b-dropdown-item>
         </b-nav-item-dropdown>
+
+        <b-nav-text v-b-tooltip.hover="{delay: {'show':0, 'hide':0}}" title="Hotkeys:
+          Press s to start pendulum.
+          Press f to enter free mode.
+          Press b to brake.
+          On workspace hold r and drag object to rotate.
+          On workspace press w to allow UI buttons to be interactable.">Help</b-nav-text>
       </b-navbar-nav>
 
       <!-- Right aligned nav items -->
