@@ -5,17 +5,17 @@
 	</div>
 	<div id="buttons">
 		<article>
-			<button id="start" class="button" @click="start"><tooltip id="tooltip0" :active_height="tooltip_height" :active_width="tooltip_width">Start the pendulum</tooltip>Start</button>
-			<button id="brake" class="button" @click="brake"><tooltip id="tooltip0" :active_height="tooltip_height" :active_width="tooltip_width">Slow the pendulum</tooltip>Brake</button>
-			<button id="load" class="button" @click="load"><tooltip id="tooltip0" :active_height="tooltip_height" :active_width="tooltip_width">Stop the pendulum quickly</tooltip>Load</button>
-			<button id="free" class="button" @click="free"><tooltip id="tooltip0" :active_height="tooltip_height" :active_width="tooltip_width">Remove the EM driver</tooltip>Free</button>
-			<button id="cal" class="button" @click="calibrate"><tooltip id="tooltip0" :active_height="tooltip_height" :active_width="tooltip_width">Recalibrate</tooltip>Cal</button>
+			<button id="start" class="btn btn-default btn-lg" @click="start"><tooltip id="tooltip0" :active_height="tooltip_height" :active_width="tooltip_width">Start the pendulum</tooltip>Start</button>
+			<button id="brake" class="btn btn-default btn-lg" @click="brake"><tooltip id="tooltip0" :active_height="tooltip_height" :active_width="tooltip_width">Slow the pendulum</tooltip>Brake</button>
+			<button id="load" class="btn btn-default btn-lg" @click="load"><tooltip id="tooltip0" :active_height="tooltip_height" :active_width="tooltip_width">Stop the pendulum quickly</tooltip>Load</button>
+			<button id="free" class="btn btn-default btn-lg" @click="free"><tooltip id="tooltip0" :active_height="tooltip_height" :active_width="tooltip_width">Remove the EM driver</tooltip>Free</button>
+			<button id="cal" class="btn btn-default btn-lg" @click="calibrate"><tooltip id="tooltip0" :active_height="tooltip_height" :active_width="tooltip_width">Recalibrate</tooltip>Cal</button>
 		</article>
 	</div>
 
 <article>
 
-<h2> Settings </h2>
+<h2 class='m-2'> Settings </h2>
 
 
 <div class="row">
@@ -85,24 +85,24 @@
 </template>
 
 <script>
-//import * as pendulum from "../pendulum";
+
 import { store } from "../store.js";
 import { eventBus } from "../main";
-//import ReconnectingWebSocket from '../../public/js/reconnecting-websocket.min.js';
-import ReconnectingWebSocket from 'reconnecting-websocket';
-//import { SmoothieChart } from '../../public/js/smoothie.js';
-//import { TimeSeries } from '../../public/js/smoothie.js';
+
 import { SmoothieChart } from 'smoothie';
 import { TimeSeries } from 'smoothie';
-
+//import ReconnectingWebSocket from 'reconnecting-websocket';
 import Tooltip from "./Tooltip.vue";
-//import PopupMenu from "./PopupMenu.vue";
+
 
 export default {
 	name: "ControlPanel",
 	components:{
 		Tooltip,
-		//PopupMenu,
+		
+	},
+	props:{
+		url: String,
 	},
     data(){
         return{
@@ -135,137 +135,22 @@ export default {
 		eventBus.$on('updatebrakecommand', this.updateBrakeParam);
 		eventBus.$on('loadcommand', this.load);
 	},
-        
-    mounted(){
-        //dataUrl =  scheme + host + ':' + port + '/' + data;
-		let dataUrl = 'wss://video.practable.io:443/bi/dpr/pendulum0';
-
-		//console.log(dataUrl)
-
-		var wsOptions = {
-			automaticOpen: true,
-			reconnectDecay: 1.5,
-			reconnectInterval: 500,
-			maxReconnectInterval: 10000,
-		}
-
-		this.dataSocket = new ReconnectingWebSocket(dataUrl, null,wsOptions);
-		//console.log(this.dataSocket);
-
-		let dataOpen = false;
-		var delay = 0
-		var messageCount = 0
-		let a;
-		let b;
-		let debug = false;
-		let wrapEncoder = true;
-
-		var initialSamplingCount = 1200 // 2 mins at 10Hz
-		var delayWeightingFactor = 60  // 1 minute drift in 1 hour
-		let encoderPPR = 2400
-
-		let responsiveSmoothie = true;
-		let thisTime;
-
-		var chart = new SmoothieChart({responsive: responsiveSmoothie, millisPerPixel:10,grid:{fillStyle:'#ffffff'}, interpolation:"linear",maxValue:135,minValue:-135,labels:{fillStyle:'#0024ff',precision:0}}); //interpolation:'linear
-		this.canvas = document.getElementById("smoothie-chart");
-		let series = new TimeSeries();
-		console.log("created");
-		chart.addTimeSeries(series, {lineWidth:2,strokeStyle:'#0024ff'});
-		chart.streamTo(this.canvas, 0);
-
-		this.dataSocket.onopen = function (event) {
-			console.log("dataSocket open" + event);
-			dataOpen = true; 
-			console.log(dataOpen);
-
-			this.dataSocket.send(JSON.stringify({
-				cmd: "drive",
-				param: this.driveParam
-			}));
-			this.dataSocket.send(JSON.stringify({
-				cmd: "brake",
-				param: this.brakeParam
-			}));
-			
-			this.dataSocket.send(JSON.stringify({
-				cmd: "interval",
-				param: this.dataParam
-			}));
-
-		};
-
-		this.dataSocket.onmessage = function (event) {
-			
-			try {
-				var obj = JSON.parse(event.data);
-				var msgTime = obj.time
-				var thisDelay = new Date().getTime() - msgTime
-
-				// if (testNaN){
-				// console.log("appending NaNs")
-				// series.append(msgTime + delay, NaN)
-				// series.append(NaN, 0)
-				// series.append(NaN, NaN)
-				// }
-
-				var enc = obj.enc
-
-				if (messageCount == 0){
-					delay = thisDelay
-				}
-
-				
-				a = 1 / delayWeightingFactor
-				b = 1 - a
-
-				
-				if (messageCount < initialSamplingCount) {
-					thisDelay = ((delay * messageCount) + thisDelay) / (messageCount + 1)
-				} else {
-					thisDelay = (delay * b) + (thisDelay * a)
-				}
-				
-				messageCount += 1
-
-				//https://stackoverflow.com/questions/4633177/c-how-to-wrap-a-float-to-the-interval-pi-pi
-				if (wrapEncoder){ //wrap and convert to degrees
-				enc = Math.atan2(Math.sin(obj.enc / (encoderPPR/2) * Math.PI), Math.cos(obj.enc / (encoderPPR/2) * Math.PI)) / Math.PI * 180
-				enc = Math.min(135, enc)
-				enc = Math.max(-135, enc)
-				store.state.current_angle = enc * Math.PI / 180;		//for output graph, convert to radians
-				}
-				else{ //convert to degrees only
-					enc = enc * 360.0 / encoderPPR;
-					store.state.current_angle = enc * Math.PI / 180;		//for data storage, convert to radians
-				}
-
-				thisTime = msgTime + delay
-				
-				if (!isNaN(thisTime) && !isNaN(enc)){
-					series.append(msgTime + delay, enc)
-					store.state.current_time = msgTime + delay;			//for output graph
-
-					if(debug) {
-						console.log(delay,thisDelay,msgTime, enc)
-					}
-				}
-				else {
-					if (debug) {
-						console.log("NaN so not logging to smoothie",delay,thisDelay,msgTime, enc)
-					}
-				} 
-
-			} catch (e) {
-				if (debug){
-					console.log(e)
-				}
-			}
-		}
-
-		store.state.start_time = new Date().getTime();
-		window.addEventListener('keydown', this.hotkey, false);
+    computed:{
+		getUrl(){
+            return this.$store.getters.getDataURL;
+		},
+	},
+	watch:{
+		getUrl(){
 		
+            this.connect();
+			console.log('connection complete');
+			
+		},
+	},
+    mounted(){
+		
+
 	},
 	methods:{
 		start(){
@@ -334,7 +219,7 @@ export default {
 			this.dataSocket.send(JSON.stringify({
 				cmd: "interval",
 				param: this.dataParam
-	}));
+			}));
 		},
 		hotkey(event){
 			if(event.key == "f"){
@@ -344,7 +229,148 @@ export default {
 			} else if(event.key == "l"){
 				this.load();
 			}
-		}
+		},
+		connect(){
+
+			//let dataUrl = this.url;
+			//dataUrl =  scheme + host + ':' + port + '/' + data;
+			//let dataUrl = 'wss://video.practable.io:443/bi/dpr/pendulum0';
+			//let dataUrl = 'wss://relay.practable.io/session/pend11-data?code=9b44157f-268b-4c9b-9701-8d6c05be62fb';
+			//console.log(dataUrl)
+
+			// var wsOptions = {
+			// 	automaticOpen: true,
+			// 	reconnectDecay: 1.5,
+			// 	reconnectInterval: 500,
+			// 	maxReconnectInterval: 10000,
+			// }
+
+			this.dataSocket = new WebSocket(this.url);
+			//this.dataSocket = new ReconnectingWebSocket(this.url);
+			//this.dataSocket = new ReconnectingWebSocket(dataUrl, null,wsOptions);
+			console.log(this.dataSocket);
+
+			//let dataOpen = false;
+			var delay = 0
+			var messageCount = 0
+			let a;
+			let b;
+			let debug = false;
+			let wrapEncoder = true;
+
+			var initialSamplingCount = 1200 // 2 mins at 10Hz
+			var delayWeightingFactor = 60  // 1 minute drift in 1 hour
+			let encoderPPR = 2400
+
+			let responsiveSmoothie = true;
+			let thisTime;
+
+			var chart = new SmoothieChart({responsive: responsiveSmoothie, millisPerPixel:10,grid:{fillStyle:'#ffffff'}, interpolation:"linear",maxValue:135,minValue:-135,labels:{fillStyle:'#0024ff',precision:0}}); //interpolation:'linear
+			this.canvas = document.getElementById("smoothie-chart");
+			let series = new TimeSeries();
+			chart.addTimeSeries(series, {lineWidth:2,strokeStyle:'#0024ff'});
+			chart.streamTo(this.canvas, 0);
+
+			this.dataSocket.onopen = (event) =>  {
+				//dataOpen = true; 
+
+				this.dataSocket.send(JSON.stringify({
+					cmd: "drive",
+					param: this.driveParam
+				}));
+				this.dataSocket.send(JSON.stringify({
+					cmd: "brake",
+					param: this.brakeParam
+				}));
+				
+				this.dataSocket.send(JSON.stringify({
+					cmd: "interval",
+					param: this.dataParam
+				}));
+				console.log('open event ' + event);
+				//resolve(console.log('opened ' + event));
+			};
+
+
+			this.dataSocket.onmessage = (event) =>  {
+				
+				try {
+					//console.log("messaged")
+					//console.log("event data = " + event.data);
+					var obj = JSON.parse(event.data);
+					//console.log("parsed data = " + obj);
+					var msgTime = obj.time
+					//console.log("time = " + msgTime);
+					var thisDelay = new Date().getTime() - msgTime
+
+					// if (testNaN){
+					// console.log("appending NaNs")
+					// series.append(msgTime + delay, NaN)
+					// series.append(NaN, 0)
+					// series.append(NaN, NaN)
+					// }
+
+					var enc = obj.enc
+
+					if (messageCount == 0){
+						delay = thisDelay
+					}
+
+					
+					a = 1 / delayWeightingFactor
+					b = 1 - a
+
+					
+					if (messageCount < initialSamplingCount) {
+						thisDelay = ((delay * messageCount) + thisDelay) / (messageCount + 1)
+					} else {
+						thisDelay = (delay * b) + (thisDelay * a)
+					}
+					
+					messageCount += 1
+
+					//https://stackoverflow.com/questions/4633177/c-how-to-wrap-a-float-to-the-interval-pi-pi
+					if (wrapEncoder){ //wrap and convert to degrees
+					enc = Math.atan2(Math.sin(obj.enc / (encoderPPR/2) * Math.PI), Math.cos(obj.enc / (encoderPPR/2) * Math.PI)) / Math.PI * 180
+					enc = Math.min(135, enc)
+					enc = Math.max(-135, enc)
+					store.state.current_angle = enc * Math.PI / 180;		//for output graph, convert to radians
+					}
+					else{ //convert to degrees only
+						enc = enc * 360.0 / encoderPPR;
+						store.state.current_angle = enc * Math.PI / 180;		//for data storage, convert to radians
+					}
+
+					thisTime = msgTime + delay
+					
+					if (!isNaN(thisTime) && !isNaN(enc)){
+						series.append(msgTime + delay, enc)
+						store.state.current_time = msgTime + delay;			//for output graph
+
+						if(debug) {
+							console.log(delay,thisDelay,msgTime, enc)
+						}
+					}
+					else {
+						if (debug) {
+							console.log("NaN so not logging to smoothie",delay,thisDelay,msgTime, enc)
+						}
+					} 
+
+				} catch (e) {
+					if (debug){
+						console.log(e)
+					}
+				}
+			}
+
+
+			store.state.start_time = new Date().getTime();
+			window.addEventListener('keydown', this.hotkey, false);
+		
+	
+		
+	},
 
 	},
 }
@@ -436,27 +462,6 @@ export default {
 	clear: both;
 }
 
-.button {
-	padding: 15px 25px;
-	font-size: 24px;
-	text-align: center;
-	cursor: pointer;
-	outline: none;
-	color: #fff;
-
-	border: none;
-	border-radius: 15px;
-	box-shadow: 0 9px #999;
-}
-
-/*	background-color: #4CAF50;
- .button:hover {background-color: #3e8e41}*/
-
-.button:active {
-	background-color: #3e8e41;
-	box-shadow: 0 5px #666;
-	transform: translateY(4px);
-}
 
 
 #start       {background-color: #4CAF50FF;}

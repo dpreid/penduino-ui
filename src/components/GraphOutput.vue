@@ -20,13 +20,9 @@
             
         </div>
 
-        <div class="col">
-            <div class="row justify-content-center">
-                <label for="gradient">Gradient</label>
-            </div>
-            <div class="row justify-content-center">
-                <input id="gradient" :value="gradient" readonly size="3"> 
-            </div>
+        <div class='form-group col-3'>
+            <label class='m-2' for="gradient">Gradient:</label>
+            <input class='col-sm' id="gradient" :value="gradient" readonly> 
         </div>
         
         <div class="col">
@@ -45,8 +41,8 @@
                 <label for="func_b">x + </label>
                 <input id="func_b" v-model="func_b" size="3"> 
                 <div class="row justify-content-center">
-                    <button id="plotFunctionButton" @click="plotFunc(linear)">Plot</button>
-                    <button id="clearFunctionButton" @click="deleteFunctionDataset">Clear</button>
+                    <button class="btn btn-default btn-xs m-1" id="plotFunctionButton" @click="plotFunc(linear)">Plot</button>
+                    <button class="btn btn-default btn-xs m-1" id="clearFunctionButton" @click="deleteFunctionDataset">Clear</button>
                 </div>
             </div>
                 <div v-else-if="currentFunction === 'quadratic'">
@@ -55,8 +51,8 @@
                 <label for="func_b">x<sup>2</sup> + </label>
                 <input id="func_b" v-model="func_b" size="3"> 
                 <div class="row justify-content-center">
-                    <button id="plotFunctionButton" @click="plotFunc(quadratic)">Plot</button>
-                    <button id="clearFunctionButton" @click="deleteFunctionDataset">Clear</button>
+                    <button class="btn btn-default btn-xs m-1" id="plotFunctionButton" @click="plotFunc(quadratic)">Plot</button>
+                    <button class="btn btn-default btn-xs m-1" id="clearFunctionButton" @click="deleteFunctionDataset">Clear</button>
                 </div>
             </div>
             <div v-else-if="currentFunction === 'trigonometric'">
@@ -68,8 +64,8 @@
                 <input id="func_c" v-model="func_c" size="2"> 
                 <label> ) </label>
                 <div class="row justify-content-center">
-                    <button id="plotFunctionButton" @click="plotFunc(trigonometric)">Plot</button>
-                    <button id="clearFunctionButton" @click="deleteFunctionDataset">Clear</button>
+                    <button class="btn btn-default btn-xs m-1" id="plotFunctionButton" @click="plotFunc(trigonometric)">Plot</button>
+                    <button class="btn btn-default btn-xs m-1" id="clearFunctionButton" @click="deleteFunctionDataset">Clear</button>
                 </div>
             </div>
             <div v-else-if="currentFunction === 'exponential'">
@@ -79,8 +75,8 @@
                 <input id="func_b" v-model="func_b" size="3"> 
                 <label for="func_b"> t)</label>
                 <div class="row justify-content-center">
-                    <button id="plotFunctionButton" @click="plotFunc(exponential)">Plot</button>
-                    <button id="clearFunctionButton" @click="deleteFunctionDataset">Clear</button>
+                    <button class="btn btn-default btn-xs m-1" id="plotFunctionButton" @click="plotFunc(exponential)">Plot</button>
+                    <button class="btn btn-default btn-xs m-1" id="clearFunctionButton" @click="deleteFunctionDataset">Clear</button>
                 </div>
             </div>
         </div>
@@ -101,6 +97,7 @@ export default {
     props: ['type', 'id'],
     data(){
         return{
+            dataStore: store,
             chart: null,
             currentDataParameter: 'theta',
             chartData: [],
@@ -118,6 +115,7 @@ export default {
             YAxisMin: 0,
             XAxisMax: 0,
             XAxisMin: 0,
+            maxDataPoints: 1200,
 
         }
     },
@@ -405,15 +403,19 @@ export default {
 
       },
       computed:{
-            getClass(){
-                if(this.total_num_charts == 1){
-                    return {"col-12": true, "col-6": false, "col-4": false}
-                } else if(this.total_num_charts==2){
-                    return {"col-12": false, "col-6": true, "col-4": false};
-                } else {
-                    return {"col-12": false, "col-6": false, "col-4": true};
-                }
+            newData(){
+                return this.dataStore.state.data;
             },
+      },
+      watch:{
+          newData(){
+            if(store.getNumData() <= this.maxDataPoints){
+                this.getLatestData();
+            } else{
+                eventBus.$emit('maxdatapointsreached');
+            }
+            
+        }
       },
       mounted() {
         this.createChart();
@@ -421,7 +423,7 @@ export default {
       },
       created(){
         //eventBus.$on('updateGraph', this.getData );
-        eventBus.$on('updateGraph', this.getLatestData );
+        //eventBus.$on('updateGraph', this.getLatestData );
         eventBus.$on('newgraphadded', this.chartAdded);
         eventBus.$on('clearalldata', this.clearData )
         
@@ -433,28 +435,6 @@ export default {
 
 
 <style scoped>
-button {
-	padding: 10px, 10px;
-	font-size: 24px;
-	text-align: center;
-	cursor: pointer;
-	outline: none;
-	color: rgb(255, 255, 255);
-
-	border: none;
-	border-radius: 15px;
-	box-shadow: 0 9px #999;
-}
-
-/*	background-color: #4CAF50;
- .button:hover {background-color: #3e8e41}*/
-
-button:active {
-	background-color: #3e8e41;
-	box-shadow: 0 5px #666;
-	transform: translateY(4px);
-}
-
 
 #plotFunctionButton       {background-color: #4CAF50FF;}
 #plotFunctionButton:hover {background-color: #3e8e41} 

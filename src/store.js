@@ -39,7 +39,6 @@ export const store = {
         this.state.data.splice(dataId, 1);
       },
       getTime(){
-         console.log("start time = " + this.state.start_time);
          return (this.state.current_time - this.state.start_time)/1000;    //in seconds
       },
       getMaxTime(){

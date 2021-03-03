@@ -15,19 +15,19 @@
       <b-navbar-nav>
         <b-nav-item-dropdown text="Menu" right>
             <b-dropdown-item @click='toggleComponent("graph")'>Graph</b-dropdown-item>
-            <b-dropdown-item @click='toggleComponent("workspace")'>Workspace</b-dropdown-item>
             <b-dropdown-item @click='toggleComponent("stopwatch")'>Stopwatch</b-dropdown-item>
             <b-dropdown-item @click='toggleComponent("autocommands")'>Autocommands</b-dropdown-item>
             <b-dropdown-item @click='toggleComponent("table")'>Table</b-dropdown-item>
         </b-nav-item-dropdown>
 
-        <b-nav-text v-b-tooltip.hover="{delay: {'show':0, 'hide':0}}" title="Hotkeys:
-          Press s to start pendulum.
-          Press f to enter free mode.
-          Press b to brake.
-          On workspace hold r and drag object to rotate.
-          On workspace press w to allow UI buttons to be interactable.">Help</b-nav-text>
+        <b-nav-item-dropdown text="Tools" right>
+              <b-dropdown-item @click='toggleComponent("workspace")'>Measuring Tools</b-dropdown-item>
+         </b-nav-item-dropdown>
+
+          <b-nav-item @click='clearWorkspace'>Clear Tools</b-nav-item>
       </b-navbar-nav>
+
+     
 
       <!-- Right aligned nav items -->
       <b-navbar-nav class="ml-auto">
@@ -35,7 +35,15 @@
           <b-form-input size="sm" class="mr-sm-2" placeholder="Search"></b-form-input>
           <b-button size="sm" class="my-2 my-sm-0" type="submit">Search</b-button>
         </b-nav-form> -->
-        <b-nav-item @click='clearWorkspace'>Clear Workspace</b-nav-item>
+        <b-nav-text class='mr-4' v-b-tooltip.hover="{delay: {'show':0, 'hide':0}}" title="Hotkeys:
+          Press s to start pendulum.
+          Press f to enter free mode.
+          Press b to brake.
+          On workspace hold r and drag object to rotate.
+          On workspace press w to allow UI buttons to be interactable.">Help</b-nav-text>
+
+
+       <b-nav-text><clock /></b-nav-text>
 
         <!-- <b-nav-item-dropdown right>
           <template #button-content>
@@ -53,7 +61,7 @@
 <script>
 //import { store } from "../store.js";
 import { eventBus } from "../main.js";
-
+import Clock from "./Clock.vue";
 export default {
 
   name: 'NavigationBar',
@@ -63,7 +71,7 @@ export default {
     }
   },
   components: {
-    
+    Clock,
   },
   computed:{
       

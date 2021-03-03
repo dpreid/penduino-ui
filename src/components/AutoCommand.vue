@@ -1,7 +1,7 @@
 <template>
-    <div class="container-fluid">
-        <div class="row justify-content-center">
-            <label for="addCommand">Command</label>
+    <div class="m-2 p-4 bg-white border rounded">
+        <div class="row justify-content-center mb-2">
+            <label class='m-1' for="addCommand">Command</label>
 
             <select name="addCommand" id="addCommand" v-model="command_to_add" @change="checkCommandParameter">
                 <option value="start">Start</option>
@@ -13,13 +13,13 @@
                 
             </select> 
 
-            <label for="command_parameter" v-if="command_to_add == 'updatedrive' || command_to_add == 'updatebrake'">Value</label>
+            <label class='m-1' for="command_parameter" v-if="command_to_add == 'updatedrive' || command_to_add == 'updatebrake'">Value</label>
             <input v-if="command_to_add == 'updatedrive' || command_to_add == 'updatebrake'" id="command_parameter" size="5" v-model="command_parameter">
-            <label for="time_interval">After</label>
+            <label class='m-1' for="time_interval">After</label>
             <input id="time_interval" size="5" v-model="time_to_add">
-            <label for="time_interval">seconds</label>
-            <button id="addButton" @click="addCommand">Add</button>
-            <button id="deleteButton" @click="deletePreviousCommand">Delete</button>
+            <label class='m-1' for="time_interval">seconds</label>
+            <button class="btn btn-default btn-xs mr-1" id="addButton" @click="addCommand">Add</button>
+            <button class="btn btn-default btn-xs" id="deleteButton" @click="deletePreviousCommand">Delete</button>
 
         </div>
 
@@ -30,9 +30,9 @@
         </div>
 
         <div class="row justify-content-center">
-            <button id="startCommands" @click="runCommands">Start</button>
-            <button id="stopCommands" @click="stopCommands">Stop</button>
-            <button id="clearCommands" @click="clearCommands">Clear</button>
+            <button v-if='commands.length > 0' class="btn btn-default btn-xs mr-1" id="startCommands" @click="runCommands">Start</button>
+            <button v-if='commands.length > 0' class="btn btn-default btn-xs mr-1" id="stopCommands" @click="stopCommands">Stop</button>
+            <button v-if='commands.length > 0' class="btn btn-default btn-xs" id="clearCommands" @click="clearCommands">Clear</button>
         </div>
 
 
@@ -115,34 +115,12 @@ export default {
 </script>
 
 <style scoped>
-.row{
+/* .row{
     border-style: solid;
-    border-width: medium;
+    border-width: thin;
     border-color: green;
-}
+} */
 
-
-button {
-	padding: 2px 2px;
-	font-size: 24px;
-	text-align: center;
-	cursor: pointer;
-	outline: none;
-	color: rgb(255, 255, 255);
-
-	border: none;
-	border-radius: 15px;
-	/* box-shadow: 0 9px #999; */
-}
-
-/*	background-color: #4CAF50;
- .button:hover {background-color: #3e8e41}*/
-
-button:active {
-	background-color: #3e8e41;
-	box-shadow: 0 5px #666;
-	transform: translateY(4px);
-}
 
 
 #addButton       {background-color: #4CAF50FF;}

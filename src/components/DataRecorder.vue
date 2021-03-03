@@ -1,15 +1,11 @@
 <template>
-    <div class='p-3 m-2 bg-white border rounded'>
-    <!-- <div class="row mb-5"> -->
-        <button v-if="!isRecording" id="recordButton" @click="record">Record</button>
-        <button v-if="isRecording" id="stopButton" @click="stopRecording">Stop</button>
-        <button v-if="hasPlotted" id="clearButton" @click="clearGraph">Reset</button>
-        <label for="time_interval">Every</label>
-        <input id="time_interval" v-model="time_interval" size="3"> 
-        <label for="time_interval">s</label>
-
-        <button v-if="hasData" id="outputButton" @click="outputToCSV">Download CSV</button>
-    <!-- </div> -->
+    <div class='m-2 p-2 bg-white border rounded'>
+       <div class="row justify-content-center align-items-center">
+        <button class="btn btn-default btn-xs m-1" v-if="!isRecording" id="recordButton" @click="record">Record</button>
+        <button class="btn btn-default btn-xs m-1" v-if="isRecording" id="stopButton" @click="stopRecording">Stop</button>
+        <button class="btn btn-default btn-xs m-1" id="clearButton" @click="clearGraph">Reset</button>
+        <button class="btn btn-default btn-xs m-1" v-if="hasData" id="outputButton" @click="outputToCSV">Download CSV</button>
+    </div>
   
   </div>
 </template>
@@ -34,6 +30,9 @@ export default {
   components: {
     
   },
+  created(){
+		eventBus.$on('maxdatapointsreached', this.stopRecording);
+	},
   computed:{
       hasData(){
           return this.store.getNumData() !== 0;
@@ -44,15 +43,14 @@ export default {
           store.state.start_time = new Date().getTime();
           this.data_points_count = 0;
           this.isRecording = true;
-          console.log("record");
           this.interval_id = setInterval(() => {
                 this.plot()
             }, parseFloat(this.time_interval)*1000);
       },
       stopRecording(){
           this.isRecording = false;
-          console.log("stop recording");
           clearInterval(this.interval_id);
+          eventBus.$emit('updatetable');
       },
       plot(){
           this.data_points_count++;
@@ -70,8 +68,8 @@ export default {
           
           let data_object = {id: store.state.data.length, t: parseFloat(time), theta: parseFloat(angle), omega: NaN};   //omega will be updated in next cycle
           store.addData(data_object);
-          eventBus.$emit('updateGraph');
-          eventBus.$emit('updatetable');
+          //eventBus.$emit('updateGraph');
+          //eventBus.$emit('updatetable');
           this.hasPlotted = true;
           
 
@@ -108,29 +106,6 @@ export default {
 </script>
 
 <style scoped>
-button {
-	padding: 15px 25px;
-	font-size: 24px;
-	text-align: center;
-	cursor: pointer;
-	outline: none;
-	color: rgb(255, 255, 255);
-
-	border: none;
-	border-radius: 15px;
-	box-shadow: 0 9px #999;
-}
-
-/*	background-color: #4CAF50;
- .button:hover {background-color: #3e8e41}*/
-
-button:active {
-	background-color: #3e8e41;
-	box-shadow: 0 5px #666;
-	transform: translateY(4px);
-}
-
-
 #recordButton       {background-color: #4CAF50FF;}
 #recordButton:hover {background-color: #3e8e41} 
 

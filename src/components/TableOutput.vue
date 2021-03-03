@@ -31,16 +31,16 @@ export default {
     name: 'TableOutput',
     data(){
         return{
-            tableData: store.state.data,
+            tableData: [], //store.state.data,
             searchData:[],
             search_field:"",
             selected_row_id: "0",
         }
     },
     methods: {
-        addData(){
-            this.tableData = store.state.data;
-            //this.searchData = data;
+        getData(){
+            //console.log('updating table');
+            this.tableData = [...store.state.data];
         },
         search(){
             if(this.search_field == ""){
@@ -74,12 +74,12 @@ export default {
             
       },
       mounted() {
-        
+        this.tableData = [...store.state.data];
         
       },
       created(){
-          eventBus.$on('updatetable', this.addData);
-            eventBus.$on('newselectedobject', this.changeSelected)
+          eventBus.$on('updatetable', this.getData);
+        eventBus.$on('newselectedobject', this.changeSelected)
       }
 }
 </script>

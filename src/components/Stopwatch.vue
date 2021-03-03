@@ -1,12 +1,12 @@
 <template>
-    <div class='m-2 p-3 align-items-center align-content-center bg-white border rounded'>
-        <div class="row pt-1 pb-1">
-            <input id="stopwatch" :value="time_string" readonly size=8>
+    <div class='m-2 p-2 bg-white border rounded'>
+        <div class="row-sm">
+            <div class='form-group col-12'><input type='text' class='form-control' id="stopwatch" :value="time_string" readonly></div>
         </div>
-        <div class="row mb-5">
-            <button v-if="!isTiming" id="start" @click="startTimer">Start</button>
-            <button v-if="isTiming" id="pause" @click="pauseTimer">Pause</button>
-            <button id="reset" @click="resetTimer">Reset</button>
+        <div class="row justify-content-center pb-2">
+            <button class="btn btn-default btn-xs" v-if="!isTiming" id="start" @click="startTimer">Start</button>
+            <button class="btn btn-default btn-xs" v-if="isTiming" id="pause" @click="pauseTimer">Pause</button>
+            <button class="btn btn-default btn-xs" id="reset" @click="resetTimer">Reset</button>
         </div>
     </div> 
 </template>
@@ -82,27 +82,6 @@ export default {
 </script>
 
 <style scoped>
-button {
-	padding: 15px 25px;
-	font-size: 24px;
-	text-align: center;
-	cursor: pointer;
-	outline: none;
-	color: rgb(255, 255, 255);
-
-	border: none;
-	border-radius: 15px;
-	box-shadow: 0 9px #999;
-}
-
-/*	background-color: #4CAF50;
- .button:hover {background-color: #3e8e41}*/
-
-button:active {
-	background-color: #3e8e41;
-	box-shadow: 0 5px #666;
-	transform: translateY(4px);
-}
 
 #stopwatch{
     font-size: 36px;
