@@ -3,7 +3,7 @@ module.exports = {
     // options...
     runtimeCompiler: true,
     publicPath: process.env.NODE_ENV === 'production'
-    ? '/RemoteLabs/pendvueino/'
+    ? '/ui/penduino-1.0/'
     : '/'
   }
   

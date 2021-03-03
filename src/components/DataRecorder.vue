@@ -36,7 +36,17 @@ export default {
   computed:{
       hasData(){
           return this.store.getNumData() !== 0;
-      }
+      },
+      newTime(){
+        return this.store.state.current_time;
+      },
+  },
+  watch:{
+      newTime(){
+      if(this.isRecording){
+        this.plot();
+      } 
+    },
   },
   methods: {
       record(){
