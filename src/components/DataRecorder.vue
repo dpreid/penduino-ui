@@ -53,13 +53,13 @@ export default {
           store.state.start_time = new Date().getTime();
           this.data_points_count = 0;
           this.isRecording = true;
-          this.interval_id = setInterval(() => {
-                this.plot()
-            }, parseFloat(this.time_interval)*1000);
+          // this.interval_id = setInterval(() => {
+          //       this.plot()
+          //   }, parseFloat(this.time_interval)*1000);
       },
       stopRecording(){
           this.isRecording = false;
-          clearInterval(this.interval_id);
+          //clearInterval(this.interval_id);
           eventBus.$emit('updatetable');
       },
       plot(){
