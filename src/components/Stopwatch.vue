@@ -84,8 +84,9 @@ export default {
 <style scoped>
 
 #stopwatch{
-    font-size: 36px;
-    text-align: left;
+    font-size: 1vw;
+    text-align: center;
+    width: 100%;
 }
 
 

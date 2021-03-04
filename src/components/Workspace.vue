@@ -42,7 +42,15 @@ export default {
             rotateMode: false,
             // isCaliperActive: false,
             workspace_canvas_clickable: true,
+            ruler_width: 1144.66,
+            ruler_height: 114.466,
+            ruler_video_width_ratio: 1.262,
+            ruler_ratio: 0.1,
+            video_canvas: null,
         }
+    },
+    created(){
+        this.video_canvas = document.getElementById("video-canvas");
     },
     mounted(){
         shapes = [];        //ensure when mounted again that the shapes are not redrawn
@@ -63,6 +71,9 @@ export default {
         //add a key press modifiers to the window
         window.addEventListener('keydown', this.updateMode, false);
         window.addEventListener('keyup', this.updateMode, false);
+        window.addEventListener('resize', () => {setTimeout(this.resizeRuler, 100)});
+
+        this.resizeRuler();
 
 
     },
@@ -76,6 +87,10 @@ export default {
                 ctx.save();
 
                 if(shapes[i].image != null){
+                    if(shapes[i].image == ruler){
+                        shapes[i].width = this.ruler_width;
+                        shapes[i].height = this.ruler_height;
+                    } 
                     ctx.translate(shapes[i].x,shapes[i].y);
                     ctx.translate(shapes[i].width/2, shapes[i].height/2)
                     ctx.rotate(shapes[i].angle);
@@ -111,11 +126,11 @@ export default {
             };
             protractor.src = document.getElementById("protractor").src;
 
-            ruler.onload = function() {
+            ruler.onload = () => {
                 let x = 100;
                 let y= 300;
-                let w=800;
-                let h=80;
+                let w = this.ruler_width;
+                let h = this.ruler_height;
                 ctx.drawImage(ruler, x, y, w, h);
                 shapes.push( {x:x, y:y, width:w, height:h, image:ruler, angle:0} );
             };
@@ -136,7 +151,7 @@ export default {
             if(event.repeat){
                 return;
             } else{
-                if(event.key == "r"){
+                if(event.key == "o"){
                     this.rotateMode = !this.rotateMode;
                 } 
                 // else if(event.key == "c")
@@ -144,7 +159,6 @@ export default {
                 //     this.isCaliperActive = !this.isCaliperActive;
                 // } 
                 else if(event.key == "w" && event.type == 'keydown'){
-                    console.log(event);
                     this.workspace_canvas_clickable = !this.workspace_canvas_clickable;
                 }
                 // console.log(event);
@@ -256,15 +270,13 @@ export default {
             this.isSelected = false;
             this.selected_index = null;
         },
-        // outputData(){
-        //         console.log("output data");
-        //         let angle = store.state.current_angle;
-        //         let time = store.getTime();
-        //         console.log(time);
-        //         let data_object = {id: store.state.data.length, t: parseFloat(time), theta: parseFloat(angle)};
-        //         store.addData(data_object);
-        //         eventBus.$emit('updateGraph');
-        //     },
+        resizeRuler(){
+            console.log('resizing');
+            this.ruler_width = this.video_canvas.clientWidth * this.ruler_video_width_ratio;
+            this.ruler_height = this.ruler_ratio*this.ruler_width;
+            this.draw();
+            
+        },
     }
 }
 

@@ -1,11 +1,10 @@
 <template>
-  <div id="app">
-     <div class='container-fluid-sm m-0' >
+  <div id="app" class='container-fluid-sm m-0'>
        <navigation-bar />
 
   <div class="row">
     <!-- LEFT HAND COLUMN -->
-    <div class="col-6">
+    <div class="col-sm-6">
       <streams />
 
       <div v-if="isTableOn">
@@ -17,8 +16,8 @@
     <!-- RIGHT HAND COLUMN -->
     <div class="col-sm-6">
      <div class='row'>
-            <div class='col-sm-5'><data-recorder /></div> 
-            <div class='col-sm-5' v-if='isStopwatchOn'><stopwatch /></div>
+            <div class='col-sm-6'><data-recorder /></div> 
+            <div class='col-sm-6' v-if='isStopwatchOn'><stopwatch /></div>
       </div>
     <div v-if="isGraphOn">
         <graph-output type="graph" id="0" />
@@ -35,7 +34,7 @@
     </div>
 
      
-    </div>
+   
   </div>
 </template>
 

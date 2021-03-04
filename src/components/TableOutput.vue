@@ -79,7 +79,8 @@ export default {
       },
       created(){
           eventBus.$on('updatetable', this.getData);
-        eventBus.$on('newselectedobject', this.changeSelected)
+        eventBus.$on('newselectedobject', this.changeSelected);
+        eventBus.$on('clearalldata', this.getData);
       }
 }
 </script>

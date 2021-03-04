@@ -5,11 +5,11 @@
 	</div>
 	<div id="buttons">
 		<article>
-			<button id="start" class="btn btn-default btn-lg" @click="start"><tooltip id="tooltip0" :active_height="tooltip_height" :active_width="tooltip_width">Start the pendulum</tooltip>Start</button>
-			<button id="brake" class="btn btn-default btn-lg" @click="brake"><tooltip id="tooltip0" :active_height="tooltip_height" :active_width="tooltip_width">Slow the pendulum</tooltip>Brake</button>
-			<button id="load" class="btn btn-default btn-lg" @click="load"><tooltip id="tooltip0" :active_height="tooltip_height" :active_width="tooltip_width">Stop the pendulum quickly</tooltip>Load</button>
-			<button id="free" class="btn btn-default btn-lg" @click="free"><tooltip id="tooltip0" :active_height="tooltip_height" :active_width="tooltip_width">Remove the EM driver</tooltip>Free</button>
-			<button id="cal" class="btn btn-default btn-lg" @click="calibrate"><tooltip id="tooltip0" :active_height="tooltip_height" :active_width="tooltip_width">Recalibrate</tooltip>Cal</button>
+			<button id="start" class="btn btn-default btn-lg" @click="start">Start</button>
+			<button id="brake" class="btn btn-default btn-lg" @click="brake">Brake</button>
+			<button id="load" class="btn btn-default btn-lg" @click="load">Load</button>
+			<button id="free" class="btn btn-default btn-lg" @click="free">Free</button>
+			<button id="cal" class="btn btn-default btn-lg" @click="calibrate">Cal</button>
 		</article>
 	</div>
 
@@ -92,13 +92,13 @@ import { eventBus } from "../main";
 import { SmoothieChart } from 'smoothie';
 import { TimeSeries } from 'smoothie';
 //import ReconnectingWebSocket from 'reconnecting-websocket';
-import Tooltip from "./Tooltip.vue";
+//import Tooltip from "./Tooltip.vue";
 
 
 export default {
 	name: "ControlPanel",
 	components:{
-		Tooltip,
+		//Tooltip,
 		
 	},
 	props:{
@@ -228,6 +228,8 @@ export default {
 				this.brake();
 			} else if(event.key == "l"){
 				this.load();
+			} else if(event.key == 's'){
+				this.start();
 			}
 		},
 		connect(){
@@ -251,8 +253,10 @@ export default {
 			console.log(this.dataSocket);
 
 			//let dataOpen = false;
-			var delay = 0
-			var messageCount = 0
+			var delay = 0;
+			let avgDelay = 0;
+			let delays = [];
+			var messageCount = 0;
 			let a;
 			let b;
 			let debug = false;
@@ -291,7 +295,7 @@ export default {
 				//resolve(console.log('opened ' + event));
 			};
 
-
+			
 			this.dataSocket.onmessage = (event) =>  {
 				
 				try {
@@ -299,9 +303,9 @@ export default {
 					//console.log("event data = " + event.data);
 					var obj = JSON.parse(event.data);
 					//console.log("parsed data = " + obj);
-					var msgTime = obj.time
+					var msgTime = obj.time;
 					//console.log("time = " + msgTime);
-					var thisDelay = new Date().getTime() - msgTime
+					var thisDelay = new Date().getTime() - msgTime;
 
 					// if (testNaN){
 					// console.log("appending NaNs")
@@ -310,12 +314,24 @@ export default {
 					// series.append(NaN, NaN)
 					// }
 
-					var enc = obj.enc
+					var enc = obj.enc;
 
 					if (messageCount == 0){
 						delay = thisDelay
+						delays[0] = thisDelay;
+					} else {
+						delays[messageCount%10] = thisDelay;
 					}
 
+					
+					
+			
+					avgDelay = 0;
+					for (let i=0; i<delays.length;i++){
+						avgDelay += delays[i];
+					}
+				
+					avgDelay /= delays.length;
 					
 					a = 1 / delayWeightingFactor
 					b = 1 - a
@@ -344,7 +360,7 @@ export default {
 					thisTime = msgTime + delay
 					
 					if (!isNaN(thisTime) && !isNaN(enc)){
-						series.append(msgTime + delay, enc)
+						series.append(msgTime + avgDelay, enc)
 						store.state.current_time = msgTime + delay;			//for output graph
 
 						if(debug) {
@@ -381,6 +397,12 @@ export default {
 </script>
 
 <style scoped>
+
+#smoothie-chart{
+	width:100%;
+	height: 120px;
+}
+
 .slidecontainer {
 	width: 100%; /* Width of the outside container */
 }
