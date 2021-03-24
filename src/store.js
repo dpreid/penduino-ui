@@ -7,7 +7,8 @@ export const store = {
      start_time: 0,
      isCaliperSet: false,
      data: [],
-     num_graphs: 0
+     num_graphs: 0,
+     isRecording: false,
      },
      calculateAngularVelocity(){
         let current_index = this.state.data.length - 1;

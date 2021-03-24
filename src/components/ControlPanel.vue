@@ -254,8 +254,9 @@ export default {
 
 			//let dataOpen = false;
 			var delay = 0;
-			let avgDelay = 0;
-			let delays = [];
+			let delay_sum = 0;
+			// let avgDelay = 0;
+			// let delays = [];
 			var messageCount = 0;
 			let a;
 			let b;
@@ -316,22 +317,30 @@ export default {
 
 					var enc = obj.enc;
 
-					if (messageCount == 0){
+					if(messageCount == 0){
 						delay = thisDelay
-						delays[0] = thisDelay;
-					} else {
-						delays[messageCount%10] = thisDelay;
+						delay_sum += thisDelay;
+					} else{
+						if(!isNaN(thisDelay)){
+							delay_sum += thisDelay;
+							delay = delay_sum / (messageCount + 1);
+						} else{
+							delay_sum += delay;
+							delay = delay_sum / (messageCount + 1);
+							
+						}
+						
 					}
 
 					
 					
 			
-					avgDelay = 0;
-					for (let i=0; i<delays.length;i++){
-						avgDelay += delays[i];
-					}
+					// avgDelay = 0;
+					// for (let i=0; i<delays.length;i++){
+					// 	avgDelay += delays[i];
+					// }
 				
-					avgDelay /= delays.length;
+					// avgDelay /= delays.length;
 					
 					a = 1 / delayWeightingFactor
 					b = 1 - a
@@ -357,11 +366,11 @@ export default {
 						store.state.current_angle = enc * Math.PI / 180;		//for data storage, convert to radians
 					}
 
-					thisTime = msgTime + delay
+					thisTime = msgTime + thisDelay
 					
 					if (!isNaN(thisTime) && !isNaN(enc)){
-						series.append(msgTime + avgDelay, enc)
-						store.state.current_time = msgTime + delay;			//for output graph
+						series.append(msgTime + thisDelay, enc)
+						store.state.current_time = msgTime + thisDelay;			//for output graph
 
 						if(debug) {
 							console.log(delay,thisDelay,msgTime, enc)

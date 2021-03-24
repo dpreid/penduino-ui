@@ -6,6 +6,14 @@
         <button class="btn btn-default btn-xs m-1" id="clearButton" @click="clearGraph">Reset</button>
         <button class="btn btn-default btn-xs m-1" v-if="hasData" id="outputButton" @click="outputToCSV">Download CSV</button>
     </div>
+    <div class='row m-2 justify-content-center'>
+      <div v-if='isRecording' class='col-2'>
+        <img id='red-light' src='../../public/images/red-light.png' width='20' height='20' :hidden='!showRedLight'>
+      </div>
+      <div class='col-10'>  
+        <p class='m-1'>Recorded: {{numData}}/{{max_data_points}} data points</p>
+      </div>
+    </div>
   
   </div>
 </template>
@@ -25,13 +33,15 @@ export default {
         interval_id: 0,
         data_points_count: 0,
         hasPlotted: false,
+        max_data_points: 5000,
+        max_reached: false,
     }
   },
   components: {
     
   },
   created(){
-		eventBus.$on('maxdatapointsreached', this.stopRecording);
+		//eventBus.$on('maxdatapointsreached', this.stopRecording);
 	},
   computed:{
       hasData(){
@@ -40,12 +50,21 @@ export default {
       newTime(){
         return this.store.state.current_time;
       },
+      numData(){
+        return this.store.getNumData();
+      },
+      showRedLight(){
+        return this.store.getNumData() % 20 > 10 ? true : false;
+      }
   },
   watch:{
       newTime(){
-      if(this.isRecording){
-        this.plot();
-      } 
+        if(this.isRecording && store.getNumData() < this.max_data_points){
+            this.plot();
+        } else if(store.getNumData() == this.max_data_points && !this.max_reached){
+            this.stopRecording();
+            this.max_reached = true;
+        }
     },
   },
   methods: {
@@ -53,6 +72,7 @@ export default {
           store.state.start_time = new Date().getTime();
           this.data_points_count = 0;
           this.isRecording = true;
+          store.state.isRecording = true;
           // this.interval_id = setInterval(() => {
           //       this.plot()
           //   }, parseFloat(this.time_interval)*1000);
@@ -60,6 +80,7 @@ export default {
       stopRecording(){
           this.isRecording = false;
           //clearInterval(this.interval_id);
+          store.state.isRecording = false;
           eventBus.$emit('updatetable');
       },
       plot(){
@@ -89,6 +110,7 @@ export default {
     //   },
       clearGraph(){
           store.clearAllData();
+          this.max_reached = false;
           eventBus.$emit('clearalldata');
           this.hasPlotted = false;
       },
