@@ -2,7 +2,7 @@
 <div class='container-sm m-2 bg-white border rounded'>
     <div class="row mb-5 justify-content-center" id="chart-canvas">
         <div class="col">
-            <canvas :id="id" @mousedown="startLine" @mouseup="endDrag" @mousemove="endLine"></canvas>
+            <canvas id='graph-canvas' @mousedown="startLine" @mouseup="endDrag" @mousemove="endLine"></canvas>
         </div>
     </div>
 
@@ -175,7 +175,7 @@ import { eventBus } from "../main.js";
 export default {
     
     name: 'GraphOutput',
-    props: ['type', 'id'],
+    props: ['type'],
     data(){
         return{
             dataStore: store,
@@ -225,7 +225,7 @@ export default {
             setTimeout(this.updateChart, 20);
         },
         createChart() {
-            const canvas = document.getElementById(this.id);
+            const canvas = document.getElementById('graph-canvas');
             const ctx = canvas.getContext('2d');
             var scatterChart = new Chart(ctx, {
             type: 'scatter',
@@ -480,7 +480,7 @@ export default {
                     let pointer_ratio = (this.gradient_start_point.y - this.gradient_end_point.y) / (this.gradient_end_point.x - this.gradient_start_point.x);  //pointer ratio
 
                     let canvas_offset = 32;         //might need to change/check this 
-                    let canvas = document.getElementById(this.id);
+                    let canvas = document.getElementById('graph-canvas');
                     let canvas_height = canvas.clientHeight - canvas_offset;
                     let canvas_width = canvas.clientWidth;
                     let canvas_ratio = canvas_height/canvas_width;      //canvas ratio
@@ -531,7 +531,7 @@ export default {
                 
                 //draw the gradient line
                 //only draw anything if at least 2 data points have been plotted
-                let canvas = document.getElementById(this.id);
+                let canvas = document.getElementById('graph-canvas');
                 const context = canvas.getContext('2d');
                 context.clearRect(0, 0, canvas.width, canvas.height);
                 this.chart.update(0);       //instantly update with no animation

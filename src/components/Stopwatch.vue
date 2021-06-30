@@ -1,27 +1,27 @@
+//Vue3 updated
+
 <template>
-    <div class='m-2 p-2 bg-white border rounded'>
-        <div class="row-sm">
-            <div class='form-group col-12'><input type='text' class='form-control' id="stopwatch" :value="time_string" readonly></div>
+    <div class='m-2 p-2 bg-white border rounded stopwatch-container' id='stopwatch-container'>
+        <div class="row-sm mb-2">
+            <div class='form-group'><input type='text' class='form-control' id="stopwatch" :value="time_string" readonly></div>
         </div>
-        <div class="row justify-content-center pb-2">
-            <button class="btn btn-default btn-xs" v-if="!isTiming" id="start" @click="startTimer">Start</button>
-            <button class="btn btn-default btn-xs" v-if="isTiming" id="pause" @click="pauseTimer">Pause</button>
-            <button class="btn btn-default btn-xs" id="reset" @click="resetTimer">Reset</button>
+        <div class="col pb-2 d-grid gap-2 d-md-block">
+            <button class="btn btn-default btn-xs me-2" v-if="!isTiming" id="start" @click="startTimer">Start</button>
+            <button class="btn btn-default btn-xs me-2" v-if="isTiming" id="pause" @click="pauseTimer">Pause</button>
+            <button class="btn btn-default btn-xs me-2" id="reset" @click="resetTimer">Reset</button>
         </div>
     </div> 
 </template>
 
 <script>
-//import { eventBus } from "../main";
-//import { store } from "../store.js";
 
 export default {
     name: "Stopwatch",
     data(){
         return{
-        
             isTiming: false,
             timerID: 0,
+            start_time: 0,
             current_time: 0,        //timer in millseconds
             time_string: ""
         }
@@ -33,6 +33,7 @@ export default {
     methods:{
         startTimer(){ 
             this.isTiming = true;
+            this.start_time = Date.now();
             this.timerID = setInterval(() => {
                 this.updateTime()
             }, 10);
@@ -47,7 +48,7 @@ export default {
             this.time_string = this.millsecondsFormatted(this.current_time);
         },
         updateTime(){
-            this.current_time += 10;
+            this.current_time = Date.now() - this.start_time;
             this.time_string = this.millsecondsFormatted(this.current_time);
             
         },
@@ -82,15 +83,21 @@ export default {
 </script>
 
 <style scoped>
+.stopwatch-container{
+    position: relative;
+    max-width: 40%;
+    min-width: 300px;
+    min-height: 100px;
+}
 
 #stopwatch{
-    font-size: 1vw;
+    font-size: 14;
     text-align: center;
     width: 100%;
 }
 
 
-#start       {background-color: #4CAF50FF;}
+#start       {background-color: rgb(3, 248, 12);}
 #start:hover {background-color: #3e8e41} 
 
 #pause       {background-color: #e13131ff;}
@@ -99,14 +106,4 @@ export default {
 #reset  {background-color: #e17a31ff;}
 #reset:hover  {background-color: #cc661eff;}
 
-label {
-    font-size:20px;
-    color: #0501f7;
-    font-weight: bold;
-    display: inline-block;
-    vertical-align: middle;
-    width: 60px;
-    padding-top: 20px;
-    /* float: left; */
-}
 </style>

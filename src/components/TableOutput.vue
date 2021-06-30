@@ -12,7 +12,7 @@
         </tr>
         <tr v-for="row in tableData" :id="row.id" :key="row.id" v-bind:class="[row.id == selected_row_id ? 'selected-row' : '']" @click="changeSelected(row.id)">
             <!-- <td>{{row.id}}</td> -->
-            <td>{{row.t}}</td>
+            <td>{{row.t.toFixed(2)}}</td>
             <td>{{row.theta.toFixed(2)}}</td>
             <td>{{row.omega.toFixed(2)}}</td>
         </tr>

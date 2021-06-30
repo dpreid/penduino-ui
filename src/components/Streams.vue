@@ -1,21 +1,21 @@
 <template>
   <div>
-    <div><webcam-stream /></div>
-    <div><data-stream /></div>
+    <!-- <div><webcam-stream /></div>
+    <div><data-stream /></div> -->
 </div>
 </template> 
 
 <script>
-import WebcamStream from "./WebcamStream.vue";
-import DataStream from "./DataStream.vue";
+// import WebcamStream from "./WebcamStream.vue";
+// import DataStream from "./DataStream.vue";
 import { eventBus } from "../main.js";
 import dayjs from "dayjs";
 
 export default {
   name: "Streams",
   components: {
-    WebcamStream,
-    DataStream,
+    //WebcamStream,
+    //DataStream,
   },
   data(){
     return{
