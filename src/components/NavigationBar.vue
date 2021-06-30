@@ -4,58 +4,42 @@
 
 
 <template>
-    <div class='mb-5 pb-2'>
-  <b-navbar toggleable="lg" type="dark" variant="primary" fixed="top">
-    <b-navbar-brand href="#">Remote Lab: Pendulum</b-navbar-brand>
 
-    <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
-    
-    <b-collapse id="nav-collapse" is-nav>
-        <!--Left aligned menu items-->
-      <b-navbar-nav>
-        <b-nav-item-dropdown text="Menu" right>
-            <b-dropdown-item @click='toggleComponent("graph")'>Graph</b-dropdown-item>
-            <b-dropdown-item @click='toggleComponent("stopwatch")'>Stopwatch</b-dropdown-item>
-            <b-dropdown-item @click='toggleComponent("autocommands")'>Autocommands</b-dropdown-item>
-            <b-dropdown-item @click='toggleComponent("table")'>Table</b-dropdown-item>
-        </b-nav-item-dropdown>
+    <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">Remote Lab: {{labName}}</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+      </button>
 
-        <b-nav-item-dropdown text="Tools" right>
-              <b-dropdown-item @click='toggleComponent("workspace")'>Measuring Tools</b-dropdown-item>
-         </b-nav-item-dropdown>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                   Menu
+                  </a>
+                  <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <li><a class="dropdown-item" href="#" @click='toggleComponent("graph")'>Graph</a></li>
+                    <li><a class="dropdown-item" href="#" @click='toggleComponent("stopwatch")'>Stopwatch</a></li>
+                    <li><a class="dropdown-item" href="#" @click='toggleComponent("table")'>Table</a></li>
+                    <li><a class="dropdown-item" href="#" @click='toggleComponent("autocommands")'>Auto Commands</a></li>
+                    <li><a class="dropdown-item" href="#" @click='toggleComponent("workspace")'>Measuring Tools</a></li>
+                  </ul>
+              </li>
 
-          <b-nav-item @click='clearWorkspace'>Clear Tools</b-nav-item>
-      </b-navbar-nav>
+              <li class="nav-item">
+                  <a class="nav-link" href="#" tabindex="-1" @click='clearWorkspace'>Clear Workspace</a>
+              </li>
+          </ul>
 
-     
+          <div class='d-flex'>
+              <clock />
+          </div>
 
-      <!-- Right aligned nav items -->
-      <b-navbar-nav class="ml-auto">
-        <!-- <b-nav-form>
-          <b-form-input size="sm" class="mr-sm-2" placeholder="Search"></b-form-input>
-          <b-button size="sm" class="my-2 my-sm-0" type="submit">Search</b-button>
-        </b-nav-form> -->
-        <b-nav-text class='mr-4' v-b-tooltip.hover="{delay: {'show':0, 'hide':0}}" title="Hotkeys:
-          Press s to start pendulum.
-          Press f to enter free mode.
-          Press b to brake.
-          On workspace hold r and drag object to rotate.
-          On workspace press w to allow UI buttons to be interactable.">Help</b-nav-text>
+      </div>
+    </div>
+  </nav>
 
-
-       <b-nav-text><clock /></b-nav-text>
-
-        <!-- <b-nav-item-dropdown right>
-          <template #button-content>
-            <em>User</em>
-          </template>
-          <b-dropdown-item href="#">Profile</b-dropdown-item>
-          <b-dropdown-item href="#">Sign Out</b-dropdown-item>
-        </b-nav-item-dropdown> -->
-      </b-navbar-nav>
-    </b-collapse>
-  </b-navbar>
-</div>
 </template>
 
 <script>
