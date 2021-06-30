@@ -462,6 +462,7 @@ export default {
                 this.chart.destroy();
             },
             startLine(event){
+                event.preventDefault();
                 this.gradient_start_point.x = event.offsetX;
                 this.gradient_start_point.y = event.offsetY;
 

@@ -9,9 +9,9 @@
   },
   "dependencies": {
     "@cycjimmy/jsmpeg-player": "git+https://github.com/timdrysdale/jsmpeg-player.git",
+    "@popperjs/core": "^2.9.2",
     "axios": "^0.21.1",
-    "bootstrap": "^4.5.3",
-    "bootstrap-vue": "^2.18.0",
+    "bootstrap": "^5.0.2",
     "chart.js": "^2.9.3",
     "core-js": "^3.6.5",
     "dayjs": "^1.10.4",
