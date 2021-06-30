@@ -9,6 +9,7 @@
   <div class='row'>
       <div class='col-12'>
         <canvas id="video-canvas"></canvas>
+        <toolbar parentCanvasID="video-canvas" parentComponentName="webcam" parentDivID='video-element' :showDownload='true' :showPopupHelp='false' :showOptions="false"></toolbar>
       </div>
     </div>
 </div>    
@@ -20,6 +21,7 @@
 <script>
 import JSMpeg from "@cycjimmy/jsmpeg-player";
 import { eventBus } from "../main.js";
+import Toolbar from './elements/Toolbar.vue';
 
 export default {
   name: "VideoElement",
@@ -30,6 +32,9 @@ export default {
           hasSessionEnded: false,
         }
     },
+    components:{
+      Toolbar,
+    },
     computed:{
         getUrl(){
             return this.$store.getters.getVideoURL;
@@ -38,7 +43,7 @@ export default {
     watch:{
         getUrl(){
             let canvas = document.getElementById("video-canvas");
-            this.player = new JSMpeg.Player(this.url, {canvas: canvas});
+            this.player = new JSMpeg.Player(this.url, {canvas: canvas, preserveDrawingBuffer: true});
             // let url = this.$store.getters.getVideoURL;
             // this.player = new JSMpeg.VideoElement("#videoWrapper", url, {
             //     autoplay: true,

@@ -163,6 +163,12 @@
         </div>
 
     </div>
+
+    <toolbar parentCanvasID="graph-canvas" parentComponentName="graph" parentDivID="graph" :showDownload='true' :showPopupHelp="false" :showOptions="false">  
+
+    </toolbar>
+
+
 </div>
 
 </template>
@@ -171,11 +177,14 @@
 import { store } from "../store.js";
 import { Chart } from 'chart.js';
 import { eventBus } from "../main.js";
-
+import Toolbar from './elements/Toolbar.vue';
 export default {
     
     name: 'GraphOutput',
     props: ['type'],
+    components:{
+        Toolbar,
+    },
     data(){
         return{
             dataStore: store,

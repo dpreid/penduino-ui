@@ -1,7 +1,7 @@
 
 <template>
 
-    <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+    <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary" id='navbar'>
     <div class="container-fluid">
       <a class="navbar-brand" href="#">Remote Lab: Pendulum</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -29,6 +29,30 @@
           </ul>
 
           <div class='d-flex'>
+            <toolbar class='me-5' parentCanvasID="" parentDivID="navbar" parentComponentName="navbar" :showDownload="false" :showOptions="false" :showPopupHelp="true">
+                  <template v-slot:popup id='navbar-popup'>
+                    <div class='row'>
+                    <div class='col-6'>
+                        <h2>Hotkeys:</h2>
+                        <p>Start: s</p>
+                        <p>Brake: b</p>
+                        <p>Free: f</p>
+                        <p>Load: l</p>
+                      </div>
+                      <div class='col-6'>
+                        <h2>UI Control:</h2>
+                        <p>When the Measuring Tools are added hold, 'o' whilst dragging a tool to rotate it</p>
+                        <p>Press 'w' to swap between controlling the measuring tools and the background UI. Click 'Clear Workspace' to remove the measuring tools</p>
+                        <p>Additional UI components can be added from the Menu bar.</p>
+                        <p>Components can be swapped by dragging to new positions. Click and drag from the grey background within the dotted line of the component you want to move. Release 
+                          inside the grey background of the dotted border that you want to move it to.</p>
+                        
+                      </div>
+                    </div>
+                  </template>
+            </toolbar>
+          </div>
+          <div class='d-flex'>
               <clock />
           </div>
 
@@ -40,6 +64,7 @@
 
 <script>
 //import { store } from "../store.js";
+import Toolbar from './elements/Toolbar.vue';
 import { eventBus } from "../main.js";
 import Clock from "./Clock.vue";
 export default {
@@ -52,6 +77,7 @@ export default {
   },
   components: {
     Clock,
+    Toolbar,
   },
   computed:{
       
