@@ -23,7 +23,7 @@
 	<div class="column2-4">
 		<div class="row">
 			<div class="column1-3  sliderlabel"> Drive ({{driveParam}}%)</div>
-			<div class="column2-3">
+			<div class="column2-3" @mousedown="toggleDraggable" @mouseup="toggleDraggable">
 				<input type="range" min="0" max="100" v-model="driveParam" class="slider" id="driveSlider" @change="updateDriveParam(null)">
 			</div>
 		</div>
@@ -41,7 +41,7 @@
 	<div class="column2-4">
 		<div class="row">
 			<div class="column1-3  sliderlabel"> Brake ({{brakeParam}}%)</div>
-		<div class="column2-3">
+		<div class="column2-3" @mousedown="toggleDraggable" @mouseup="toggleDraggable">
 			<input type="range" min="0" max="100" v-model="brakeParam" class="slider" id="brakeSlider" @change="updateBrakeParam(null)">
 		</div>
 	</div>
@@ -54,7 +54,7 @@
 	<div class="column2-4">
 		<div class="row">
 			<div class="column1-3  sliderlabel"> Start bump ({{startParam}}ms)</div>
-			<div class="column2-3">
+			<div class="column2-3" @mousedown="toggleDraggable" @mouseup="toggleDraggable">
 				<input type="range" min="1" max="100" v-model="startParam" class="slider" id="startSlider" @change="updateStartParam">
 			</div>
 	</div>
@@ -67,7 +67,7 @@
 	<div class="column2-4">
 		<div class="row">
 			<div class="column1-3  sliderlabel"> Report every {{dataParam}}ms</div> 
-			<div class="column2-3">
+			<div class="column2-3" @mousedown="toggleDraggable" @mouseup="toggleDraggable">
 				<input type="range" min="20" max="200" v-model="dataParam" class="slider" id="dataSlider" @change="updateDataParam">
 			</div>
 			</div>
@@ -153,6 +153,9 @@ export default {
 
 	},
 	methods:{
+		toggleDraggable(){
+			eventBus.$emit('toggledraggable');
+		},
 		start(){
 			console.log("START " + this.startParam);
 			this.dataSocket.send(JSON.stringify({
@@ -192,6 +195,7 @@ export default {
 			//don't send as it will make it start
 		},
 		updateDriveParam(val){
+			
 			if(val !== null){
 				this.driveParam = val;
 			}
@@ -292,8 +296,9 @@ export default {
 					cmd: "interval",
 					param: this.dataParam
 				}));
-				console.log('open event ' + event);
-				//resolve(console.log('opened ' + event));
+				// console.log('open event ' + event);
+				console.log('opened ' + event);
+				
 			};
 
 			

@@ -11,19 +11,19 @@
   <div class='row' id='component-grid'>
 
       <div class='col-lg-6 col-sm-12' id='left-screen'>
-        <div class='col drop-area' id='drop_0_0' draggable='true' @dragstart="dragComponent" @drop='dropComponent' @dragover.prevent @dragenter.prevent><webcam-stream id='webcam-stream' /></div>
-        <div class='col drop-area' id='drop_1_0' draggable='true' @dragstart="dragComponent" @drop='dropComponent' @dragover.prevent @dragenter.prevent><data-stream id='data-stream' /></div>
-        <div class='col drop-area' id='drop_2_0' draggable='true' @dragstart="dragComponent" @drop='dropComponent' @dragover.prevent @dragenter.prevent><table-output v-show='isTableOn' id='table' /></div>
-        <div class='col drop-area' id='drop_3_0' draggable='true' @dragstart="dragComponent" @drop='dropComponent' @dragover.prevent @dragenter.prevent></div>
-        <div class='col drop-area' id='drop_4_0' draggable='true' @dragstart="dragComponent" @drop='dropComponent' @dragover.prevent @dragenter.prevent></div>
+        <div class='col drop-area' id='drop_0_0' :draggable='isDraggable' @dragstart="dragComponent" @drop='dropComponent' @dragover.prevent @dragenter.prevent><webcam-stream id='webcam-stream' /></div>
+        <div class='col drop-area' id='drop_1_0' :draggable='isDraggable' @dragstart="dragComponent" @drop='dropComponent' @dragover.prevent @dragenter.prevent><data-stream id='data-stream' /></div>
+        <div class='col drop-area' id='drop_2_0' :draggable='isDraggable' @dragstart="dragComponent" @drop='dropComponent' @dragover.prevent @dragenter.prevent><table-output v-show='isTableOn' id='table' /></div>
+        <div class='col drop-area' id='drop_3_0' :draggable='isDraggable' @dragstart="dragComponent" @drop='dropComponent' @dragover.prevent @dragenter.prevent></div>
+        <div class='col drop-area' id='drop_4_0' :draggable='isDraggable' @dragstart="dragComponent" @drop='dropComponent' @dragover.prevent @dragenter.prevent></div>
       </div>
 
       <div class='col-lg-6 col-sm-12' id='right-screen'>
-        <div class='col drop-area' id='drop_0_1' draggable='true' @dragstart="dragComponent" @drop='dropComponent' @dragover.prevent @dragenter.prevent><data-recorder id='data-recorder' /></div>
-        <div class='col drop-area' id='drop_1_1' draggable='true' @dragstart="dragComponent" @drop='dropComponent' @dragover.prevent @dragenter.prevent><stopwatch v-show='isStopwatchOn' id='stopwatch'/></div>
-        <div class='col drop-area' id='drop_2_1' draggable='true' @dragstart="dragComponent" @drop='dropComponent' @dragover.prevent @dragenter.prevent><graph-output v-show='isGraphOn' id='graph' type="graph" /></div>
-        <div class='col drop-area' id='drop_3_1' draggable='true' @dragstart="dragComponent" @drop='dropComponent' @dragover.prevent @dragenter.prevent><auto-command v-show='isAutoCommandOn' id='auto-command' /></div>
-        <div class='col drop-area' id='drop_4_1' draggable='true' @dragstart="dragComponent" @drop='dropComponent' @dragover.prevent @dragenter.prevent></div>
+        <div class='col drop-area' id='drop_0_1' :draggable='isDraggable' @dragstart="dragComponent" @drop='dropComponent' @dragover.prevent @dragenter.prevent><data-recorder id='data-recorder' /></div>
+        <div class='col drop-area' id='drop_1_1' :draggable='isDraggable' @dragstart="dragComponent" @drop='dropComponent' @dragover.prevent @dragenter.prevent><stopwatch v-show='isStopwatchOn' id='stopwatch'/></div>
+        <div class='col drop-area' id='drop_2_1' :draggable='isDraggable' @dragstart="dragComponent" @drop='dropComponent' @dragover.prevent @dragenter.prevent><graph-output v-show='isGraphOn' id='graph' type="graph" /></div>
+        <div class='col drop-area' id='drop_3_1' :draggable='isDraggable' @dragstart="dragComponent" @drop='dropComponent' @dragover.prevent @dragenter.prevent><auto-command v-show='isAutoCommandOn' id='auto-command' /></div>
+        <div class='col drop-area' id='drop_4_1' :draggable='isDraggable' @dragstart="dragComponent" @drop='dropComponent' @dragover.prevent @dragenter.prevent></div>
       </div>
 
   </div>
@@ -99,6 +99,8 @@ export default {
     eventBus.$on('togglestopwatch', this.toggleStopwatch);
     eventBus.$on('toggleautocommands', this.toggleAutoCommands);
     eventBus.$on('clearworkspace', this.clearWorkspace);
+
+    eventBus.$on('toggledraggable', this.toggleDraggable);
   },
   data() {
     return {
@@ -107,6 +109,7 @@ export default {
       isStopwatchOn: false,
       isWorkspaceOn: false,
       isAutoCommandOn: false,
+      isDraggable: true,
     }
   },
   methods:{
@@ -160,6 +163,9 @@ export default {
         }
       }
       return false;
+    },
+    toggleDraggable(){
+      this.isDraggable = !this.isDraggable;
     },
     toggleGraph(){
       this.isGraphOn = !this.isGraphOn;
