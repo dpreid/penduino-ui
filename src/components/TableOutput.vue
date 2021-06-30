@@ -1,5 +1,5 @@
 <template>
-<div class='container-sm m-2 bg-white border rounded'>
+<div class='container-sm m-2 bg-white border rounded table'>
     <div class="row mb-5 justify-content-center">
     <!-- <input type="text" id="search" v-on:keyup="search" v-model="search_field" placeholder="Search the table..."> -->
 
@@ -90,5 +90,10 @@ export default {
 .selected-row{
     background-color: red;
     color: white;
+}
+
+.table{
+    overflow: scroll;
+    max-height: 500px;
 }
 </style>

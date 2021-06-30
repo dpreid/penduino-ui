@@ -1,6 +1,6 @@
 <template>
     <div class='m-2 p-2 bg-white border rounded'>
-       <div class="row justify-content-center align-items-center">
+       <div class="col pb-2 d-grid gap-2 d-md-block">
         <button class="btn btn-default btn-xs m-1" v-if="!isRecording" id="recordButton" @click="record">Record</button>
         <button class="btn btn-default btn-xs m-1" v-if="isRecording" id="stopButton" @click="stopRecording">Stop</button>
         <button class="btn btn-default btn-xs m-1" id="clearButton" @click="clearGraph">Reset</button>

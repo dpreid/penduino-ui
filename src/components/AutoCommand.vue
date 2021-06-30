@@ -1,6 +1,6 @@
 <template>
     <div class="m-2 p-4 bg-white border rounded">
-        <div class="row justify-content-center mb-2">
+        <div class="col pb-2 d-grid gap-2 d-md-block">
             <label class='m-1' for="addCommand">Command</label>
 
             <select name="addCommand" id="addCommand" v-model="command_to_add" @change="checkCommandParameter">
