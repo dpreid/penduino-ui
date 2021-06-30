@@ -107,6 +107,7 @@ export default {
     data(){
         return{
 			dataSocket: null,
+			isDataSocketOpen: false,
 
 			startSlider: null,
 			startParam: 50,
@@ -147,9 +148,18 @@ export default {
 			console.log('connection complete');
 			
 		},
+		isDataSocketOpen(open){
+			if(open){
+				this.updateDataParam();
+				setTimeout(() => {this.updateDriveParam(null)}, 500);
+				setTimeout(() => {this.updateBrakeParam(null)}, 1000);
+				
+			}
+		}
 	},
     mounted(){
 		
+
 
 	},
 	methods:{
@@ -195,7 +205,7 @@ export default {
 			//don't send as it will make it start
 		},
 		updateDriveParam(val){
-			
+			console.log('drive update');
 			if(val !== null){
 				this.driveParam = val;
 			}
@@ -208,6 +218,7 @@ export default {
 			
 		},
 		updateBrakeParam(val){
+			console.log('brake update');
 			if(val !== null){
 				this.brakeParam = val;
 			}
@@ -235,6 +246,9 @@ export default {
 			} else if(event.key == 's'){
 				this.start();
 			}
+		},
+		test(){
+			console.log('SECOND');
 		},
 		connect(){
 
@@ -280,24 +294,10 @@ export default {
 			chart.addTimeSeries(series, {lineWidth:2,strokeStyle:'#0024ff'});
 			chart.streamTo(this.canvas, 0);
 
-			this.dataSocket.onopen = (event) =>  {
+			this.dataSocket.onopen = () =>  {
 				//dataOpen = true; 
-
-				this.dataSocket.send(JSON.stringify({
-					cmd: "drive",
-					param: this.driveParam
-				}));
-				this.dataSocket.send(JSON.stringify({
-					cmd: "brake",
-					param: this.brakeParam
-				}));
+				this.isDataSocketOpen = true;
 				
-				this.dataSocket.send(JSON.stringify({
-					cmd: "interval",
-					param: this.dataParam
-				}));
-				// console.log('open event ' + event);
-				console.log('opened ' + event);
 				
 			};
 
