@@ -174,9 +174,10 @@
 </template>
 
 <script>
-import { store } from "../store.js";
+import { mapGetters, mapActions } from 'vuex';
+
 import { Chart } from 'chart.js';
-import { eventBus } from "../main.js";
+
 import Toolbar from './elements/Toolbar.vue';
 export default {
     
@@ -185,13 +186,12 @@ export default {
     components:{
         Toolbar,
     },
+    emits:['newselectedobject'],
     data(){
         return{
-            dataStore: store,
             chart: null,
             currentDataParameter: 'theta',
             chartData: [],
-            total_num_charts: store.state.num_graphs,
             gradient_start_point: {x:0, y:0},
             gradient_end_point: {x:0, y:0},
             gradient: 0,
@@ -209,15 +209,34 @@ export default {
             current_data_index: 0,
             data_index_interval: 100,
             latest_index: 0,
-            max_reached: false,
 
         }
     },
+    mounted() {
+        this.createChart();
+        this.getAllData();
+        this.updateChart();
+    },
+    computed:{
+        ...mapGetters([
+            'getData',
+            'getNumData',
+            'getIsRecording'
+        ]),
+    },
+    watch:{
+        getData(){
+            this.clearData(); //only runs if data array gets reset to [];
+        }
+    },
     methods: {
+        ...mapActions([
+
+        ]),
         updateChart(){
-            let max_index = store.getNumData() - 1;
+            let max_index = this.getNumData - 1;
             if(max_index < this.maxDataPoints){
-                if(this.latest_index < max_index && store.state.isRecording){
+                if(this.latest_index < max_index && this.getIsRecording){
                     for(let i=this.latest_index; i < max_index; i++){
                         this.getDataAtIndex(i);
                     }
@@ -225,10 +244,6 @@ export default {
                     this.chart.update(0);                       //actually updating the chart moved to here!
                     this.chart.options.scales.yAxes[0].scaleLabel.labelString = this.currentDataParameter;
                 } 
-            } else if(!this.max_reached){
-                eventBus.$emit('maxdatapointsreached');
-                console.log('max reached');
-                this.max_reached = true;
             }
 
             setTimeout(this.updateChart, 20);
@@ -289,7 +304,7 @@ export default {
             canvas.onclick = function(event){
                 let active_points = scatterChart.getElementsAtEvent(event);
                 if(active_points[0]){
-                    eventBus.$emit('newselectedobject', active_points[0]._index);       //data point selected so send event to let other elements know.
+                    this.$emit('newselectedobject', active_points[0]._index);       //data point selected so send event to let other elements know.
                 }
                 
             };
@@ -325,12 +340,10 @@ export default {
             // this.chart.options.scales.yAxes[0].scaleLabel.labelString = this.currentDataParameter;
         },
         clearData(){
-            this.chartData = [];
-            this.chart.data.datasets[0].data = this.chartData;
-            //this.chart.reset();
-            this.chart.update();
             this.latest_index = 0;          //NEW
-            this.max_reached = false;          //NEW
+            
+            this.chart.destroy();
+            this.createChart();
         },
         getAllData(){
                 if(this.current_data_index == 0){
@@ -338,24 +351,22 @@ export default {
                     
                 }
                 
-                
-                //for(let i=0; i<this.$store.getters.getNumData;i++){
-                for(let i=this.current_data_index; i<store.getNumData();i++){
-                    
-                    let x_data = store.state.data[i].t;
+                let data = this.getData;
+                for(let i=this.current_data_index; i<this.getNumData;i++){
+                    let x_data = data[i].t;
                     let y_data;
                     switch(this.currentDataParameter){
                         case 'theta':
-                            y_data = store.state.data[i].theta;
+                            y_data = data[i].theta;
                             break;
                         case 'omega':
-                            y_data = store.state.data[i].omega;
+                            y_data = data[i].omega;
                             break;
 
                     }
                     this.addDataToChart({x: x_data, y: y_data});
 
-                    if(i >= this.current_data_index + this.data_index_interval || i == store.getNumData() - 1){
+                    if(i >= this.current_data_index + this.data_index_interval || i == this.getNumData - 1){
                         this.current_data_index = i + 1;
                         //console.log("broke from get data");
                         break;
@@ -363,13 +374,10 @@ export default {
                     
                 }
 
-                    if(this.current_data_index < store.getNumData() && this.current_data_index <= this.maxDataPoints){
+                    if(this.current_data_index < this.getNumData && this.current_data_index <= this.maxDataPoints){
                         setTimeout(this.getAllData, 20);
                         this.chart.update(0);
                     } else{
-                        if(this.current_data_index > this.maxDataPoints){
-                            eventBus.$emit('maxdatapointsreached');
-                        }
                         this.chart.update(0);
                         console.log('finished loading graph data');
                         this.count = 0;
@@ -379,18 +387,19 @@ export default {
                 
             },
             getLatestData(){
-                let index = store.getNumData() - 1;
+                let index = this.getNumData - 1;
+                let data = this.getData[index];
                 let y_data;
                 if(index >= 0){
                     
-                    let x_data = store.state.data[index].t;
+                    let x_data = data.t;
     
                     switch(this.currentDataParameter){
                             case 'theta':
-                            y_data = store.state.data[index].theta;
+                            y_data = data.theta;
                             break;
                         case 'omega':
-                            y_data = store.state.data[index].omega;
+                            y_data = data.omega;
                             break;
 
                         }
@@ -402,16 +411,17 @@ export default {
             },
             getDataAtIndex(index){
                 let y_data;
+                let data = this.getData[index];
                 if(index >= 0){
                    
-                    let x_data = store.state.data[index].t;
+                    let x_data = data.t;
                 
                     switch(this.currentDataParameter){
                             case 'theta':
-                            y_data = store.state.data[index].theta;
+                            y_data = data.theta;
                             break;
                         case 'omega':
-                            y_data = store.state.data[index].omega;
+                            y_data = data.omega;
                             break;
 
                         }
@@ -419,53 +429,6 @@ export default {
                     } else{
                         //console.log("no data");
                     }
-            },
-        // getData(){
-        //         console.log("getting ALL DATA");
-        //         this.clearData();
-                
-        //         for(let i=0; i<store.state.data.length;i++){
-        //             let y_data;
-        //             let x_data = store.state.data[i].t;
-        //             switch(this.currentDataParameter){
-        //                 case 'theta':
-        //                     y_data = store.state.data[i].theta;
-        //                     break;
-        //                 case 'omega':
-        //                     y_data = store.state.data[i].omega;
-
-        //             }
-        //             this.addDataToChart({x: x_data, y: y_data});
-                    
-        //         }
-                
-        //     },
-        //     getLatestData(){
-        //         console.log("getting LATEST DATA");
-        //         let index = store.getNumData() - 1;
-        //         let y_data;
-        //         if(index >= 0){
-        //             let x_data = store.state.data[index].t;
-        //             switch(this.currentDataParameter){
-        //                     case 'theta':
-        //                         y_data = store.state.data[index].theta;
-        //                         break;
-        //                     case 'omega':
-        //                         //data for omega is calculated after the next timestep, so latest is 1 index position behind
-        //                         if(index > 0){
-        //                             y_data = store.state.data[index - 1].omega;
-        //                         }
-        //                         break;
-
-        //                 }
-        //                 this.addDataToChart({x: x_data, y: y_data});
-        //             } else{
-        //                 console.log("no data");
-        //             }
-                
-        //     },
-            chartAdded(){
-                this.total_num_charts = store.state.num_graphs;
             },
             removeChart(){
                 this.chart.destroy();
@@ -559,8 +522,6 @@ export default {
                 
             },
             plotFunc(func){
-                // let min = store.getMinTime();
-                // let max = store.getMaxTime();
                 let min = this.XAxisMin;
                 let max = this.XAxisMax;
                 let t_delta = max-min;
@@ -607,35 +568,7 @@ export default {
             
 
       },
-      computed:{
-            // newData(){
-            //     return this.dataStore.state.data;
-            // },
-      },
-      watch:{
-        //   newData(){
-        //     if(store.getNumData() <= this.maxDataPoints){
-        //         this.getLatestData();
-        //     } else{
-        //         eventBus.$emit('maxdatapointsreached');
-        //     }
-            
-        // }
-      },
-      mounted() {
-        this.createChart();
-        this.getAllData();
-
-        this.updateChart();
-      },
-      created(){
-        //eventBus.$on('updateGraph', this.getData );
-        //eventBus.$on('updateGraph', this.getLatestData );
-        eventBus.$on('newgraphadded', this.chartAdded);
-        eventBus.$on('clearalldata', this.clearData )
-        
-
-      }
+      
 }
 </script>
 

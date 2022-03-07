@@ -1,6 +1,6 @@
 <template>
 
-<div v-if='hasSessionEnded' class='row'>
+<div v-if='getSessionExpired' class='row'>
   <div class='col-12'>
         <img id='session-end-image' src='https://assets.practable.io/images/common/thank-you-screen.svg' alt='session ended'>
     </div>
@@ -20,7 +20,7 @@
 
 <script>
 import JSMpeg from "@cycjimmy/jsmpeg-player";
-import { eventBus } from "../main.js";
+import { mapGetters } from 'vuex';
 import Toolbar from './elements/Toolbar.vue';
 
 export default {
@@ -29,13 +29,15 @@ export default {
   data(){
         return{
           player: null,
-          hasSessionEnded: false,
         }
     },
     components:{
       Toolbar,
     },
     computed:{
+      ...mapGetters([
+        'getSessionExpired'
+      ]),
         getUrl(){
             return this.$store.getters.getVideoURL;
         }
@@ -52,7 +54,7 @@ export default {
         }
     },
     created(){
-      eventBus.$on('sessionended', (ended) => {this.hasSessionEnded = ended});
+  
     },
   mounted() {
     //only for debugging

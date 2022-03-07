@@ -1,9 +1,6 @@
-import Vue from 'vue';
-import Vuex from 'vuex';
 
-Vue.use(Vuex);
 
-const store = new Vuex.Store({
+const streamStore = {
    state: {
         connectionDroppedAt: 0,
         connectionIsDropped: false,
@@ -20,6 +17,7 @@ const store = new Vuex.Store({
         disableTooltips: false,
         expiryTime: '',
         camera: '',
+        sessionExpired: false,
       },
       mutations:{
           SET_CONNECTION_DROPPED_AT(state, when){
@@ -72,6 +70,9 @@ const store = new Vuex.Store({
           },
           SET_CAMERA(state,cam){
             state.camera = cam;
+          },
+          SET_SESSION_EXPIRED(state, set){
+            state.sessionExpired = set;
           }
       },
       actions:{
@@ -119,6 +120,9 @@ const store = new Vuex.Store({
             },
             setCamera(context, cam){
               context.commit("SET_CAMERA", cam);
+            },
+            setSessionExpired(context, set){
+              context.commit('SET_SESSION_EXPIRED', set);
             }
            
         },
@@ -184,11 +188,14 @@ const store = new Vuex.Store({
         },
         getCamera(state){
           return state.camera;
+        },
+        getSessionExpired(state){
+          return state.sessionExpired;
         }
         
         
  
       },
- })
+ }
 
- export default store;
+ export default streamStore;

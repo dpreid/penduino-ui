@@ -6,9 +6,7 @@
 </template> 
 
 <script>
-// import WebcamStream from "./WebcamStream.vue";
-// import DataStream from "./DataStream.vue";
-import { eventBus } from "../main.js";
+
 import dayjs from "dayjs";
 
 export default {
@@ -19,13 +17,16 @@ export default {
   },
   data(){
     return{
-      
+      connectionChecker: null,
     }
   },
   computed: {
     // id() {
     //   return this.$route.params.id;
     // },
+    getSessionExpired(){
+      return this.$store.getters.getSessionExpired;
+    },
     decodedStreams() {
       return this.$store.getters.getStreams;
     },
@@ -40,7 +41,7 @@ export default {
     },
   },
   created(){
-      eventBus.$on('sessionended', this.sessionExpired);
+      
     },
   mounted() {
     if (this.streamsObtained) {
@@ -115,22 +116,18 @@ export default {
 
     };
 
-    var connectionChecker = setInterval(wd, 1000);
-
-    document.addEventListener("streams:expired", function () {
-      clearInterval(connectionChecker);
-    });
-
+    this.connectionChecker = setInterval(wd, 1000);
 
   },
   methods:{
-    sessionExpired(){
-      var expiredEvent = new Event("streams:expired");
-        document.dispatchEvent(expiredEvent);
-    }
+    
   },
   watch: {
-    
+    getSessionExpired(expired){
+      if(expired){
+        clearInterval(this.connectionChecker);
+      }
+    }
   },
 };
 

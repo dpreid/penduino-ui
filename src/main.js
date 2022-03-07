@@ -1,19 +1,14 @@
-import Vue from 'vue';
-import App from './App.vue';
+import { createApp } from 'vue'
 
-import store from "./streamStore.js";
-
+import store from "./store.js";
+import App from './App.vue'
 
 import 'bootstrap';
 //import "bootstrap/dist/js/bootstrap.bundle.js";
 import "bootstrap/dist/css/bootstrap.min.css";
-import 'es6-promise/auto';
-export const eventBus = new Vue();
+import 'es6-promise/auto'
 
-Vue.config.productionTip = false
-//Vue.use(ReconnectingWebSocket);
 
-new Vue({
-  store: store,
-  render: h => h(App),
-}).$mount('#app')
+const app = createApp(App)
+app.use(store)
+app.mount('#app')

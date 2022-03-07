@@ -63,13 +63,13 @@
 </template>
 
 <script>
-//import { store } from "../store.js";
+
 import Toolbar from './elements/Toolbar.vue';
-import { eventBus } from "../main.js";
 import Clock from "./Clock.vue";
 export default {
 
   name: 'NavigationBar',
+  emits:['clearworkspace', 'togglegraph', 'togglestopwatch', 'toggletable', 'toggleautocommands', 'toggleworkspace', 'addruler', 'addprotractor'],
   data () {
     return {
         
@@ -86,14 +86,14 @@ export default {
       addTool(tool){
           this.toggleComponent('workspace');
           setTimeout(function(){
-              eventBus.$emit('add' + tool), 100});  //give the workspace time to initialise and then send tool event
+              this.$emit('add' + tool), 100});  //give the workspace time to initialise and then send tool event
           
       },
       toggleComponent(component){
-          eventBus.$emit('toggle' + component);
+          this.$emit('toggle' + component);
       },
       clearWorkspace(){
-          eventBus.$emit('clearworkspace');
+          this.$emit('clearworkspace');
       }
   }
 }

@@ -39,7 +39,7 @@
 </template>
 
 <script>
-import { store } from "../store.js";
+import { store } from "../modules/dataStore.js";
 import { eventBus } from "../main.js";
 
 export default {

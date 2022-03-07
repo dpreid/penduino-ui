@@ -24,46 +24,48 @@
 </template>
 
 <script>
-import { store } from "../store.js";
-import { eventBus } from "../main.js";
+
+import { mapGetters } from 'vuex';
 
 export default {
     name: 'TableOutput',
+    props:[
+      'selected_point'
+    ],
     data(){
         return{
-            tableData: [], //store.state.data,
+            tableData: [],
             searchData:[],
             search_field:"",
             selected_row_id: "0",
         }
     },
     methods: {
-        getData(){
-            //console.log('updating table');
-            this.tableData = [...store.state.data];
+        updateTable(){
+            this.tableData = [...this.getData];     //get a clone of the data, not set tableData to the getData getter
         },
-        search(){
-            if(this.search_field == ""){
-                this.searchData = Array.from(this.tableData);
-            } else{
-                this.searchData = [];
-                let d;
-                let string_data_row;
-                // Loop through all tableData, create a string of all elements in the table row, search if the current search_field text is contained and set hidden appropriately.
-                for (let i = 0; i < this.tableData.length; i++) {
-                    d = this.tableData[i];
-                    string_data_row = d.id + d.mass + d.name + d.reclat + d.reclong + d.recclass;
+    //     search(){
+    //         if(this.search_field == ""){
+    //             this.searchData = Array.from(this.tableData);
+    //         } else{
+    //             this.searchData = [];
+    //             let d;
+    //             let string_data_row;
+    //             // Loop through all tableData, create a string of all elements in the table row, search if the current search_field text is contained and set hidden appropriately.
+    //             for (let i = 0; i < this.tableData.length; i++) {
+    //                 d = this.tableData[i];
+    //                 string_data_row = d.id + d.mass + d.name + d.reclat + d.reclong + d.recclass;
 
-                    if (string_data_row.toUpperCase().indexOf(this.search_field.toUpperCase()) > -1) {
-                        this.searchData.push(d);
-                }    else {
-                        //tr[i].style.display = "none";
-            }
+    //                 if (string_data_row.toUpperCase().indexOf(this.search_field.toUpperCase()) > -1) {
+    //                     this.searchData.push(d);
+    //             }    else {
+    //                     //tr[i].style.display = "none";
+    //         }
         
-    }
-            }
+    // }
+    //         }
             
-        },
+    //     },
         changeSelected(id){
             this.selected_row_id = id;
             var elmnt = document.getElementById(id);
@@ -71,16 +73,33 @@ export default {
         }
       },
       computed:{
-            
+        ...mapGetters([
+            'getIsRecording',
+            'getData',
+        ])
+      },
+      watch:{
+          //to clear data table on reset.
+        getData(data){
+            if(data.length == 0){
+                this.updateTable();
+            }
+        },
+        //to update table once recording complete
+        getIsRecording(now, prev){
+            if(!now && prev){
+                this.updateTable();
+            }
+        },
+        selected_point(id){
+            this.changeSelected(id);
+        }
       },
       mounted() {
-        this.tableData = [...store.state.data];
-        
+        this.updateTable();
       },
       created(){
-          eventBus.$on('updatetable', this.getData);
-        eventBus.$on('newselectedobject', this.changeSelected);
-        eventBus.$on('clearalldata', this.getData);
+          
       }
 }
 </script>

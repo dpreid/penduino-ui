@@ -23,7 +23,7 @@
 	<div class="column2-4">
 		<div class="row">
 			<div class="column1-3  sliderlabel"> Drive ({{driveParam}}%)</div>
-			<div class="column2-3" @mousedown="toggleDraggable" @mouseup="toggleDraggable">
+			<div class="column2-3" @mousedown="setDraggable(false)" @mouseup="setDraggable(true)">
 				<input type="range" min="0" max="100" v-model="driveParam" class="slider" id="driveSlider" @change="updateDriveParam(null)">
 			</div>
 		</div>
@@ -41,7 +41,7 @@
 	<div class="column2-4">
 		<div class="row">
 			<div class="column1-3  sliderlabel"> Brake ({{brakeParam}}%)</div>
-		<div class="column2-3" @mousedown="toggleDraggable" @mouseup="toggleDraggable">
+		<div class="column2-3" @mousedown="setDraggable(false)" @mouseup="setDraggable(true)">
 			<input type="range" min="0" max="100" v-model="brakeParam" class="slider" id="brakeSlider" @change="updateBrakeParam(null)">
 		</div>
 	</div>
@@ -54,7 +54,7 @@
 	<div class="column2-4">
 		<div class="row">
 			<div class="column1-3  sliderlabel"> Start bump ({{startParam}}ms)</div>
-			<div class="column2-3" @mousedown="toggleDraggable" @mouseup="toggleDraggable">
+			<div class="column2-3" @mousedown="setDraggable(false)" @mouseup="setDraggable(true)">
 				<input type="range" min="1" max="100" v-model="startParam" class="slider" id="startSlider" @change="updateStartParam">
 			</div>
 	</div>
@@ -66,9 +66,9 @@
 	<div class="column1-4">&nbsp; </div>
 	<div class="column2-4">
 		<div class="row">
-			<div class="column1-3  sliderlabel"> Report every {{dataParam}}ms</div> 
-			<div class="column2-3" @mousedown="toggleDraggable" @mouseup="toggleDraggable">
-				<input type="range" min="20" max="200" v-model="dataParam" class="slider" id="dataSlider" @change="updateDataParam">
+			<div class="column1-3  sliderlabel"> Report every {{intervalParam}}ms</div> 
+			<div class="column2-3" @mousedown="setDraggable(false)" @mouseup="setDraggable(true)">
+				<input type="range" min="20" max="200" v-model="intervalParam" class="slider" id="dataSlider" @change="updateInterval">
 			</div>
 			</div>
 		</div>
@@ -86,8 +86,7 @@
 
 <script>
 
-import { store } from "../store.js";
-import { eventBus } from "../main";
+import { mapActions } from 'vuex'
 
 import { SmoothieChart } from 'smoothie';
 import { TimeSeries } from 'smoothie';
@@ -119,7 +118,7 @@ export default {
 			brakeParam: 50,
 
 			dataSlider: null,
-			dataParam: 50,
+			intervalParam: 50,
 
 			canvas: null,
 
@@ -129,12 +128,7 @@ export default {
         }
     },
     created(){
-		eventBus.$on('startcommand', this.start);
-		eventBus.$on('updatedrivecommand', this.updateDriveParam);
-		eventBus.$on('freecommand', this.free);
-		eventBus.$on('brakecommand', this.brake);
-		eventBus.$on('updatebrakecommand', this.updateBrakeParam);
-		eventBus.$on('loadcommand', this.load);
+		
 	},
     computed:{
 		getUrl(){
@@ -150,7 +144,7 @@ export default {
 		},
 		isDataSocketOpen(open){
 			if(open){
-				this.updateDataParam();
+				this.updateInterval();
 				setTimeout(() => {this.updateDriveParam(null)}, 500);
 				setTimeout(() => {this.updateBrakeParam(null)}, 1000);
 				
@@ -163,46 +157,40 @@ export default {
 
 	},
 	methods:{
-		toggleDraggable(){
-			eventBus.$emit('toggledraggable');
-		},
+		...mapActions([
+			'setDraggable'
+		]),
 		start(){
 			console.log("START " + this.startParam);
-			this.dataSocket.send(JSON.stringify({
-				cmd: "start",
-				param: this.startParam
-			}));
-		},
-		brake(){
-			console.log("BRAKE " + this.brakeParam);
-			this.dataSocket.send(JSON.stringify({
-				cmd: "stop",
-				param: "brake"
-			}));
-		},
-		free(){
-			console.log("undamped");
-			this.dataSocket.send(JSON.stringify({
-				cmd: "stop",
-				param: "unloaded"
-			}));
-		},
-		load(){
-			console.log("LOAD");
-			this.dataSocket.send(JSON.stringify({
-				cmd: "stop",
-				param: "loaded"
-			}));
-		},
-		calibrate(){
-			console.log("calibrate");
-			this.dataSocket.send(JSON.stringify({
-				cmd: "calibrate"
-	}));
+			this.$store.dispatch('start', this.startParam);
 		},
 		updateStartParam(){
 			console.log("start", this.startParam);
 			//don't send as it will make it start
+		},
+		brake(){
+			console.log("BRAKE " + this.brakeParam);
+			this.$store.dispatch('brake');
+		},
+		updateBrakeParam(val){
+			console.log('brake update');
+			if(val !== null){
+				this.brakeParam = val;
+			}
+			console.log("Braking " + this.brakeParam);
+			this.$store.dispatch('updateBrake', this.brakeParam);
+		},
+		free(){
+			console.log("undamped");
+			this.$store.dispatch('free');
+		},
+		load(){
+			console.log("LOAD");
+			this.$store.dispatch('load');
+		},
+		calibrate(){
+			console.log("calibrate");
+			this.$store.dispatch('calibrate');
 		},
 		updateDriveParam(val){
 			console.log('drive update');
@@ -211,30 +199,11 @@ export default {
 			}
 
 			console.log("Driving " + this.driveParam);
-			this.dataSocket.send(JSON.stringify({
-				cmd: "drive",
-				param: this.driveParam
-			}));
-			
+			this.$store.dispatch('updateDrive', this.driveParam);
 		},
-		updateBrakeParam(val){
-			console.log('brake update');
-			if(val !== null){
-				this.brakeParam = val;
-			}
-
-			console.log("Braking " + this.brakeParam);
-			this.dataSocket.send(JSON.stringify({
-				cmd: "brake",
-				param: this.brakeParam
-			}));
-		},
-		updateDataParam(){
-			console.log("data delay", this.dataParam)
-			this.dataSocket.send(JSON.stringify({
-				cmd: "interval",
-				param: this.dataParam
-			}));
+		updateInterval(){
+			console.log("data delay", this.intervalParam)
+			this.$store.dispatch('updateInterval', this.intervalParam);
 		},
 		hotkey(event){
 			if(event.key == "f"){
@@ -252,23 +221,13 @@ export default {
 		},
 		connect(){
 
-			//let dataUrl = this.url;
-			//dataUrl =  scheme + host + ':' + port + '/' + data;
-			//let dataUrl = 'wss://video.practable.io:443/bi/dpr/pendulum0';
-			//let dataUrl = 'wss://relay.practable.io/session/pend11-data?code=9b44157f-268b-4c9b-9701-8d6c05be62fb';
-			//console.log(dataUrl)
-
-			// var wsOptions = {
-			// 	automaticOpen: true,
-			// 	reconnectDecay: 1.5,
-			// 	reconnectInterval: 500,
-			// 	maxReconnectInterval: 10000,
-			// }
+			let _this = this;
 
 			this.dataSocket = new WebSocket(this.url);
 			//this.dataSocket = new ReconnectingWebSocket(this.url);
 			//this.dataSocket = new ReconnectingWebSocket(dataUrl, null,wsOptions);
 			console.log(this.dataSocket);
+			this.$store.dispatch('setDataSocket', this.dataSocket);
 
 			//let dataOpen = false;
 			var delay = 0;
@@ -361,21 +320,21 @@ export default {
 
 					//https://stackoverflow.com/questions/4633177/c-how-to-wrap-a-float-to-the-interval-pi-pi
 					if (wrapEncoder){ //wrap and convert to degrees
-					enc = Math.atan2(Math.sin(obj.enc / (encoderPPR/2) * Math.PI), Math.cos(obj.enc / (encoderPPR/2) * Math.PI)) / Math.PI * 180
-					enc = Math.min(135, enc)
-					enc = Math.max(-135, enc)
-					store.state.current_angle = enc * Math.PI / 180;		//for output graph, convert to radians
+						enc = Math.atan2(Math.sin(obj.enc / (encoderPPR/2) * Math.PI), Math.cos(obj.enc / (encoderPPR/2) * Math.PI)) / Math.PI * 180
+						enc = Math.min(135, enc)
+						enc = Math.max(-135, enc)
+						_this.$store.dispatch('setCurrentAngle',enc * Math.PI / 180);		//for output graph, convert to radians
 					}
 					else{ //convert to degrees only
 						enc = enc * 360.0 / encoderPPR;
-						store.state.current_angle = enc * Math.PI / 180;		//for data storage, convert to radians
+						_this.$store.dispatch('setCurrentAngle', enc * Math.PI / 180);		//for data storage, convert to radians
 					}
 
 					thisTime = msgTime + thisDelay
 					
 					if (!isNaN(thisTime) && !isNaN(enc)){
 						series.append(msgTime + thisDelay, enc)
-						store.state.current_time = msgTime + thisDelay;			//for output graph
+						_this.$store.dispatch('setCurrentTime', msgTime);			//for output graph
 
 						if(debug) {
 							console.log(delay,thisDelay,msgTime, enc)
@@ -395,7 +354,7 @@ export default {
 			}
 
 
-			store.state.start_time = new Date().getTime();
+			_this.$store.dispatch('setStartTime', new Date().getTime());
 			window.addEventListener('keydown', this.hotkey, false);
 			window.addEventListener('pagehide', this.free);				//closing window
 			window.addEventListener('beforeunload', this.free);			//refreshing page, changing URL
