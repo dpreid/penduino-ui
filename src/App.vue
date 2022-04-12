@@ -21,7 +21,7 @@
       <div class='col-lg-6 col-sm-12' id='right-screen'>
         <div class='col drop-area' id='drop_0_1' :draggable='getDraggable' @dragstart="dragComponent" @drop='dropComponent' @dragover.prevent @dragenter.prevent><data-recorder id='data-recorder' /></div>
         <div class='col drop-area' id='drop_1_1' :draggable='getDraggable' @dragstart="dragComponent" @drop='dropComponent' @dragover.prevent @dragenter.prevent><stopwatch v-show='isStopwatchOn' id='stopwatch'/></div>
-        <div class='col drop-area' id='drop_2_1' :draggable='getDraggable' @dragstart="dragComponent" @drop='dropComponent' @dragover.prevent @dragenter.prevent><graph-output v-show='isGraphOn' id='graph' type="graph" @newselectedgraphpoint="selectedGraphPoint"/></div>
+        <!-- <div class='col drop-area' id='drop_2_1' :draggable='getDraggable' @dragstart="dragComponent" @drop='dropComponent' @dragover.prevent @dragenter.prevent><graph-output v-show='isGraphOn' id='graph' type="graph" @newselectedgraphpoint="selectedGraphPoint"/></div> -->
         <div class='col drop-area' id='drop_3_1' :draggable='getDraggable' @dragstart="dragComponent" @drop='dropComponent' @dragover.prevent @dragenter.prevent><auto-command v-show='isAutoCommandOn' id='auto-command' /></div>
         <div class='col drop-area' id='drop_4_1' :draggable='getDraggable' @dragstart="dragComponent" @drop='dropComponent' @dragover.prevent @dragenter.prevent></div>
       </div>
@@ -64,7 +64,7 @@
 <script>
 
 
-import GraphOutput from "./components/GraphOutput.vue";
+//import GraphOutput from "./components/GraphOutput.vue";
 import TableOutput from "./components/TableOutput.vue";
 import Stopwatch from "./components/Stopwatch.vue";
 import Workspace from "./components/Workspace.vue";
@@ -83,7 +83,7 @@ export default {
     Streams,
     WebcamStream,
     DataStream,
-    GraphOutput,
+    //GraphOutput,
     TableOutput,
     Stopwatch,
     Workspace,

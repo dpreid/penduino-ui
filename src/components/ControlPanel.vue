@@ -127,19 +127,14 @@ export default {
 
         }
     },
-    created(){
-		
-	},
-    computed:{
-		getUrl(){
-            return this.$store.getters.getDataURL;
-		},
-	},
 	watch:{
-		getUrl(){
-		
-            this.connect();
-			console.log('connection complete');
+		url(){
+            if(this.url != ""){
+                console.log(this.url);
+                this.connect();
+                
+            }
+            
 			
 		},
 		isDataSocketOpen(open){

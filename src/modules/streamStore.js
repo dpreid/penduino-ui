@@ -13,7 +13,6 @@ const streamStore = {
         dataURL: "",
         dataURLObtained: false,
         remoteLabVersion: '',
-        isDataRecorderOn: false,
         disableTooltips: false,
         expiryTime: '',
         camera: '',
@@ -164,9 +163,6 @@ const streamStore = {
         },
         getRemoteLabVersion(state){
             return state.remoteLabVersion;
-        },
-        getIsDataRecorderOn(state){
-            return state.isDataRecorderOn;
         },
         getDisableTooltips(state){
             return state.disableTooltips;
