@@ -191,7 +191,6 @@ export default {
         return{
             chart: null,
             currentDataParameter: 'theta',
-            chartData: [],
             gradient_start_point: {x:0, y:0},
             gradient_end_point: {x:0, y:0},
             gradient: 0,
@@ -214,7 +213,7 @@ export default {
     },
     mounted() {
         this.createChart();
-        this.getAllData();
+        //this.getAllData();
         this.updateChart();
     },
     computed:{
@@ -246,17 +245,18 @@ export default {
                 } 
             }
 
-            setTimeout(this.updateChart, 20);
+            setTimeout(this.updateChart, 50);
         },
         createChart() {
             const canvas = document.getElementById('graph-canvas');
+            console.log(canvas);
             const ctx = canvas.getContext('2d');
             var scatterChart = new Chart(ctx, {
             type: 'scatter',
             data: {
                 datasets: [{
                     label: this.type,
-                    data: this.chartData,
+                    data: [],
                     pointBackgroundColor: 'rgba(0, 0, 0, 1)',
                 }]
             },
@@ -332,12 +332,11 @@ export default {
             }
         },
         addDataToChart(data) {
-            this.chart.data.datasets[0].data.push(data);
-            // this.chart.data.datasets.forEach((dataset) => {
-            //     dataset.data.push(data);
-            // });
-            // this.chart.update(0);       //instantly update with 0 parameter, no animation
-            // this.chart.options.scales.yAxes[0].scaleLabel.labelString = this.currentDataParameter;
+            try{
+                this.chart.data.datasets[0].data.push(data);
+            } catch(e){
+                console.log(e);
+            }
         },
         clearData(){
             this.latest_index = 0;          //NEW
@@ -411,9 +410,8 @@ export default {
             },
             getDataAtIndex(index){
                 let y_data;
-                let data = this.getData[index];
                 if(index >= 0){
-                   
+                    let data = this.getData[index];
                     let x_data = data.t;
                 
                     switch(this.currentDataParameter){
@@ -493,7 +491,7 @@ export default {
                     let x_diff = this.XAxisMax - this.XAxisMin;
                     let axis_ratio = y_diff/x_diff;         //axis ratio
 
-                    if(this.chartData.length > 1){
+                    if(this.getNumData > 1){
                         this.gradient = axis_ratio*pointer_ratio/canvas_ratio;
                         this.drawLine(this.gradient_start_point, this.gradient_end_point);
                     }

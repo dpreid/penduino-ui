@@ -329,6 +329,7 @@ export default {
 					
 					if (!isNaN(thisTime) && !isNaN(enc)){
 						series.append(msgTime + thisDelay, enc)
+                        //console.log(msgTime);
 						_this.$store.dispatch('setCurrentTime', msgTime);			//for output graph
 
 						if(debug) {

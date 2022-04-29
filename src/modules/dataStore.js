@@ -7,7 +7,6 @@ const dataStore = {
      start_time: 0,
      isCaliperSet: false,
      data: [],
-     num_graphs: 0,
      isRecording: false,
    }),
    mutations:{
@@ -63,6 +62,9 @@ const dataStore = {
       },
       getCurrentAngle(state){
          return state.current_angle;
+      },
+      getCurrentTime(state){
+        return state.current_time;
       },
       getTime(state){
          return (state.current_time - state.start_time)/1000;    //in seconds

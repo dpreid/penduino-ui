@@ -47,6 +47,7 @@ export default {
       'getNumData',
       'getCurrentAngle',
       'getTime',
+      'getCurrentTime'
     ]),
       hasData(){
           return this.getNumData !== 0;
@@ -75,8 +76,12 @@ export default {
       'clearAllData',
     ]),
       record(){
-          this.$store.dispatch('setStartTime', new Date().getTime());
+          //this.$store.dispatch('setStartTime', new Date().getTime());
+          this.$store.dispatch('setStartTime', this.getCurrentTime);
+          console.log('start time');
+          console.log(this.getCurrentTime);
           this.data_points_count = 0;
+          console.log('recording');
           this.setIsRecording(true);
           // this.interval_id = setInterval(() => {
           //       this.plot()
@@ -89,6 +94,7 @@ export default {
           this.data_points_count++;
           let angle = this.getCurrentAngle
           let time = this.getTime;
+          //console.log(time);
           let ang_vel = this.$store.getters.getAngularVelocity;
           
           //let index = this.getNumData - 1;
