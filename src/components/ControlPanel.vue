@@ -131,6 +131,7 @@ export default {
 		url(){
             if(this.url != ""){
                 console.log(this.url);
+                console.log('connecting')
                 this.connect();
                 
             }
