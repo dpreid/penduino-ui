@@ -260,20 +260,10 @@ export default {
 			this.dataSocket.onmessage = (event) =>  {
 				
 				try {
-					//console.log("messaged")
-					//console.log("event data = " + event.data);
+					
 					var obj = JSON.parse(event.data);
-					//console.log("parsed data = " + obj);
 					var msgTime = obj.time;
-					//console.log("time = " + msgTime);
 					var thisDelay = new Date().getTime() - msgTime;
-
-					// if (testNaN){
-					// console.log("appending NaNs")
-					// series.append(msgTime + delay, NaN)
-					// series.append(NaN, 0)
-					// series.append(NaN, NaN)
-					// }
 
 					var enc = obj.enc;
 
@@ -294,14 +284,6 @@ export default {
 
 					
 					
-			
-					// avgDelay = 0;
-					// for (let i=0; i<delays.length;i++){
-					// 	avgDelay += delays[i];
-					// }
-				
-					// avgDelay /= delays.length;
-					
 					a = 1 / delayWeightingFactor
 					b = 1 - a
 
@@ -319,18 +301,21 @@ export default {
 						enc = Math.atan2(Math.sin(obj.enc / (encoderPPR/2) * Math.PI), Math.cos(obj.enc / (encoderPPR/2) * Math.PI)) / Math.PI * 180
 						enc = Math.min(135, enc)
 						enc = Math.max(-135, enc)
-						_this.$store.dispatch('setCurrentAngle',enc * Math.PI / 180);		//for output graph, convert to radians
 					}
 					else{ //convert to degrees only
 						enc = enc * 360.0 / encoderPPR;
-						_this.$store.dispatch('setCurrentAngle', enc * Math.PI / 180);		//for data storage, convert to radians
 					}
 
 					thisTime = msgTime + thisDelay
 					
 					if (!isNaN(thisTime) && !isNaN(enc)){
 						series.append(msgTime + thisDelay, enc)
-                        //console.log(msgTime);
+
+                        //Calculate angular velocity using new data sent through as well as currently stored values - before updating those values
+                        let values = {theta_1: enc * Math.PI / 180, theta_0:_this.$store.getters.getCurrentAngle, t_1:msgTime, t_0:_this.$store.getters.getCurrentTime}
+                        _this.$store.dispatch('setCurrentAngVel', values)
+                        
+                        _this.$store.dispatch('setCurrentAngle',enc * Math.PI / 180);		//for output graph, convert to radians
 						_this.$store.dispatch('setCurrentTime', msgTime);			//for output graph
 
 						if(debug) {
@@ -344,9 +329,9 @@ export default {
 					} 
 
 				} catch (e) {
-					if (debug){
-						console.log(e)
-					}
+                    if(debug) {
+                        console.log(e)
+                    }
 				}
 			}
 

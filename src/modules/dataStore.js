@@ -4,6 +4,7 @@ const dataStore = {
    state: () => ({
      current_angle: 0,
      current_time: 0,
+     current_ang_vel: 0,
      start_time: 0,
      isCaliperSet: false,
      data: [],
@@ -16,6 +17,9 @@ const dataStore = {
       SET_CURRENT_TIME(state, value){
          state.current_time = value;
       },
+      SET_CURRENT_ANG_VEL(state, value){
+        state.current_ang_vel = value;
+     },
       SET_START_TIME(state, value){
          state.start_time = value;
       },
@@ -40,6 +44,15 @@ const dataStore = {
       setCurrentTime(context, value){
          context.commit('SET_CURRENT_TIME', value);
       },
+      setCurrentAngVel(context, values){
+        let theta_delta = values.theta_1 - values.theta_0;
+        let time_delta = values.t_1 - values.t_0;
+        let ang_vel = theta_delta / time_delta;
+        if(!isNaN(ang_vel)){
+            context.commit('SET_CURRENT_ANG_VEL', ang_vel);
+        }
+        
+     },
       setStartTime(context, value){
          context.commit('SET_START_TIME', value);
       },
@@ -65,6 +78,9 @@ const dataStore = {
       },
       getCurrentTime(state){
         return state.current_time;
+      },
+      getCurrentAngularVelocity(state){
+        return state.current_ang_vel;
       },
       getTime(state){
          return (state.current_time - state.start_time)/1000;    //in seconds
@@ -95,21 +111,21 @@ const dataStore = {
       getNumData(state){
          return state.data.length;
      },
-     getAngularVelocity(state){
-         let current_index = state.data.length - 1;
-         let current_data = state.data[current_index];
-         let previous_data = state.data[current_index - 1];
-         if(current_data && previous_data){
-            let theta_delta = current_data.theta - previous_data.theta;
-            let time_delta = current_data.t - previous_data.t;
-            let ang_vel = theta_delta / time_delta;
-            return ang_vel;
-         } 
-         else{
+    //  getAngularVelocity(state){
+    //      let current_index = state.data.length - 1;
+    //      let current_data = state.data[current_index];
+    //      let previous_data = state.data[current_index - 1];
+    //      if(current_data && previous_data){
+    //         let theta_delta = current_data.theta - previous_data.theta;
+    //         let time_delta = current_data.t - previous_data.t;
+    //         let ang_vel = theta_delta / time_delta;
+    //         return ang_vel;
+    //      } 
+    //      else{
             
-            return NaN;
-         }
-      },
+    //         return NaN;
+    //      }
+    //   },
    },
       
 }

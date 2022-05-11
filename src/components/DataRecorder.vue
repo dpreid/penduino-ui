@@ -46,6 +46,7 @@ export default {
       'getIsRecording',
       'getNumData',
       'getCurrentAngle',
+      'getCurrentAngularVelocity',
       'getTime',
       'getCurrentTime'
     ]),
@@ -94,18 +95,9 @@ export default {
           this.data_points_count++;
           let angle = this.getCurrentAngle
           let time = this.getTime;
-          //console.log(time);
-          let ang_vel = this.$store.getters.getAngularVelocity;
+          let ang_vel = this.getCurrentAngularVelocity;
           
-          //let index = this.getNumData - 1;
-          //should the ang_vel calculated this loop be placed in the previous data point? Or this one?!!!!!!!!!!!!!!!
-          // if(index >= 0){
-          //     console.log("index = " + index);
-          //     console.log("ang vel = " + ang_vel);
-          //     store.state.data[index].omega = ang_vel;  //update previous ang_vel
-          // }
-          
-          let data_object = {id: this.getNumData, t: parseFloat(time), theta: parseFloat(angle), omega: ang_vel};   //omega will be updated in next cycle
+          let data_object = {id: this.getNumData, t: parseFloat(time), theta: parseFloat(angle), omega: ang_vel};
           this.addData(data_object);
           this.hasPlotted = true;
           

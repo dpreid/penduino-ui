@@ -235,7 +235,7 @@ export default {
         updateChart(){
             let max_index = this.getNumData - 1;
             if(max_index < this.maxDataPoints){
-                if(this.latest_index < max_index && this.getIsRecording){
+                if(this.latest_index < max_index /*&& this.getIsRecording*/){
                     for(let i=this.latest_index; i < max_index; i++){
                         this.getDataAtIndex(i);
                     }
