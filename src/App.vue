@@ -14,7 +14,7 @@
         <div class='col drop-area' id='drop_0_0' :draggable='getDraggable' @dragstart="dragComponent" @drop='dropComponent' @dragover.prevent @dragenter.prevent><webcam-stream id='webcam-stream' /></div>
         <div class='col drop-area' id='drop_1_0' :draggable='getDraggable' @dragstart="dragComponent" @drop='dropComponent' @dragover.prevent @dragenter.prevent><data-stream id='data-stream' /></div>
         <div class='col drop-area' id='drop_2_0' :draggable='getDraggable' @dragstart="dragComponent" @drop='dropComponent' @dragover.prevent @dragenter.prevent><table-output v-if='isTableOn' id='table' :selected_point="selected_graph_point"/></div>
-        <div class='col drop-area' id='drop_3_0' :draggable='getDraggable' @dragstart="dragComponent" @drop='dropComponent' @dragover.prevent @dragenter.prevent><user-input id='user-input' /></div>
+        <div class='col drop-area' id='drop_3_0' :draggable='getDraggable' @dragstart="dragComponent" @drop='dropComponent' @dragover.prevent @dragenter.prevent><snapshot id='snapshot' /></div>
         <div class='col drop-area' id='drop_4_0' :draggable='getDraggable' @dragstart="dragComponent" @drop='dropComponent' @dragover.prevent @dragenter.prevent></div>
       </div>
 
@@ -45,7 +45,7 @@ import DataRecorder from "./components/DataRecorder.vue";
 import AutoCommand from "./components/AutoCommand.vue";
 import NavigationBar from "./components/NavigationBar.vue";
 import Streams from "./components/Streams.vue";
-import UserInput from "./components/UserInput.vue"
+import Snapshot from "./components/Snapshot.vue"
 
 import { mapGetters } from 'vuex'
 
@@ -62,7 +62,7 @@ export default {
     DataRecorder,
     AutoCommand,
     NavigationBar,
-    UserInput,
+    Snapshot,
 
   },
   mounted(){

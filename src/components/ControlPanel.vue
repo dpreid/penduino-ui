@@ -275,6 +275,7 @@ export default {
 					var enc = obj.enc;
 
 					if(messageCount == 0){
+                        _this.$store.dispatch('setStartTime', msgTime);
 						delay = thisDelay
 						delay_sum += thisDelay;
 					} else{
@@ -343,7 +344,7 @@ export default {
 			}
 
 
-			_this.$store.dispatch('setStartTime', new Date().getTime());
+			
 			window.addEventListener('keydown', this.hotkey, false);
 			window.addEventListener('pagehide', this.free);				//closing window
 			window.addEventListener('beforeunload', this.free);			//refreshing page, changing URL

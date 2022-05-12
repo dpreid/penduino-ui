@@ -12,7 +12,7 @@ import { mapGetters, mapActions } from 'vuex'
 
 export default {
 
-  name: 'UserInput',
+  name: 'Snapshot',
   data () {
     return {
       
@@ -34,11 +34,10 @@ export default {
         'addData',
     ]),
       snapshot(){
-          console.log('snapshot');
           let angle = this.getCurrentAngle
           let time = this.getTime;
+          console.log(this.$store.getters.getCurrentTime)
           let ang_vel = this.getCurrentAngularVelocity;
-          console.log(ang_vel);
           
           let data_object = {id: this.getNumData, t: parseFloat(time), theta: parseFloat(angle), omega: ang_vel};
           this.addData(data_object);

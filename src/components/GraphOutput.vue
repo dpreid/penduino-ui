@@ -207,7 +207,7 @@ export default {
             maxDataPoints: 1200,
             current_data_index: 0,
             data_index_interval: 100,
-            latest_index: 0,
+            latest_index: -1,
 
         }
     },
@@ -236,7 +236,7 @@ export default {
             let max_index = this.getNumData - 1;
             if(max_index < this.maxDataPoints){
                 if(this.latest_index < max_index /*&& this.getIsRecording*/){
-                    for(let i=this.latest_index; i <= max_index; i++){
+                    for(let i=this.latest_index; i < max_index; i++){
                         this.getDataAtIndex(i);
                     }
                     this.latest_index = max_index;
@@ -249,7 +249,6 @@ export default {
         },
         createChart() {
             const canvas = document.getElementById('graph-canvas');
-            console.log('created');
             const ctx = canvas.getContext('2d');
             var scatterChart = new Chart(ctx, {
             type: 'scatter',
@@ -340,7 +339,7 @@ export default {
         },
         clearData(resetIndex = true){
             if(resetIndex){
-                this.latest_index = 0;          //NEW
+                this.latest_index = -1;          //NEW
             }
             
             this.chart.destroy();
@@ -350,13 +349,10 @@ export default {
         //If passed true, will clear all data first and then get new data.
         getAllData(toClear = false){
                 if(toClear){
-                    console.log('cleared')
                     this.clearData(false);
-                    
                 }
                 
                 let data = this.getData;
-                console.log(data)
                 for(let i=this.current_data_index; i<this.getNumData;i++){
                     let x_data = data[i].t;
                     let y_data;
@@ -373,7 +369,7 @@ export default {
 
                     if(i >= this.current_data_index + this.data_index_interval || i == this.getNumData - 1){
                         this.current_data_index = i + 1;
-                        //console.log("broke from get data");
+                    
                         break;
                     }
                     
@@ -384,7 +380,6 @@ export default {
                         this.chart.update(0);
                     } else{
                         this.chart.update(0);
-                        console.log('finished loading graph data');
                         this.current_data_index = 0;
                     }
                     
