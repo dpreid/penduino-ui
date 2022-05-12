@@ -207,7 +207,7 @@ export default {
             maxDataPoints: 1200,
             current_data_index: 0,
             data_index_interval: 100,
-            latest_index: -1,
+            latest_index: 0,
 
         }
     },
@@ -233,7 +233,7 @@ export default {
 
         ]),
         updateChart(){
-            let max_index = this.getNumData - 1;
+            let max_index = this.getNumData;
             if(max_index < this.maxDataPoints){
                 if(this.latest_index < max_index /*&& this.getIsRecording*/){
                     for(let i=this.latest_index; i < max_index; i++){
@@ -339,7 +339,7 @@ export default {
         },
         clearData(resetIndex = true){
             if(resetIndex){
-                this.latest_index = -1;          //NEW
+                this.latest_index = 0;          
             }
             
             this.chart.destroy();
