@@ -2,6 +2,8 @@
 
 <template>
 <div>
+    <button class='btn btn-secondary me-2' @click='increaseRulerSize'>Ruler +</button>
+    <button class='btn btn-secondary' @click='decreaseRulerSize'>Ruler -</button>
     <canvas :class="workspace_canvas_clickable ? 'clickable' : 'unclickable'" id="workspace" @mousedown="checkClick" @mousemove="moveClicked" @mouseup="mouseUnclick"></canvas>
     <img id="ruler-image" src="../../public/images/ruler.png" hidden>
     <img id="protractor" src="../../public/images/protractor.png" hidden>
@@ -33,21 +35,11 @@ export default {
             workspace_canvas_clickable: true,
             ruler_width: 800,
             ruler_height: 80,
-            ruler_video_width_ratio: 1.428,
             ruler_ratio: 0.1,
-            video_canvas: null,
         }
     },
     created(){
         
-        //let cam_type = this.$store.getters.getCamera;
-        //console.log(cam_type);
-        // if(cam_type == 0){  //logitech
-        //     this.ruler_video_width_ratio = 1.29;       //1.428
-        // } else{
-        //     this.ruler_video_width_ratio = 0.77;     //0.7432, 0.8556need to get this ratio check this ratio on final boxes
-        // }
-        // this.video_canvas = document.getElementById("video-canvas");
     },
     mounted(){
         shapes = [];        //ensure when mounted again that the shapes are not redrawn
@@ -261,6 +253,21 @@ export default {
         //     this.draw();
             
         // },
+        increaseRulerSize(){
+            if(this.ruler_width < 1000){
+                this.ruler_width += 10;
+                this.ruler_height = this.ruler_ratio*this.ruler_width;
+                this.draw();
+            }
+            
+        },
+        decreaseRulerSize(){
+            if(this.ruler_width > 100){
+                this.ruler_width -= 10;
+                this.ruler_height = this.ruler_ratio*this.ruler_width;
+                this.draw();
+            }
+        }
     }
 }
 

@@ -180,7 +180,7 @@ export default {
   text-align: center;
   color: #2c3e50;
   /* margin-top: 50px; */
-  padding-top:60px;
+  margin-top:60px;
   background-color: rgba(161, 161, 161, 0.39);
 }
 
