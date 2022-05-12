@@ -12,7 +12,7 @@
                 <label for="graphSelect">Graph:</label>
             </div>
 
-            <select name="graphSelect" id="graphSelect" v-model="currentDataParameter" @change="getAllData">
+            <select name="graphSelect" id="graphSelect" v-model="currentDataParameter" @change="getAllData(true)">    
                 <option value="theta">Angle</option>
                 <option value="omega">Angular Velocity</option>
                 
@@ -236,7 +236,7 @@ export default {
             let max_index = this.getNumData - 1;
             if(max_index < this.maxDataPoints){
                 if(this.latest_index < max_index /*&& this.getIsRecording*/){
-                    for(let i=this.latest_index; i < max_index; i++){
+                    for(let i=this.latest_index; i <= max_index; i++){
                         this.getDataAtIndex(i);
                     }
                     this.latest_index = max_index;
@@ -249,7 +249,7 @@ export default {
         },
         createChart() {
             const canvas = document.getElementById('graph-canvas');
-            console.log(canvas);
+            console.log('created');
             const ctx = canvas.getContext('2d');
             var scatterChart = new Chart(ctx, {
             type: 'scatter',
@@ -338,19 +338,25 @@ export default {
                 console.log(e);
             }
         },
-        clearData(){
-            this.latest_index = 0;          //NEW
+        clearData(resetIndex = true){
+            if(resetIndex){
+                this.latest_index = 0;          //NEW
+            }
             
             this.chart.destroy();
             this.createChart();
         },
-        getAllData(){
-                if(this.current_data_index == 0){
-                    this.clearData();
+        //By default will not clear the graph of previous data
+        //If passed true, will clear all data first and then get new data.
+        getAllData(toClear = false){
+                if(toClear){
+                    console.log('cleared')
+                    this.clearData(false);
                     
                 }
                 
                 let data = this.getData;
+                console.log(data)
                 for(let i=this.current_data_index; i<this.getNumData;i++){
                     let x_data = data[i].t;
                     let y_data;
@@ -379,7 +385,6 @@ export default {
                     } else{
                         this.chart.update(0);
                         console.log('finished loading graph data');
-                        this.count = 0;
                         this.current_data_index = 0;
                     }
                     
