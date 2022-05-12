@@ -38,12 +38,9 @@ export default {
       ...mapGetters([
         'getSessionExpired'
       ]),
-        getUrl(){
-            return this.$store.getters.getVideoURL;
-        }
     },
     watch:{
-        getUrl(){
+        url(){
             let canvas = document.getElementById("video-canvas");
             this.player = new JSMpeg.Player(this.url, {canvas: canvas, preserveDrawingBuffer: true});
             // let url = this.$store.getters.getVideoURL;

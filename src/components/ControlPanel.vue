@@ -86,11 +86,11 @@
 
 <script>
 
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 
 import { SmoothieChart } from 'smoothie';
 import { TimeSeries } from 'smoothie';
-//import ReconnectingWebSocket from 'reconnecting-websocket';
+
 //import Tooltip from "./Tooltip.vue";
 
 
@@ -127,14 +127,23 @@ export default {
 
         }
     },
+    computed:{
+        ...mapGetters([
+            'getDataURLObtained'
+        ])
+    },
 	watch:{
 		url(){
-            if(this.url != ""){
-                console.log(this.url);
-                console.log('connecting')
-                this.connect();
-                
-            }
+            try{
+				if(this.url != '' && this.getDataURLObtained){
+					this.connect();	
+				} else{
+					console.log('disconnecting: ' + this.url);
+				}
+				
+			} catch(e){
+				console.log(e);
+			}
             
 			
 		},
@@ -220,9 +229,7 @@ export default {
 			let _this = this;
 
 			this.dataSocket = new WebSocket(this.url);
-			//this.dataSocket = new ReconnectingWebSocket(this.url);
-			//this.dataSocket = new ReconnectingWebSocket(dataUrl, null,wsOptions);
-			console.log(this.dataSocket);
+			//console.log(this.dataSocket);
 			this.$store.dispatch('setDataSocket', this.dataSocket);
 
 			//let dataOpen = false;

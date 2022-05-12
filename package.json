@@ -10,7 +10,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "@cycjimmy/jsmpeg-player": "git+https://github.com/timdrysdale/jsmpeg-player.git",
+    "@cycjimmy/jsmpeg-player": "github:timdrysdale/jsmpeg-player",
     "@popperjs/core": "^2.9.2",
     "axios": "^0.21.1",
     "bootstrap": "^5.0.2",
@@ -18,12 +18,9 @@
     "core-js": "^3.6.5",
     "dayjs": "^1.10.4",
     "es6-promise": "^4.2.8",
-    "jsmpeg": "^1.0.0",
-    "reconnecting-websocket": "^4.4.0",
     "smoothie": "^1.35.0",
     "vue": "^3.2.31",
-    "vuex": "^4.0.0",
-    "websocket": "^1.0.33"
+    "vuex": "^4.0.0"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^4.5.15",
