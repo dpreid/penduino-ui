@@ -1,28 +1,38 @@
-//Updated for Vue3, removing eventBus $on waiting for addruler/protractor event - now controlled through props from App.vue
-
 <template>
 <div>
     <canvas :class="workspace_canvas_clickable ? 'clickable' : 'unclickable'" id="workspace" @mousedown="checkClick" @mousemove="moveClicked" @mouseup="mouseUnclick"></canvas>
-    <img id="ruler-image" src="../../public/images/ruler.png" hidden>
     <img id="protractor" src="../../public/images/protractor.png" hidden>
-    
+    <img id="ruler" src="../../public/images/ruler.png" hidden>
+    <!-- <img id="caliper" src="../../public/images/caliper.png" hidden> -->
 </div>
 </template>
 
 <script>
+//import * as pendulum from "../pendulum";
+// import { eventBus } from "../main";
+// import { store } from "../store.js";
 
 var canvas;
 var ctx;
+
+
+// let rect_width = 100;
+// let rect_height = 20;
+// let rect_top_left_x = 200;
+// let rect_top_left_y = 200; 
+//var WIDTH = 400;
+//var HEIGHT = 300;
+
 let protractor = new Image();
 let ruler = new Image();
+// let caliper = new Image();
+
 let shapes = [];        //the added objects to canvas
+
+
 
 export default {
     name: "Workspace",
-    props:{
-      protractorAdded: Boolean,
-      rulerAdded: Boolean
-  },
     data(){
         return{
             isSelected: false,
@@ -30,54 +40,46 @@ export default {
             selected_offset_x: 0,
             selected_offset_y: 0,
             rotateMode: false,
+            // isCaliperActive: false,
             workspace_canvas_clickable: true,
-            ruler_width: 800,
-            ruler_height: 80,
-            ruler_video_width_ratio: 1.428,
+            ruler_width: 1144.66,
+            ruler_height: 114.466,
+            ruler_video_width_ratio: 1.262,
             ruler_ratio: 0.1,
             video_canvas: null,
         }
     },
     created(){
-        
-        //let cam_type = this.$store.getters.getCamera;
-        //console.log(cam_type);
-        // if(cam_type == 0){  //logitech
-        //     this.ruler_video_width_ratio = 1.29;       //1.428
-        // } else{
-        //     this.ruler_video_width_ratio = 0.77;     //0.7432, 0.8556need to get this ratio check this ratio on final boxes
-        // }
-        // this.video_canvas = document.getElementById("video-canvas");
+        this.video_canvas = document.getElementById("video-canvas");
     },
     mounted(){
         shapes = [];        //ensure when mounted again that the shapes are not redrawn
+
         canvas = document.getElementById("workspace");
+    
         canvas.width = screen.width;
         canvas.height = screen.height;
+       
         ctx = canvas.getContext("2d");
+       
+        //setInterval(() => {this.draw()}, 10);         //not constantly animating, but instead call draw when click and mouse move
+        this.addImages();
+
+        //the rectangle shape added to shapes array
+        //shapes.push({x:rect_top_left_x, y:rect_top_left_y, width:rect_width, height:rect_height, image:null, angle:0});
 
         //add a key press modifiers to the window
         window.addEventListener('keydown', this.updateMode, false);
         window.addEventListener('keyup', this.updateMode, false);
-        //window.addEventListener('resize', () => {setTimeout(this.resizeRuler, 100)});
+        window.addEventListener('resize', () => {setTimeout(this.resizeRuler, 100)});
 
-        //this.resizeRuler();
-    },
-    watch:{
-        protractorAdded(set) {
-            if(set){
-                this.addProtractor();
-            }
-        },
-        rulerAdded(set) {
-            if(set){
-                this.addRuler();
-                //this.$store.dispatch('setAchievementCompleted', 'ruler');
-            }
-        },
+        this.resizeRuler();
+
+
     },
     methods:{
         draw() {
+            
             ctx.clearRect(0,0,screen.width, screen.height);
 
             for(let i=0; i< shapes.length;i++){
@@ -108,9 +110,12 @@ export default {
                 ctx.restore();
             }
 
+
+            
+
         },
-        addProtractor(){
-            protractor.onload = function() {
+        addImages(){
+             protractor.onload = function() {
                 let x = 100;
                 let y= 100;
                 let w=400;
@@ -118,29 +123,29 @@ export default {
                 shapes.push( {x:x, y:y, width:w, height:h, image:protractor, angle:0} );
                 ctx.drawImage(protractor, x, y, w, h);
                 
-                
             };
             protractor.src = document.getElementById("protractor").src;
-        },
-        addRuler(){
-            let _this = this;
-            ruler.onload = function() {
-                let x = 100;
-                let y= 100;
-                let w = _this.ruler_width;
-                let h = _this.ruler_height;
-                
-                shapes.push( {x:x, y:y, width:w, height:h, image:ruler, angle:0} );
-                ctx.drawImage(ruler, x, y, w, h);
-                
-            };
 
-            ruler.onerror = function(){
-                console.log('no image');
-            }
+            ruler.onload = () => {
+                let x = 100;
+                let y= 300;
+                let w = this.ruler_width;
+                let h = this.ruler_height;
+                ctx.drawImage(ruler, x, y, w, h);
+                shapes.push( {x:x, y:y, width:w, height:h, image:ruler, angle:0} );
+            };
+            ruler.src = document.getElementById("ruler").src;
+
+            // caliper.onload = function() {
+            //     let x = 100;
+            //     let y= 400;
+            //     let w=100;
+            //     let h=100;
+            //     ctx.drawImage(caliper, x, y, w, h);
+            //     shapes.push( {x:x, y:y, width:w, height:h, image:caliper, angle:0} );
+            // };
+            // caliper.src = document.getElementById("caliper").src;
             
-            ruler.src = document.getElementById("ruler-image").src;
-        
         },
         updateMode(event){
             if(event.repeat){
@@ -149,14 +154,20 @@ export default {
                 if(event.key == "o"){
                     this.rotateMode = !this.rotateMode;
                 } 
+                // else if(event.key == "c")
+                // {
+                //     this.isCaliperActive = !this.isCaliperActive;
+                // } 
                 else if(event.key == "w" && event.type == 'keydown'){
-                    console.log(event);
                     this.workspace_canvas_clickable = !this.workspace_canvas_clickable;
                 }
+                // console.log(event);
+                // console.log(this.rotateMode);
             }
             
         },
         checkClick(event){
+            //console.log(event);
             for(let i=0; i<shapes.length;i++){
 
                 let origin = [0,0];
@@ -196,6 +207,13 @@ export default {
                 }
 
             }
+
+            // if(shapes[this.selected_index].image == caliper){
+            //     if(this.isCaliperActive){
+            //         this.outputData();
+            //     }
+                
+            // }
             
         },
         // To find orientation of ordered triplet (p, q, r). 
@@ -252,15 +270,13 @@ export default {
             this.isSelected = false;
             this.selected_index = null;
         },
-        // resizeRuler(){
-        //     console.log('resizing');
-        //     this.ruler_width = this.video_canvas.clientWidth * this.ruler_video_width_ratio;
+        resizeRuler(){
+            console.log('resizing');
+            this.ruler_width = this.video_canvas.clientWidth * this.ruler_video_width_ratio;
+            this.ruler_height = this.ruler_ratio*this.ruler_width;
+            this.draw();
             
-        //     this.ruler_height = this.ruler_ratio*this.ruler_width;
-             
-        //     this.draw();
-            
-        // },
+        },
     }
 }
 

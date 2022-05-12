@@ -20,7 +20,17 @@
                     <li><a class="dropdown-item" href="#" @click='toggleComponent("table")'>Table</a></li>
                     <li><a class="dropdown-item" href="#" @click='toggleComponent("autocommands")'>Auto Commands</a></li>
                     <li><a class="dropdown-item" href="#" @click='toggleComponent("snapshot")'>Snapshot</a></li>
-                    <li><a class="dropdown-item" href="#" @click='toggleComponent("workspace")'>Measuring Tools</a></li>
+                    <!-- <li><a class="dropdown-item" href="#" @click='toggleComponent("workspace")'>Measuring Tools</a></li> -->
+                  </ul>
+              </li>
+
+              <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" id="toolsdropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                   Tools
+                  </a>
+                  <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDropdown2">
+                    <li><a class="dropdown-item" id='rulermenu' href="#" @click='addTool("ruler")'>Ruler</a></li>
+                    <li><a class="dropdown-item" id='protractormenu' href="#" @click='addTool("protractor")'>Protractor</a></li>
                   </ul>
               </li>
 
@@ -86,8 +96,7 @@ export default {
   methods: {
       addTool(tool){
           this.toggleComponent('workspace');
-          setTimeout(function(){
-              this.$emit('add' + tool), 100});  //give the workspace time to initialise and then send tool event
+          setTimeout(() => {this.$emit('add' + tool)}, 100);  //give the workspace time to initialise and then send tool event
           
       },
       toggleComponent(component){

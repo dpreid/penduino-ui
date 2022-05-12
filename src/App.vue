@@ -1,9 +1,9 @@
 <template>
   <div id="app" class='container-fluid-sm m-0'>
-       <navigation-bar @togglesnapshot="toggleSnapshot" @togglegraph="toggleGraph" @toggleautocommands="toggleAutoCommands" @togglestopwatch="toggleStopwatch" @toggletable="toggleTable" @toggleworkspace="toggleWorkspace" @clearworkspace="clearWorkspace"/>
+       <navigation-bar @togglesnapshot="toggleSnapshot" @togglegraph="toggleGraph" @toggleautocommands="toggleAutoCommands" @togglestopwatch="toggleStopwatch" @toggletable="toggleTable" @toggleworkspace="addWorkspace" @clearworkspace="clearWorkspace" @addruler="rulerAdded = true" @addprotractor="protractorAdded = true"/>
 
         <div v-if="isWorkspaceOn">
-          <workspace />
+          <workspace :protractorAdded="protractorAdded" :rulerAdded="rulerAdded"/>
         </div>
 
         <streams id='streams' />
@@ -77,6 +77,8 @@ export default {
       isAutoCommandOn: false,
       isSnapshotOn: false,
       selected_graph_point: null,
+      protractorAdded: false,
+      rulerAdded: false
     }
   },
   computed:{
@@ -142,6 +144,9 @@ export default {
     toggleGraph(){
       this.isGraphOn = !this.isGraphOn;
     },
+    addWorkspace(){
+        this.isWorkspaceOn = true;
+    },
     toggleWorkspace(){
       this.isWorkspaceOn = !this.isWorkspaceOn;
     },
@@ -159,6 +164,8 @@ export default {
     },
     clearWorkspace(){
       this.isWorkspaceOn = false;
+      this.protractorAdded = false;
+      this.rulerAdded = false;
     }
   },
 }
