@@ -19,6 +19,7 @@
                     <li><a class="dropdown-item" href="#" @click='toggleComponent("stopwatch")'>Stopwatch</a></li>
                     <li><a class="dropdown-item" href="#" @click='toggleComponent("table")'>Table</a></li>
                     <li><a class="dropdown-item" href="#" @click='toggleComponent("autocommands")'>Auto Commands</a></li>
+                    <li><a class="dropdown-item" href="#" @click='toggleComponent("snapshot")'>Snapshot</a></li>
                     <li><a class="dropdown-item" href="#" @click='toggleComponent("workspace")'>Measuring Tools</a></li>
                   </ul>
               </li>
@@ -69,7 +70,7 @@ import Clock from "./Clock.vue";
 export default {
 
   name: 'NavigationBar',
-  emits:['clearworkspace', 'togglegraph', 'togglestopwatch', 'toggletable', 'toggleautocommands', 'toggleworkspace', 'addruler', 'addprotractor'],
+  emits:['clearworkspace', 'togglegraph', 'togglestopwatch', 'toggletable', 'toggleautocommands', 'toggleworkspace', 'addruler', 'addprotractor', 'togglesnapshot'],
   data () {
     return {
         
