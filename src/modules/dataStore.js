@@ -46,7 +46,7 @@ const dataStore = {
       },
       setCurrentAngVel(context, values){
         let theta_delta = values.theta_1 - values.theta_0;
-        let time_delta = values.t_1 - values.t_0;
+        let time_delta = (values.t_1 - values.t_0)/1000.0;
         let ang_vel = theta_delta / time_delta;
         if(!isNaN(ang_vel)){
             context.commit('SET_CURRENT_ANG_VEL', ang_vel);
