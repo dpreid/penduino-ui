@@ -6,26 +6,40 @@
         </div>
     </div>
 
-    <div class="row mb-5 justify-content-center" id="chart-functions">
-        <div class="col">
-            <div class="row justify-content-center">
-                <label for="graphSelect">Graph:</label>
+    <div class="row m-2 d-flex-sm" id="chart-functions">
+        <div class="col-sm-6 flex-column">
+            <!-- Graph type -->
+            <div>
+                <label class='m-2' for="graphSelect">Graph:</label>
+                <select name="graphSelect" id="graphSelect" v-model="currentDataParameter" @change="getAllData(true)">    
+                    <option value="theta">Angle</option>
+                    <option value="omega">Angular Velocity</option>
+                </select> 
             </div>
 
-            <select name="graphSelect" id="graphSelect" v-model="currentDataParameter" @change="getAllData(true)">    
-                <option value="theta">Angle</option>
-                <option value="omega">Angular Velocity</option>
-                
-            </select> 
-            
-        </div>
+            <!-- Gradient -->
+            <div>
+                <label class='m-2' for="gradient">Gradient:</label>
+                <input class='col-sm' id="gradient" :value="gradient" readonly> 
+            </div>
+            <!-- Error bars -->
+            <div>
+                <label class='m-2' for="errorbars">Error bars</label>
+                <input type='checkbox' class='col-sm' id="errorbars" v-model="areErrorBarsOn" @change='getAllData(true)'> 
+            </div>
 
-        <div class='form-group col-3'>
-            <label class='m-2' for="gradient">Gradient:</label>
-            <input class='col-sm' id="gradient" :value="gradient" readonly> 
+            <div v-if='areErrorBarsOn'>
+                <label class='m-2' for="xerrorrange">+/- X</label>
+                <input type='number' class='col-sm' id="xerrorrange" v-model="x_error_range" @change='getAllData(true)'> 
+            </div>
+
+            <div v-if='areErrorBarsOn'>
+                <label class='m-2' for="yerrorrange">+/- Y</label>
+                <input type='number' class='col-sm' id="yerrorrange" v-model="y_error_range" @change='getAllData(true)'> 
+            </div>
         </div>
         
-        <div class='form-group col-6'>
+        <div class='col-sm-6 flex-column'>
             <label class='m-2' for="graph">Plot function: </label>
             <select class='col-sm-4' name="function" id="function" v-model="currentFunction">
                 <option value="linear">Linear</option>
@@ -177,6 +191,7 @@
 import { mapGetters, mapActions } from 'vuex';
 
 import { Chart } from 'chart.js';
+import 'chartjs-chart-error-bars'
 
 import Toolbar from './elements/Toolbar.vue';
 export default {
@@ -208,7 +223,9 @@ export default {
             current_data_index: 0,
             data_index_interval: 100,
             latest_index: 0,
-
+            areErrorBarsOn: true,
+            x_error_range: 0,
+            y_error_range: 1,
         }
     },
     mounted() {
@@ -248,10 +265,11 @@ export default {
             setTimeout(this.updateChart, 50);
         },
         createChart() {
+            let _this = this;
             const canvas = document.getElementById('graph-canvas');
             const ctx = canvas.getContext('2d');
             var scatterChart = new Chart(ctx, {
-            type: 'scatter',
+            type: _this.getChartType(),
             data: {
                 datasets: [{
                     label: this.type,
@@ -303,10 +321,17 @@ export default {
             canvas.onclick = function(event){
                 let active_points = scatterChart.getElementsAtEvent(event);
                 if(active_points[0]){
-                    this.$emit('newselectedobject', active_points[0]._index);       //data point selected so send event to let other elements know.
+                    () => {this.$emit('newselectedobject', active_points[0]._index)};       //data point selected so send event to let other elements know.
                 }
                 
             };
+        },
+        getChartType(){
+            if(this.areErrorBarsOn){
+                return 'scatterWithErrorBars';
+            } else{
+                return 'scatter';
+            }
         },
         updateYAxisMax(value, index){
             if(index == 0){
@@ -365,7 +390,13 @@ export default {
                             break;
 
                     }
-                    this.addDataToChart({x: x_data, y: y_data});
+
+                    if(this.areErrorBarsOn){
+                        this.addDataToChart({x: x_data, y: y_data, xMax: x_data + this.x_error_range, xMin: x_data - this.x_error_range, yMax: y_data + this.y_error_range, yMin: y_data - this.y_error_range});
+                    } else{
+                        this.addDataToChart({x: x_data, y: y_data});
+                    }
+                    
 
                     if(i >= this.current_data_index + this.data_index_interval || i == this.getNumData - 1){
                         this.current_data_index = i + 1;
@@ -402,7 +433,11 @@ export default {
                             break;
 
                         }
-                        this.addDataToChart({x: x_data, y: y_data});
+                        if(this.areErrorBarsOn){
+                            this.addDataToChart({x: x_data, y: y_data, xMax: x_data + this.x_error_range, xMin: x_data - this.x_error_range, yMax: y_data + this.y_error_range, yMin: y_data - this.y_error_range});
+                        } else{
+                            this.addDataToChart({x: x_data, y: y_data});
+                    }
                     } else{
                         //console.log("no data");
                     }
@@ -423,7 +458,11 @@ export default {
                             break;
 
                         }
-                        this.addDataToChart({x: x_data, y: y_data});
+                        if(this.areErrorBarsOn){
+                            this.addDataToChart({x: x_data, y: y_data, xMax: x_data + this.x_error_range, xMin: x_data - this.x_error_range, yMax: y_data + this.y_error_range, yMin: y_data - this.y_error_range});
+                        } else{
+                            this.addDataToChart({x: x_data, y: y_data});
+                    }
                     } else{
                         //console.log("no data");
                     }
