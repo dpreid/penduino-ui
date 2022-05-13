@@ -2,8 +2,9 @@
 
 <template>
 <div>
-    <button class='btn btn-secondary me-2' @click='increaseRulerSize'>Ruler +</button>
-    <button class='btn btn-secondary' @click='decreaseRulerSize'>Ruler -</button>
+    <button class='button-sm button-primary me-2' @click='increaseRulerSize'>+</button>
+    <input type='text' class='input-disabled' placeholder='Ruler' size='3'>  
+    <button class='button-sm button-primary' @click='decreaseRulerSize'>-</button>
     <canvas :class="workspace_canvas_clickable ? 'clickable' : 'unclickable'" id="workspace" @mousedown="checkClick" @mousemove="moveClicked" @mouseup="mouseUnclick"></canvas>
     <img id="ruler-image" src="../../public/images/ruler.png" hidden>
     <img id="protractor" src="../../public/images/protractor.png" hidden>

@@ -1,5 +1,5 @@
 <template>
-<div class='container-sm m-2 bg-white border rounded'>
+<div class='container-sm m-2 background-white border rounded'>
     <div class="row mb-5 justify-content-center" id="chart-canvas">
         <div class="col">
             <canvas id='graph-canvas' @mousedown="startLine" @mouseup="endDrag" @mousemove="endLine"></canvas>
@@ -10,8 +10,8 @@
         <div class="col-sm-6 flex-column">
             <!-- Graph type -->
             <div>
-                <label class='m-2' for="graphSelect">Graph:</label>
-                <select name="graphSelect" id="graphSelect" v-model="currentDataParameter" @change="getAllData(true)">    
+                <label class='m-2 txt-primary' for="graphSelect">Graph:</label>
+                <select class='button-sm button-secondary col-sm-6' name="graphSelect" id="graphSelect" v-model="currentDataParameter" @change="getAllData(true)">    
                     <option value="theta">Angle</option>
                     <option value="omega">Angular Velocity</option>
                 </select> 
@@ -19,29 +19,29 @@
 
             <!-- Gradient -->
             <div>
-                <label class='m-2' for="gradient">Gradient:</label>
-                <input class='col-sm' id="gradient" :value="gradient" readonly> 
+                <label class='m-2 txt-primary' for="gradient">Gradient:</label>
+                <input class='input-disabled col-sm-4' id="gradient" :value="gradient" readonly> 
             </div>
             <!-- Error bars -->
             <div>
-                <label class='m-2' for="errorbars">Error bars</label>
+                <label class='m-2 txt-primary' for="errorbars">Error bars</label>
                 <input type='checkbox' class='col-sm' id="errorbars" v-model="areErrorBarsOn" @change='getAllData(true)'> 
             </div>
 
             <div v-if='areErrorBarsOn'>
-                <label class='m-2' for="xerrorrange">+/- X</label>
-                <input type='number' class='col-sm' id="xerrorrange" v-model="x_error_range" @change='getAllData(true)'> 
+                <label class='m-2 txt-primary' for="xerrorrange">+/- X</label>
+                <input type='number' class='input col-sm-3' id="xerrorrange" v-model="x_error_range" @change='getAllData(true)'> 
             </div>
 
             <div v-if='areErrorBarsOn'>
-                <label class='m-2' for="yerrorrange">+/- Y</label>
-                <input type='number' class='col-sm' id="yerrorrange" v-model="y_error_range" @change='getAllData(true)'> 
+                <label class='m-2 txt-primary' for="yerrorrange">+/- Y</label>
+                <input type='number' class='input col-sm-3' id="yerrorrange" v-model="y_error_range" @change='getAllData(true)'> 
             </div>
         </div>
         
         <div class='col-sm-6 flex-column'>
-            <label class='m-2' for="graph">Plot function: </label>
-            <select class='col-sm-4' name="function" id="function" v-model="currentFunction">
+            <label class='m-2 txt-primary' for="graph">Plot function: </label>
+            <select class='button-sm button-secondary col-sm-6' name="function" id="function" v-model="currentFunction">
                 <option value="linear">Linear</option>
                 <option value="quadratic">Quadratic</option>
                 <option value="trigonometric">Trigonometric</option>
@@ -57,14 +57,14 @@
 
                 <div class='row justify-content-center'>
                     <div>
-                        <label class='m-2' for="func_a">a = </label>
-                        <input id="func_a" v-model="func_a" size="3">
+                        <label class='txt-primary m-2' for="func_a">a = </label>
+                        <input type='number' class='input col-sm-3' id="func_a" v-model="func_a">
                     </div>
                     
 
                     <div>
-                        <label class='m-2' for="func_b">b = </label>
-                        <input id="func_b" v-model="func_b" size="3">                
+                        <label class='txt-primary m-2' for="func_b">b = </label>
+                        <input type='number' class='input col-sm-3' id="func_b" v-model="func_b">                
                     </div>
                 </div>
 
@@ -75,8 +75,8 @@
 
 
                 <div class="row-sm justify-content-center">
-                    <button class="btn btn-default btn-xs m-1" id="plotFunctionButton" @click="plotFunc(linear)">Plot</button>
-                    <button class="btn btn-default btn-xs m-1" id="clearFunctionButton" @click="deleteFunctionDataset">Clear</button>
+                    <button class="button-sm button-primary m-1" id="plotFunctionButton" @click="plotFunc(linear)">Plot</button>
+                    <button class="button-sm button-danger m-1" id="clearFunctionButton" @click="deleteFunctionDataset">Clear</button>
                 </div>
             </div>
                 <div v-else-if="currentFunction === 'quadratic'">
@@ -88,14 +88,14 @@
 
                 <div class='row justify-content-center'>
                     <div>
-                        <label class='m-2' for="func_a">a = </label>
-                        <input id="func_a" v-model="func_a" size="3">
+                        <label class='txt-primary m-2' for="func_a">a = </label>
+                        <input type='number' class='input col-sm-3' id="func_a" v-model="func_a" size="3">
                     </div>
                     
 
                     <div>
-                        <label class='m-2' for="func_b">b = </label>
-                        <input id="func_b" v-model="func_b" size="3">                
+                        <label class='txt-primary m-2' for="func_b">b = </label>
+                        <input type='number' class='input col-sm-3' id="func_b" v-model="func_b" size="3">                
                     </div>
                 </div>
 
@@ -104,8 +104,8 @@
                 <label class='m-2' for="func_b">x<sup>2</sup> + </label>
                 <input id="func_b" v-model="func_b" size="3">  -->
                 <div class="row-sm justify-content-center">
-                    <button class="btn btn-default btn-xs m-1" id="plotFunctionButton" @click="plotFunc(quadratic)">Plot</button>
-                    <button class="btn btn-default btn-xs m-1" id="clearFunctionButton" @click="deleteFunctionDataset">Clear</button>
+                    <button class="button-sm button-primary m-1" id="plotFunctionButton" @click="plotFunc(quadratic)">Plot</button>
+                    <button class="button-sm button-danger m-1" id="clearFunctionButton" @click="deleteFunctionDataset">Clear</button>
                 </div>
             </div>
             <div v-else-if="currentFunction === 'trigonometric'">
@@ -117,18 +117,18 @@
 
                 <div class='row justify-content-center'>
                     <div>
-                        <label class='m-2' for="func_a">A</label>
-                        <input id="func_a" v-model="func_a" size="3">
+                        <label class='txt-primary m-2' for="func_a">A</label>
+                        <input type='number' class='input col-sm-3' id="func_a" v-model="func_a" size="3">
                     </div>
                     
                     <div>
-                        <label class='m-2' for="func_b">&omega;</label>
-                        <input id="func_b" v-model="func_b" size="3">
+                        <label class='txt-primary m-2' for="func_b">&omega;</label>
+                        <input type='number' class='input col-sm-3' id="func_b" v-model="func_b" size="3">
                     </div>
 
                     <div>
-                        <label class='m-2' for="func_c">&phi;</label>
-                        <input id="func_c" v-model="func_c" size="3">                
+                        <label class='txt-primary m-2' for="func_c">&phi;</label>
+                        <input type='number' class='input col-sm-3' id="func_c" v-model="func_c" size="3">                
                     </div>
                 </div>
 
@@ -140,8 +140,8 @@
                 <input id="func_c" v-model="func_c" size="2"> 
                 <label class='m-2'> ) </label> -->
                 <div class="row-sm justify-content-center">
-                    <button class="btn btn-default btn-xs m-1" id="plotFunctionButton" @click="plotFunc(trigonometric)">Plot</button>
-                    <button class="btn btn-default btn-xs m-1" id="clearFunctionButton" @click="deleteFunctionDataset">Clear</button>
+                    <button class="button-sm button-primary m-1" id="plotFunctionButton" @click="plotFunc(trigonometric)">Plot</button>
+                    <button class="button-sm button-danger m-1" id="clearFunctionButton" @click="deleteFunctionDataset">Clear</button>
                 </div>
             </div>
             <div v-else-if="currentFunction === 'exponential'">
@@ -153,14 +153,14 @@
 
                 <div class='row justify-content-center'>
                     <div>
-                        <label class='m-2' for="func_a">A = </label>
-                        <input id="func_a" v-model="func_a" size="3">
+                        <label class='txt-primary m-2' for="func_a">A = </label>
+                        <input type='number' class='input col-sm-3' id="func_a" v-model="func_a" size="3">
                     </div>
                     
 
                     <div>
-                        <label class='m-2' for="func_b">b = </label>
-                        <input id="func_b" v-model="func_b" size="3">                
+                        <label class='txt-primary m-2' for="func_b">b = </label>
+                        <input type='number' class='input col-sm-3' id="func_b" v-model="func_b" size="3">                
                     </div>
                 </div>
 
@@ -170,8 +170,8 @@
                 <input id="func_b" v-model="func_b" size="3"> 
                 <label class='m-2' for="func_b"> t)</label> -->
                 <div class="row-sm justify-content-center">
-                    <button class="btn btn-default btn-xs m-1" id="plotFunctionButton" @click="plotFunc(exponential)">Plot</button>
-                    <button class="btn btn-default btn-xs m-1" id="clearFunctionButton" @click="deleteFunctionDataset">Clear</button>
+                    <button class="button-sm button-primary m-1" id="plotFunctionButton" @click="plotFunc(exponential)">Plot</button>
+                    <button class="button-sm button-danger m-1" id="clearFunctionButton" @click="deleteFunctionDataset">Clear</button>
                 </div>
             </div>
         </div>
@@ -225,7 +225,7 @@ export default {
             latest_index: 0,
             areErrorBarsOn: false,
             x_error_range: 0,
-            y_error_range: 1,
+            y_error_range: 0.1,
         }
     },
     mounted() {
@@ -274,7 +274,7 @@ export default {
                 datasets: [{
                     label: this.type,
                     data: [],
-                    pointBackgroundColor: 'rgba(0, 0, 0, 1)',
+                    pointBackgroundColor: 'rgba(20, 51, 186, 1)',
                 }]
             },
             options: {
@@ -576,7 +576,7 @@ export default {
                     new_data.push(data);
                 }
                 
-                this.addNewDataSet('rgba(255, 0, 0, 0.5)', new_data);
+                this.addNewDataSet('rgba(224, 0, 0, 0.5)', new_data);
             },
             linear(t){
                 return (parseFloat(this.func_a)*t + parseFloat(this.func_b));
@@ -632,21 +632,9 @@ export default {
     height: 30px;
 }
 
-#plotFunctionButton       {background-color: #4CAF50FF;}
-#plotFunctionButton:hover {background-color: #3e8e41} 
-
-#clearFunctionButton        {background-color: #e13131ff;}
-#clearFunctionButton:hover {background-color: #cc1e1eff;}
-
-#clearButton  {background-color: #e17a31ff;}
-#clearButton:hover  {background-color: #cc661eff;}
-
-#outputButton        {background-color: #e1b131ff;}
-#outputButton:hover  {background-color: #cc9d1eff;}
 
 label {
     font-size:16px;
-    color: #0501f7;
     font-weight: bold;
     display: inline-block;
     /* vertical-align: middle; */
@@ -660,7 +648,6 @@ select{
     padding-top: 5px;
     padding-bottom: 5px;
     
-    background-color: #4490d8;
 }
 
 

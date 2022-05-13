@@ -1,14 +1,14 @@
 <template>
-<div class='container-sm m-2 bg-white border rounded table'>
+<div class='container-sm m-2 background-white border rounded table'>
     <div class="row mb-5 justify-content-center">
     <!-- <input type="text" id="search" v-on:keyup="search" v-model="search_field" placeholder="Search the table..."> -->
 
     <table class="table">
         <tr>
             <!-- <th scope="col">ID</th> -->
-            <th scope="col">Time/s</th>
-            <th scope="col">Angle/rad</th>
-            <th scope="col">Angular Velocity/rad/s</th>
+            <th class='txt-primary' scope="col">Time/s</th>
+            <th class='txt-primary' scope="col">Angle/rad</th>
+            <th class='txt-primary' scope="col">Angular Velocity/rad/s</th>
         </tr>
         <tr v-for="row in tableData" :id="row.id" :key="row.id" v-bind:class="[row.id == selected_row_id ? 'selected-row' : '']" @click="changeSelected(row.id)">
             <!-- <td>{{row.id}}</td> -->

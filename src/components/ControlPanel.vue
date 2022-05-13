@@ -1,21 +1,22 @@
 <template>
-<div class='container-sm m-2 bg-white border rounded'>
+<div class='container-sm m-2 background-white border rounded'>
 	<div>
 		<canvas id="smoothie-chart" width="640" height="120"></canvas>
 	</div>
 	<div id="buttons">
 		<article>
-			<button id="start" class="btn btn-default btn-lg" @click="start">Start</button>
-			<button id="brake" class="btn btn-default btn-lg" @click="brake">Brake</button>
-			<button id="load" class="btn btn-default btn-lg" @click="load">Load</button>
-			<button id="free" class="btn btn-default btn-lg" @click="free">Free</button>
-			<button id="cal" class="btn btn-default btn-lg" @click="calibrate">Cal</button>
+			<!-- <button id="start" class="btn btn-default btn-lg" @click="start">Start</button> -->
+            <button id="start" class="button-lg button-primary" @click="start">Start</button>
+			<button id="brake" class="button-lg button-secondary" @click="brake">Brake</button>
+			<button id="load" class="button-lg button-tertiary" @click="load">Load</button>
+			<button id="free" class="button-lg button-warning" @click="free">Free</button>
+			<button id="cal" class="button-lg button-danger" @click="calibrate">Cal</button>
 		</article>
 	</div>
 
 <article>
 
-<h2 class='m-2'> Settings </h2>
+<h2 class='txt-primary m-2'> Settings </h2>
 
 
 <div class="row">
@@ -448,21 +449,4 @@ export default {
 	clear: both;
 }
 
-
-
-#start       {background-color: #4CAF50FF;}
-#start:hover {background-color: #3e8e41} 
-
-#brake       {background-color: #e13131ff;}
-#brake:hover {background-color: #cc1e1eff;}
-
-#load        {background-color: #e17a31ff;}
-#load:hover  {background-color: #cc661eff;}
-
-#free        {background-color: #e1b131ff;}
-#free:hover  {background-color: #cc9d1eff;}
-
-
-#cal         {background-color: #5b7fa5ff;}
-#cal:hover   {background-color: #46627fff;}
 </style>

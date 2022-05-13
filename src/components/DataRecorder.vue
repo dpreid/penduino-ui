@@ -1,10 +1,10 @@
 <template>
-    <div class='m-2 p-2 bg-white border rounded'>
+    <div class='m-2 p-2 background-white border rounded'>
        <div class="col pb-2 d-grid gap-2 d-md-block">
-        <button class="btn btn-default btn-xs m-1" v-if="!getIsRecording" id="recordButton" @click="record">Record</button>
-        <button class="btn btn-default btn-xs m-1" v-if="getIsRecording" id="stopButton" @click="stopRecording">Stop</button>
-        <button class="btn btn-default btn-xs m-1" id="clearButton" @click="clearGraph">Reset</button>
-        <button class="btn btn-default btn-xs m-1" v-if="hasData" id="outputButton" @click="outputToCSV">Download CSV</button>
+        <button class="button-sm button-primary m-1" v-if="!getIsRecording" id="recordButton" @click="record">Record</button>
+        <button class="button-sm button-danger m-1" v-if="getIsRecording" id="stopButton" @click="stopRecording">Stop</button>
+        <button class="button-sm button-warning m-1" id="clearButton" @click="clearGraph">Reset</button>
+        <button class="button-sm button-primary m-1" v-if="hasData" id="outputButton" @click="outputToCSV">Download CSV</button>
     </div>
     <div class='row m-2 justify-content-center'>
       <div v-if='getIsRecording' class='col-2'>
@@ -132,17 +132,6 @@ export default {
 </script>
 
 <style scoped>
-#recordButton       {background-color: #4CAF50FF;}
-#recordButton:hover {background-color: #3e8e41} 
-
-#stopButton       {background-color: #e13131ff;}
-#stopButton:hover {background-color: #cc1e1eff;}
-
-#clearButton  {background-color: #e17a31ff;}
-#clearButton:hover  {background-color: #cc661eff;}
-
-#outputButton        {background-color: #e1b131ff;}
-#outputButton:hover  {background-color: #cc9d1eff;}
 
 label {
     font-size:20px;
