@@ -321,7 +321,7 @@ export default {
             canvas.onclick = function(event){
                 let active_points = scatterChart.getElementsAtEvent(event);
                 if(active_points[0]){
-                    () => {this.$emit('newselectedobject', active_points[0]._index)};       //data point selected so send event to let other elements know.
+                    _this.$emit('newselectedobject', active_points[0]._index);       //data point selected so send event to let other elements know.
                 }
                 
             };

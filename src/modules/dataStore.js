@@ -2,9 +2,9 @@
 
 const dataStore = {
    state: () => ({
-     current_angle: 0,
-     current_time: 0,
-     current_ang_vel: 0,
+     current_angle: 0,  //rad
+     current_time: 0,   //ms
+     current_ang_vel: 0,    //rad/s
      start_time: 0,
      isCaliperSet: false,
      data: [],
@@ -46,10 +46,10 @@ const dataStore = {
       },
       setCurrentAngVel(context, values){
         let theta_delta = values.theta_1 - values.theta_0;
-        let time_delta = (values.t_1 - values.t_0)/1000.0;
+        let time_delta = (values.t_1 - values.t_0)/1000.0;  //convert to seconds
         let ang_vel = theta_delta / time_delta;
         if(!isNaN(ang_vel)){
-            context.commit('SET_CURRENT_ANG_VEL', ang_vel);
+            context.commit('SET_CURRENT_ANG_VEL', ang_vel); //set angular vel in rad/s
         }
         
      },
