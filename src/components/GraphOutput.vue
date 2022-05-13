@@ -6,7 +6,7 @@
         </div>
     </div>
 
-    <div class="row m-2 d-flex-sm" id="chart-functions">
+    <div class="row m-2 d-flex-sm" id="chart-functions" @mousedown="setDraggable(false)" @mouseup="setDraggable(true)">
         <div class="col-sm-6 flex-column">
             <!-- Graph type -->
             <div>
@@ -223,7 +223,7 @@ export default {
             current_data_index: 0,
             data_index_interval: 100,
             latest_index: 0,
-            areErrorBarsOn: true,
+            areErrorBarsOn: false,
             x_error_range: 0,
             y_error_range: 1,
         }
@@ -247,7 +247,7 @@ export default {
     },
     methods: {
         ...mapActions([
-
+            'setDraggable'
         ]),
         updateChart(){
             let max_index = this.getNumData;
