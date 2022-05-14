@@ -650,5 +650,8 @@ select{
     
 }
 
+#chart-canvas{
+    cursor: crosshair;
+}
 
 </style>

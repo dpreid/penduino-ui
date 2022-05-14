@@ -1,6 +1,6 @@
 <template>
     <div class="m-2 p-2 background-white border rounded">
-        <div class="row d-flex flex-row align-items-center">
+        <div class="row d-flex flex-row align-items-top">
             <div class='col-sm-3 d-flex flex-column align-items-center'>
                 <label class='txt-primary m-1' for="addCommand">Command</label>
                 <select class='button-sm button-secondary col-sm-12' name="addCommand" id="addCommand" v-model="command_to_add" @change="checkCommandParameter">
@@ -13,14 +13,14 @@
                 </select> 
             </div>
 
-            <div class='col-sm-3 d-flex flex-column align-items-center'>
+            <div class='col-sm-3 d-flex flex-column align-items-center' @mousedown="setDraggable(false)" @mouseup="setDraggable(true)">
                 <label class='txt-primary m-1' for="command_parameter" v-if="command_to_add == 'updateDrive' || command_to_add == 'updateBrake'">Value</label>
-                <input v-if="command_to_add == 'updateDrive' || command_to_add == 'updateBrake'" class='input' id="command_parameter" size="5" v-model="command_parameter">
+                <input v-if="command_to_add == 'updateDrive' || command_to_add == 'updateBrake'" class='input col-sm-6' id="command_parameter" v-model="command_parameter">
             </div>
 
-            <div class='col-sm-3 d-flex flex-column align-items-center'>
+            <div class='col-sm-3 d-flex flex-column align-items-center' @mousedown="setDraggable(false)" @mouseup="setDraggable(true)">
                 <label class='txt-primary m-1' for="time_interval">After</label>
-                <input class='input' id="time_interval" size="5" v-model="time_to_add">
+                <input class='input col-sm-6' id="time_interval" size="5" v-model="time_to_add">
                 <label class='txt-primary m-1' for="time_interval">seconds</label>
             </div>
 
@@ -56,6 +56,8 @@
 
 <script>
 
+import { mapActions } from 'vuex'
+
 export default {
 
   name: 'AutoCommand',
@@ -80,6 +82,9 @@ export default {
 
   },
   methods: {
+      ...mapActions([
+          'setDraggable'
+      ]),
      addCommand(){
          let id = this.commands.length;
          let new_command = {id: id, com:this.command_to_add, time:this.time_to_add, parameter:this.command_parameter};

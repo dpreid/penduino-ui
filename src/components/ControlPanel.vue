@@ -381,6 +381,7 @@ export default {
 	opacity: 0.7;
 	-webkit-transition: .2s;
 	transition: opacity .2s;
+    cursor:pointer;
 }
 
 .slider::-webkit-slider-thumb {
@@ -390,7 +391,7 @@ export default {
 	height: 25px;
 	border-radius: 50%; 
 	background: #5b7fa5ff; 
-	cursor: pointer;
+	cursor: grab;
 }
 
 .slider::-moz-range-thumb {
@@ -398,7 +399,7 @@ export default {
 	height: 25px;
 	border-radius: 50%;
 	background: #5b7fa5ff;
-	cursor: pointer;
+	cursor: grab;
 }
 
 /* Mouse-over effects */
