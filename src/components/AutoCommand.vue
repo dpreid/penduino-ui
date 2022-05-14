@@ -25,8 +25,8 @@
             </div>
 
             <div class='col-sm-3 d-flex flex-column align-items-center'>
-                <button class="button-sm button-primary col-sm-6" id="addButton" @click="addCommand">Add</button>
-                <button class="button-sm button-danger col-sm-6" id="deleteButton" @click="deletePreviousCommand">Delete</button>
+                <button class="button-sm button-primary col-sm-8" id="addButton" @click="addCommand">Add</button>
+                <button class="button-sm button-danger col-sm-8" id="deleteButton" @click="deletePreviousCommand">Delete</button>
             </div>
 
         </div>

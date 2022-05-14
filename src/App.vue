@@ -185,7 +185,7 @@ export default {
 html, body {
 	background-color: #fff;
 	text-align: center;
-	font-family: 'Comfortaa', cursive;
+	font-family: Avenir, Helvetica, Arial, sans-serif;
 }
 
 #optionsMenu{
@@ -300,7 +300,7 @@ input[type=checkbox] {
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    font-size: 1.0vw;
+    font-size: 18px;
     margin: 8px 4px;
     transition-duration: 0.2s;
     cursor: pointer;
@@ -315,7 +315,7 @@ input[type=checkbox] {
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    font-size: 1.3vw;
+    font-size: 24px;
     margin: 8px 4px;
     transition-duration: 0.2s;
     cursor: pointer;
