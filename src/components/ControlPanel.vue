@@ -390,7 +390,7 @@ export default {
 	width: 25px;
 	height: 25px;
 	border-radius: 50%; 
-	background: #5b7fa5ff; 
+	background: #1433BA; /* Persian Blue */
 	cursor: grab;
 }
 
@@ -398,7 +398,7 @@ export default {
 	width: 25px;
 	height: 25px;
 	border-radius: 50%;
-	background: #5b7fa5ff;
+	background: #1433BA; /* Persian Blue */
 	cursor: grab;
 }
 
