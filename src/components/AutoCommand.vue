@@ -1,38 +1,53 @@
 <template>
-    <div class="m-2 p-4 background-white border rounded">
-        <div class="col pb-2 d-grid gap-2 d-md-block">
-            <label class='m-1' for="addCommand">Command</label>
+    <div class="m-2 p-2 background-white border rounded">
+        <div class="row d-flex flex-row align-items-center">
+            <div class='col-sm-3 d-flex flex-column align-items-center'>
+                <label class='txt-primary m-1' for="addCommand">Command</label>
+                <select class='button-sm button-secondary col-sm-12' name="addCommand" id="addCommand" v-model="command_to_add" @change="checkCommandParameter">
+                    <option value="start">Start</option>
+                    <option value="updateDrive">Drive Param</option>
+                    <option value="brake">Brake</option>
+                    <option value="updateBrake">Brake Param</option>
+                    <option value="load">Load</option>
+                    <option value="free">Free</option>
+                </select> 
+            </div>
 
-            <select class='button-sm button-secondary' name="addCommand" id="addCommand" v-model="command_to_add" @change="checkCommandParameter">
-                <option value="start">Start</option>
-                <option value="updateDrive">Drive Param</option>
-                <option value="brake">Brake</option>
-                <option value="updateBrake">Brake Param</option>
-                <option value="load">Load</option>
-                <option value="free">Free</option>
-                
-            </select> 
+            <div class='col-sm-3 d-flex flex-column align-items-center'>
+                <label class='txt-primary m-1' for="command_parameter" v-if="command_to_add == 'updateDrive' || command_to_add == 'updateBrake'">Value</label>
+                <input v-if="command_to_add == 'updateDrive' || command_to_add == 'updateBrake'" class='input' id="command_parameter" size="5" v-model="command_parameter">
+            </div>
 
-            <label class='m-1' for="command_parameter" v-if="command_to_add == 'updateDrive' || command_to_add == 'updateBrake'">Value</label>
-            <input v-if="command_to_add == 'updateDrive' || command_to_add == 'updateBrake'" id="command_parameter" size="5" v-model="command_parameter">
-            <label class='m-1' for="time_interval">After</label>
-            <input id="time_interval" size="5" v-model="time_to_add">
-            <label class='m-1' for="time_interval">seconds</label>
-            <button class="btn btn-default btn-xs mr-1" id="addButton" @click="addCommand">Add</button>
-            <button class="btn btn-default btn-xs" id="deleteButton" @click="deletePreviousCommand">Delete</button>
+            <div class='col-sm-3 d-flex flex-column align-items-center'>
+                <label class='txt-primary m-1' for="time_interval">After</label>
+                <input class='input' id="time_interval" size="5" v-model="time_to_add">
+                <label class='txt-primary m-1' for="time_interval">seconds</label>
+            </div>
+
+            <div class='col-sm-3 d-flex flex-column align-items-center'>
+                <button class="button-sm button-primary col-sm-6" id="addButton" @click="addCommand">Add</button>
+                <button class="button-sm button-danger col-sm-6" id="deleteButton" @click="deletePreviousCommand">Delete</button>
+            </div>
 
         </div>
+
+        <div v-if='commands.length > 0' class='h-divider'></div>
 
         <div class="row justify-content-center" v-for="command in commands" :key="command.id">     <!--command structure command = {id=0, com:"start", time: 5, parameter: 0} -->
-            <h3>{{command.com}} after {{command.time}} seconds &nbsp;</h3>
-            <h3 v-if="command.parameter != null">: parameter value {{command.parameter}}</h3>
-
+            <div v-if="command.parameter != null">
+                <h3>{{command.id + 1}}) {{command.com}} after {{command.time}} seconds to {{command.parameter}}&nbsp;</h3>
+            </div>
+            <div v-else>
+                <h3>{{command.id + 1}}) {{command.com}} after {{command.time}} seconds</h3>
+            </div>
         </div>
 
-        <div class="row justify-content-center">
-            <button v-if='commands.length > 0' class="btn btn-default btn-xs mr-1" id="startCommands" @click="runCommands">Start</button>
-            <button v-if='commands.length > 0' class="btn btn-default btn-xs mr-1" id="stopCommands" @click="stopCommands">Stop</button>
-            <button v-if='commands.length > 0' class="btn btn-default btn-xs" id="clearCommands" @click="clearCommands">Clear</button>
+        <div v-if='commands.length > 0' class='h-divider'></div>
+
+        <div class="row m-2 d-flex flex-row justify-content-center">
+            <button v-if='commands.length > 0' class="button-sm button-primary col-sm-2" id="startCommands" @click="runCommands">Start</button>
+            <button v-if='commands.length > 0' class="button-sm button-warning col-sm-2" id="stopCommands" @click="stopCommands">Stop</button>
+            <button v-if='commands.length > 0' class="button-sm button-danger col-sm-2" id="clearCommands" @click="clearCommands">Clear</button>
         </div>
 
 
@@ -113,36 +128,15 @@ export default {
 </script>
 
 <style scoped>
-/* .row{
-    border-style: solid;
-    border-width: thin;
-    border-color: green;
-} */
-
-
-
-#addButton       {background-color: #4CAF50FF;}
-#addButton:hover {background-color: #3e8e41} 
-
-#deleteButton       {background-color: #e13131ff;}
-#deleteButton:hover {background-color: #cc1e1eff;}
-
-#startCommands  {background-color: #4CAF50FF;}
-#startCommands:hover  {background-color: #3e8e41;}
-
-#stopCommands        {background-color: #e1b131ff;}
-#stopCommands:hover  {background-color: #cc9d1eff;}
-
-#clearCommands        {background-color: #e13131ff;}
-#clearCommands:hover  {background-color: #cc1e1eff;}
 
 label {
     font-size:20px;
-    color: #0501f7;
     font-weight: bold;
     display: inline-block;
     vertical-align: middle;
     width: 100px;
     /* float: left; */
 }
+
+
 </style>

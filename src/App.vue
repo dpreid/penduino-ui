@@ -300,7 +300,7 @@ input[type=checkbox] {
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    font-size: 18px;
+    font-size: 1.0vw;
     margin: 8px 4px;
     transition-duration: 0.2s;
     cursor: pointer;
@@ -315,7 +315,7 @@ input[type=checkbox] {
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    font-size: 24px;
+    font-size: 1.3vw;
     margin: 8px 4px;
     transition-duration: 0.2s;
     cursor: pointer;
@@ -472,6 +472,12 @@ input[type=checkbox] {
     transition: border-color .25s ease-in-out,box-shadow .15s ease-in-out;
 }
 
-
+.h-divider{
+ margin-top:5px;
+ margin-bottom:5px;
+ height:1px;
+ width:100%;
+ border-top:1px solid #1433BA; /* Persian Blue */
+}
 
 </style>
