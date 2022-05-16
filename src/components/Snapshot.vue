@@ -1,6 +1,6 @@
 <template>
 
-<div class="m-2 background-white border rounded" id='snapshot-div'>
+<div class="container-fluid m-2 background-white border rounded" id='snapshot-div'>
 
     <div class="row justify-content-center align-items-center" >
 

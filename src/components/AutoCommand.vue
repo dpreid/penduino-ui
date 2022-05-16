@@ -1,5 +1,5 @@
 <template>
-    <div class="m-2 p-2 background-white border rounded">
+    <div class="container-fluid m-2 background-white border rounded">
         <div class="row d-flex flex-row align-items-top">
             <div class='col-sm-3 d-flex flex-column align-items-center'>
                 <label class='txt-primary m-1' for="addCommand">Command</label>

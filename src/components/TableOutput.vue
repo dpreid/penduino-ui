@@ -1,5 +1,5 @@
 <template>
-<div class='container-sm m-2 background-white border rounded table'>
+<div class='container-fluid m-2 background-white border rounded table'>
     <div class="row mb-5 justify-content-center">
     <!-- <input type="text" id="search" v-on:keyup="search" v-model="search_field" placeholder="Search the table..."> -->
 

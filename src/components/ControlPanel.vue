@@ -1,5 +1,5 @@
 <template>
-<div class='container-sm m-2 background-white border rounded'>
+<div class='container-fluid m-2 background-white border rounded'>
 	<div>
 		<canvas id="smoothie-chart" width="640" height="120"></canvas>
 	</div>
