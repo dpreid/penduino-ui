@@ -2,30 +2,37 @@
 
 <div class="container-fluid m-2 background-white border rounded" id='snapshot-div'>
 
-    <div class="row justify-content-center align-items-center" >
+    <div class="row table" id='table'>
 
-        <table class="table">
-            <tr>
-                <th class='txt-primary' v-for='heading in headings' :key="heading" scope="col">{{heading}}</th>
-            </tr>
+        <table>
+            <thead class='table-head background-primary'>
+                <tr class='background-primary text-white'>
+                    <th v-for='heading in headings' :key="heading" scope="col">{{heading}}</th>
+                </tr>
+            </thead>
 
             <tr v-for="row in snaps" :id="row.t" :key="row.t">
-                <td v-for='key in Object.keys(row)' :key="key">{{row[key]}}</td>
+                <td v-for='key in Object.keys(row)' :key="key">{{row[key].toFixed(2)}}</td>
             </tr>
 
-            <tr class='current'>
+            <tr class='current' id='current-row'>
                 <td>{{getTime.toFixed(2)}}</td>
                 <td>{{getCurrentAngle.toFixed(2)}}</td>
                 <td>{{getCurrentAngularVelocity.toFixed(2)}}</td>
-            </tr>
-                            
+            </tr>    
+
+            <div id='table-bottom'>
+                <div class='white-divider'>
+                    </div>
+                </div>  
         </table> 
+
+        
 
 	</div>
 
-
     <div class='d-grid gap-2 d-sm-block'>
-        <button id="snapshot" type='button' class="button-sm button-primary" @click="snapshot">Record Snapshot</button>
+        <button id="snapshot" type='button' class="button-sm button-primary" @click="snapshot(); scrollTo('table-bottom')">Record Snapshot</button>
         <button id="reset_snaps" type='button' class="button-sm button-danger" @click="toggleResetModal">Reset</button>
         <button id="download_snaps" type='button' class="button-sm button-secondary" @click="outputToCSV">Download Snapshots</button>
     </div>
@@ -117,6 +124,13 @@ export default {
         toggleResetModal(){
             this.showResetConfirmModal = !this.showResetConfirmModal;
         },
+        scrollTo(id){
+            var element = document.getElementById(id);
+            //let topPos = element.offsetTop;
+            element.scrollIntoView(true); 
+            //document.getElementById('table').scrollTop = topPos;
+
+        },
         outputToCSV(){
           let csv = '';
           let filename = '';
@@ -160,6 +174,14 @@ export default {
  height:1px;
  width:100%;
  border-top:1px solid gray;
+}
+
+.white-divider{
+ margin-top:5px;
+ margin-bottom:5px;
+ height:1px;
+ width:100%;
+ border-top:1px solid white;
 }
 
 .v-divider{

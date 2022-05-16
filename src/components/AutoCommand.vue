@@ -1,7 +1,7 @@
 <template>
     <div class="container-fluid m-2 background-white border rounded">
         <div class="row d-flex flex-row align-items-top">
-            <div class='col-sm-3 d-flex flex-column align-items-center'>
+            <div class='col-md-3 d-flex flex-column align-items-center'>
                 <label class='txt-primary m-1' for="addCommand">Command</label>
                 <select class='button-sm button-secondary col-sm-12' name="addCommand" id="addCommand" v-model="command_to_add" @change="checkCommandParameter">
                     <option value="start">Start</option>
@@ -13,20 +13,22 @@
                 </select> 
             </div>
 
-            <div class='col-sm-3 d-flex flex-column align-items-center' @mousedown="setDraggable(false)" @mouseup="setDraggable(true)">
+            <div class='col-md-3 d-flex flex-column align-items-center' @mousedown="setDraggable(false)" @mouseup="setDraggable(true)">
                 <label class='txt-primary m-1' for="command_parameter" v-if="command_to_add == 'updateDrive' || command_to_add == 'updateBrake'">Value</label>
                 <input v-if="command_to_add == 'updateDrive' || command_to_add == 'updateBrake'" class='input col-sm-6' id="command_parameter" v-model="command_parameter">
             </div>
 
-            <div class='col-sm-3 d-flex flex-column align-items-center' @mousedown="setDraggable(false)" @mouseup="setDraggable(true)">
+            <div class='col-md-3 d-flex flex-column align-items-center' @mousedown="setDraggable(false)" @mouseup="setDraggable(true)">
                 <label class='txt-primary m-1' for="time_interval">After</label>
                 <input class='input col-sm-6' id="time_interval" size="5" v-model="time_to_add">
                 <label class='txt-primary m-1' for="time_interval">seconds</label>
             </div>
 
-            <div class='col-sm-3 d-flex flex-column align-items-center'>
-                <button class="button-sm button-primary col-sm-8" id="addButton" @click="addCommand">Add</button>
-                <button class="button-sm button-danger col-sm-8" id="deleteButton" @click="deletePreviousCommand">Delete</button>
+            <div class='col-md-3'>
+                <div class='d-grid gap-2 d-sm-block'>
+                    <button class="button-sm button-primary" id="addButton" @click="addCommand">Add</button>
+                    <button class="button-sm button-danger" id="deleteButton" @click="deletePreviousCommand">Delete</button>
+                </div>
             </div>
 
         </div>

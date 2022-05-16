@@ -2,13 +2,13 @@
 
 <template>
     <div class='container-fluid m-2 background-white border rounded stopwatch-container' id='stopwatch-container'>
-        <div class="row-sm mb-2">
+        <div class="row-sm m-2">
             <div class='form-group'><input type='text' class='form-control' id="stopwatch" :value="time_string" readonly></div>
         </div>
-        <div class="col pb-2 d-grid gap-2 d-md-block">
-            <button class="button-sm button-primary me-2" v-if="!isTiming" id="start" @click="startTimer">Start</button>
-            <button class="button-sm button-warning me-2" v-if="isTiming" id="pause" @click="pauseTimer">Stop</button>
-            <button class="button-sm button-danger me-2" id="reset" @click="resetTimer">Reset</button>
+        <div class="col d-grid d-sm-block">
+            <button class="button-sm button-primary" v-if="!isTiming" id="start" @click="startTimer">Start</button>
+            <button class="button-sm button-warning" v-if="isTiming" id="pause" @click="pauseTimer">Stop</button>
+            <button class="button-sm button-danger" id="reset" @click="resetTimer">Reset</button>
         </div>
     </div> 
 </template>

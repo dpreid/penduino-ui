@@ -483,4 +483,14 @@ input[type=checkbox] {
  border-top:1px solid #1433BA; /* Persian Blue */
 }
 
+.table{
+    overflow: scroll;
+    max-height: 500px;
+}
+
+.table-head{
+    position: sticky; 
+    top: 0; 
+}
+
 </style>

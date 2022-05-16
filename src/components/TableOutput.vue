@@ -1,23 +1,25 @@
 <template>
 <div class='container-fluid m-2 background-white border rounded table'>
-    <div class="row mb-5 justify-content-center">
+    <div class="row ">
     <!-- <input type="text" id="search" v-on:keyup="search" v-model="search_field" placeholder="Search the table..."> -->
 
-    <table class="table">
-        <tr>
-            <!-- <th scope="col">ID</th> -->
-            <th class='txt-primary' scope="col">Time/s</th>
-            <th class='txt-primary' scope="col">Angle/rad</th>
-            <th class='txt-primary' scope="col">Angular Velocity/rad/s</th>
-        </tr>
-        <tr v-for="row in tableData" :id="row.id" :key="row.id" v-bind:class="[row.id == selected_row_id ? 'selected-row' : '']" @click="changeSelected(row.id)">
-            <!-- <td>{{row.id}}</td> -->
-            <td>{{row.t.toFixed(2)}}</td>
-            <td>{{row.theta.toFixed(2)}}</td>
-            <td>{{row.omega.toFixed(2)}}</td>
-        </tr>
-                            
-    </table> 
+        <table>
+            <thead class='table-head'>
+                <tr class='background-primary text-white'>
+                    <!-- <th scope="col">ID</th> -->
+                    <th scope="col">Time[s]</th>
+                    <th scope="col">Angle[rad]</th>
+                    <th scope="col">Angular Velocity[rad/s]</th>
+                </tr>
+            </thead>
+            <tr v-for="row in tableData" :id="row.id" :key="row.id" v-bind:class="[row.id == selected_row_id ? 'selected-row' : '']" @click="changeSelected(row.id)">
+                <!-- <td>{{row.id}}</td> -->
+                <td>{{row.t.toFixed(2)}}</td>
+                <td>{{row.theta.toFixed(2)}}</td>
+                <td>{{row.omega.toFixed(2)}}</td>
+            </tr>
+                                
+        </table> 
 
     </div>
 </div>
@@ -68,7 +70,9 @@ export default {
     //     },
         changeSelected(id){
             this.selected_row_id = id;
-            var elmnt = document.getElementById(id);
+            //the selected row will be covered by the sticky table heading, so scroll to the element below
+            let scroll_id = id - 1;
+            var elmnt = document.getElementById(scroll_id);
             elmnt.scrollIntoView(); 
         }
       },
@@ -111,8 +115,4 @@ export default {
     color: white;
 }
 
-.table{
-    overflow: scroll;
-    max-height: 500px;
-}
 </style>
