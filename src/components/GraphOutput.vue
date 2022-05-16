@@ -30,12 +30,12 @@
 
             <div v-if='areErrorBarsOn'>
                 <label class='m-2 txt-primary' for="xerrorrange">+/- X</label>
-                <input type='number' class='input col-sm-3' id="xerrorrange" v-model="x_error_range" @change='getAllData(true)'> 
+                <input type='number' step='0.1' min='0.1' class='input col-sm-3' id="xerrorrange" v-model="x_error_range" @change='getAllData(true)'> 
             </div>
 
             <div v-if='areErrorBarsOn'>
                 <label class='m-2 txt-primary' for="yerrorrange">+/- Y</label>
-                <input type='number' class='input col-sm-3' id="yerrorrange" v-model="y_error_range" @change='getAllData(true)'> 
+                <input type='number' step='0.1' min='0.1' class='input col-sm-3' id="yerrorrange" v-model="y_error_range" @change='getAllData(true)'> 
             </div>
         </div>
         
@@ -257,8 +257,11 @@ export default {
                         this.getDataAtIndex(i);
                     }
                     this.latest_index = max_index;
-                    this.chart.update(0);                       //actually updating the chart moved to here!
-                    this.chart.options.scales.yAxes[0].scaleLabel.labelString = this.currentDataParameter;
+                    if(this.chart != null){
+                        this.chart.update(0);                       //actually updating the chart moved to here!
+                        this.chart.options.scales.yAxes[0].scaleLabel.labelString = this.currentDataParameter;
+                    }
+                    
                 } 
             }
 
@@ -366,9 +369,10 @@ export default {
             if(resetIndex){
                 this.latest_index = 0;          
             }
-            
+
             this.chart.destroy();
             this.createChart();
+            this.chart.update(0); //make sure chart is displayed again, even with no data
         },
         //By default will not clear the graph of previous data
         //If passed true, will clear all data first and then get new data.
