@@ -25,17 +25,17 @@
             <!-- Error bars -->
             <div>
                 <label class='m-2 txt-primary' for="errorbars">Error bars</label>
-                <input type='checkbox' class='col-sm' id="errorbars" v-model="areErrorBarsOn" @change='getAllData(true)'> 
+                <input type='checkbox' class='col-sm' id="errorbars" v-model="areErrorBarsOn" @change='toggleErrorBars'> 
             </div>
 
             <div v-if='areErrorBarsOn'>
                 <label class='m-2 txt-primary' for="xerrorrange">+/- X</label>
-                <input type='number' step='0.1' min='0.1' class='input col-sm-3' id="xerrorrange" v-model="x_error_range" @change='getAllData(true)'> 
+                <input type='number' step='0.01' class='input col-sm-3' id="xerrorrange" v-model="x_error_range" @change='updateErrorBars'> 
             </div>
 
             <div v-if='areErrorBarsOn'>
                 <label class='m-2 txt-primary' for="yerrorrange">+/- Y</label>
-                <input type='number' step='0.1' min='0.1' class='input col-sm-3' id="yerrorrange" v-model="y_error_range" @change='getAllData(true)'> 
+                <input type='number' step='0.01' class='input col-sm-3' id="yerrorrange" v-model="y_error_range" @change='updateErrorBars'> 
             </div>
         </div>
         
@@ -257,9 +257,11 @@ export default {
                         this.getDataAtIndex(i);
                     }
                     this.latest_index = max_index;
-                    if(this.chart != null){
+                    if(this.chart.ctx != null){
                         this.chart.update(0);                       //actually updating the chart moved to here!
                         this.chart.options.scales.yAxes[0].scaleLabel.labelString = this.currentDataParameter;
+                    } else{
+                        console.log('error updating chart');
                     }
                     
                 } 
@@ -411,8 +413,8 @@ export default {
                 }
 
                     if(this.current_data_index < this.getNumData && this.current_data_index <= this.maxDataPoints){
-                        setTimeout(this.getAllData, 20);
                         this.chart.update(0);
+                        setTimeout(this.getAllData, 20);
                     } else{
                         this.chart.update(0);
                         this.current_data_index = 0;
@@ -470,6 +472,20 @@ export default {
                     } else{
                         //console.log("no data");
                     }
+            },
+            toggleErrorBars(){
+                this.getAllData(true);      //need to recreate the whole graph with a different graph type. getAllData(true) will do this.
+            },
+            updateErrorBars(){
+                for(let i=0; i < this.chart.data.datasets[0].data.length; i++){
+                    let point = this.chart.data.datasets[0].data[i];
+                    point.xMax = point.x + this.x_error_range;
+                    point.xMin = point.x - this.x_error_range;
+                    point.yMax = point.y + this.y_error_range;
+                    point.yMin = point.y - this.y_error_range;
+                }   
+
+                this.chart.update(0);
             },
             removeChart(){
                 this.chart.destroy();
