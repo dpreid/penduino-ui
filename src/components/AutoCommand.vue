@@ -105,8 +105,27 @@ export default {
                 }
 
                 await new Promise((resolve) => {
-                    console.log("command param = " + this.commands[i].parameter);
-                    setTimeout(() => resolve(this.$store.dispatch(eventName, this.commands[i].parameter)), time*1000);
+                    if(eventName == 'updateDrive')
+                    {
+                        setTimeout(() => {
+                            this.$store.dispatch('updateDrive', this.commands[i].parameter);
+                            this.$store.dispatch('sendDrive')
+                            resolve();
+                            }, time*1000);
+                    } 
+                    else if(eventName == 'updateBrake')
+                    {
+                        setTimeout(() => {
+                            this.$store.dispatch('updateBrake', this.commands[i].parameter);
+                            this.$store.dispatch('sendBrake')
+                            resolve();
+                            }, time*1000);
+                    } 
+                    else
+                    {
+                        setTimeout(() => resolve(this.$store.dispatch(eventName, this.commands[i].parameter)), time*1000);
+                    }
+                    
                 });
             }
              

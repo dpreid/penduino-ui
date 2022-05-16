@@ -25,7 +25,7 @@
 		<div class="row">
 			<div class="column1-3  sliderlabel"> Drive ({{driveParam}}%)</div>
 			<div class="column2-3" @mousedown="setDraggable(false)" @mouseup="setDraggable(true)">
-				<input type="range" min="0" max="100" v-model="driveParam" class="slider" id="driveSlider" @change="updateDriveParam(null)">
+				<input type="range" min="0" max="100" v-model="driveParam" class="slider" id="driveSlider" @change="sendDrive">
 			</div>
 		</div>
 	</div>
@@ -43,7 +43,7 @@
 		<div class="row">
 			<div class="column1-3  sliderlabel"> Brake ({{brakeParam}}%)</div>
 		<div class="column2-3" @mousedown="setDraggable(false)" @mouseup="setDraggable(true)">
-			<input type="range" min="0" max="100" v-model="brakeParam" class="slider" id="brakeSlider" @change="updateBrakeParam(null)">
+			<input type="range" min="0" max="100" v-model="brakeParam" class="slider" id="brakeSlider" @change='sendBrake'>
 		</div>
 	</div>
 	</div>
@@ -56,7 +56,7 @@
 		<div class="row">
 			<div class="column1-3  sliderlabel"> Start bump ({{startParam}}ms)</div>
 			<div class="column2-3" @mousedown="setDraggable(false)" @mouseup="setDraggable(true)">
-				<input type="range" min="1" max="100" v-model="startParam" class="slider" id="startSlider" @change="updateStartParam">
+				<input type="range" min="1" max="100" v-model="startParam" class="slider" id="startSlider" > 
 			</div>
 	</div>
 	</div>
@@ -69,7 +69,7 @@
 		<div class="row">
 			<div class="column1-3  sliderlabel"> Report every {{intervalParam}}ms</div> 
 			<div class="column2-3" @mousedown="setDraggable(false)" @mouseup="setDraggable(true)">
-				<input type="range" min="20" max="200" v-model="intervalParam" class="slider" id="dataSlider" @change="updateInterval">
+				<input type="range" min="20" max="200" v-model="intervalParam" class="slider" id="dataSlider" @change='sendInterval'>
 			</div>
 			</div>
 		</div>
@@ -108,30 +108,50 @@ export default {
         return{
 			dataSocket: null,
 			isDataSocketOpen: false,
-
-			startSlider: null,
-			startParam: 50,
-
-			driveSlider: null,
-			driveParam: 50,
-
-			brakeSlider: null,
-			brakeParam: 50,
-
-			dataSlider: null,
-			intervalParam: 50,
-
 			canvas: null,
-
-			tooltip_width: "50px",
-			tooltip_height: "40px",
-
         }
     },
     computed:{
         ...mapGetters([
-            'getDataURLObtained'
-        ])
+            'getDataURLObtained',
+            'getDrive',
+            'getStart',
+            'getBrake',
+            'getInterval'
+
+        ]),
+        driveParam: {
+            get(){
+                return this.getDrive;
+            },
+            set(val){
+                this.updateDrive(val);
+            }
+        },
+        brakeParam: {
+            get(){
+                return this.getBrake;
+            },
+            set(val){
+                this.updateBrake(val);
+            }
+        },
+        intervalParam: {
+            get(){
+                return this.getInterval;
+            },
+            set(val){
+                this.updateInterval(val);
+            }
+        },
+        startParam: {
+            get(){
+                return this.getStart;
+            },
+            set(val){
+                this.updateStart(val);
+            }
+        }
     },
 	watch:{
 		url(){
@@ -150,10 +170,10 @@ export default {
 		},
 		isDataSocketOpen(open){
 			if(open){
-				this.updateInterval();
-				setTimeout(() => {this.updateDriveParam(null)}, 500);
-				setTimeout(() => {this.updateBrakeParam(null)}, 1000);
-				
+                this.updateStart(50);
+				this.updateInterval(50);
+                this.updateDrive(50)
+                this.updateBrake(50)
 			}
 		}
 	},
@@ -164,52 +184,29 @@ export default {
 	},
 	methods:{
 		...mapActions([
-			'setDraggable'
+			'setDraggable',
+            'updateDrive',
+            'updateBrake',
+            'updateStart',
+            'updateInterval',
+            'sendDrive',
+            'sendBrake',
+            'sendInterval'
 		]),
 		start(){
-			console.log("START " + this.startParam);
 			this.$store.dispatch('start', this.startParam);
 		},
-		updateStartParam(){
-			console.log("start", this.startParam);
-			//don't send as it will make it start
-		},
 		brake(){
-			console.log("BRAKE " + this.brakeParam);
 			this.$store.dispatch('brake');
 		},
-		updateBrakeParam(val){
-			console.log('brake update');
-			if(val !== null){
-				this.brakeParam = val;
-			}
-			console.log("Braking " + this.brakeParam);
-			this.$store.dispatch('updateBrake', this.brakeParam);
-		},
 		free(){
-			console.log("undamped");
 			this.$store.dispatch('free');
 		},
 		load(){
-			console.log("LOAD");
 			this.$store.dispatch('load');
 		},
 		calibrate(){
-			console.log("calibrate");
 			this.$store.dispatch('calibrate');
-		},
-		updateDriveParam(val){
-			console.log('drive update');
-			if(val !== null){
-				this.driveParam = val;
-			}
-
-			console.log("Driving " + this.driveParam);
-			this.$store.dispatch('updateDrive', this.driveParam);
-		},
-		updateInterval(){
-			console.log("data delay", this.intervalParam)
-			this.$store.dispatch('updateInterval', this.intervalParam);
 		},
 		hotkey(event){
 			if(event.key == "f"){
