@@ -23,8 +23,8 @@
 
             <div id='table-bottom'>
                 <div class='white-divider'>
-                    </div>
-                </div>  
+                </div>
+            </div>  
         </table> 
 
         
@@ -174,14 +174,6 @@ export default {
  height:1px;
  width:100%;
  border-top:1px solid gray;
-}
-
-.white-divider{
- margin-top:5px;
- margin-bottom:5px;
- height:1px;
- width:100%;
- border-top:1px solid white;
 }
 
 .v-divider{

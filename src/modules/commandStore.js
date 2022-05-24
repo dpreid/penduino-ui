@@ -51,7 +51,6 @@ const commandStore = {
             state.drive = value;
         },
         SEND_DRIVE(state){
-            console.log('drive SENT');
             state.dataSocket.send(JSON.stringify({
 				cmd: "drive",
 				param: state.drive
