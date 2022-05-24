@@ -8,6 +8,8 @@ import 'bootstrap';
 import "bootstrap/dist/css/bootstrap.min.css";
 import 'es6-promise/auto'
 
+// Load CSS style sheets for main components
+import '@/styles/app.css'
 
 const app = createApp(App)
 app.use(store)

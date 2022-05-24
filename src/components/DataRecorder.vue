@@ -133,15 +133,5 @@ export default {
 
 <style scoped>
 
-label {
-    font-size:20px;
-    color: #0501f7;
-    font-weight: bold;
-    display: inline-block;
-    vertical-align: middle;
-    width: 60px;
-    padding-top: 20px;
-    /* float: left; */
-}
 
 </style>
