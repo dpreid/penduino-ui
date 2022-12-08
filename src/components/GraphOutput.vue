@@ -23,10 +23,10 @@
                 <input class='input-disabled col-sm-4' id="gradient" :value="gradient" readonly> 
             </div>
             <!-- Error bars -->
-            <div>
+            <!-- <div>
                 <label class='m-2 txt-primary' for="errorbars">Error bars</label>
                 <input type='checkbox' class='col-sm' id="errorbars" v-model="areErrorBarsOn" @change='toggleErrorBars'> 
-            </div>
+            </div> -->
 
             <div v-if='areErrorBarsOn'>
                 <label class='m-2 txt-primary' for="xerrorrange">+/- X</label>
@@ -218,6 +218,15 @@ export default {
             'getNumData',
             'getIsRecording'
         ]),
+        getAxisLabel(){
+            if(this.currentDataParameter == 'theta'){
+                return 'Angle [rad]';
+            } else if(this.currentDataParameter == 'omega'){
+                return 'Angular Velocity [rad/s]'
+            } else{
+                return ''
+            }
+        }
     },
     watch:{
         getData(){
@@ -238,7 +247,7 @@ export default {
                     this.latest_index = max_index;
                     if(this.chart.ctx != null){
                         this.chart.update(0);                       //actually updating the chart moved to here!
-                        this.chart.options.scales.yAxes[0].scaleLabel.labelString = this.currentDataParameter;
+                        this.chart.options.scales.yAxes[0].scaleLabel.labelString = this.getAxisLabel;
                     } else{
                         console.log('error updating chart');
                     }
@@ -284,7 +293,7 @@ export default {
                     yAxes: [{
                         scaleLabel:{
                             display: true,
-                            labelString: this.currentDataParameter
+                            labelString: this.getAxisLabel
                         },
                         type: 'linear',
                         position: 'left',

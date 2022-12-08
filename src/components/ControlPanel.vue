@@ -107,7 +107,6 @@ export default {
     data(){
         return{
 			dataSocket: null,
-			isDataSocketOpen: false,
 			canvas: null,
         }
     },
@@ -168,14 +167,7 @@ export default {
             
 			
 		},
-		isDataSocketOpen(open){
-			if(open){
-                this.updateStart(50);
-				this.updateInterval(50);
-                this.updateDrive(50)
-                this.updateBrake(50)
-			}
-		}
+		
 	},
     mounted(){
 		
@@ -256,7 +248,9 @@ export default {
 
 			this.dataSocket.onopen = () =>  {
 				//dataOpen = true; 
-				this.isDataSocketOpen = true;
+				_this.sendInterval()
+                _this.sendDrive()
+                _this.sendBrake()
 				
 				
 			};
