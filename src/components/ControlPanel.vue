@@ -248,12 +248,26 @@ export default {
 
 			this.dataSocket.onopen = () =>  {
 				//dataOpen = true; 
-                _this.updateInterval(50);
-                _this.updateBrake(50);
                 _this.updateDrive(50);
-				_this.sendInterval()
-                _this.sendDrive()
-                _this.sendBrake()
+                _this.sendDrive();
+                console.log('drive');
+
+                setTimeout(() => {
+                    _this.updateInterval(50);
+                    _this.sendInterval();
+                    console.log('interval');
+                }, 1000)
+                
+                setTimeout(() => {
+                    _this.updateBrake(50);
+                    _this.sendBrake();
+                    console.log('brake');
+                }, 2000)
+                
+                
+				
+                
+                
                 console.log('sent starting parameters');
 				
 			};
