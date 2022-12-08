@@ -75,18 +75,17 @@ export default {
       'setIsRecording',
       'addData',
       'clearAllData',
+      'updateColourIndex'
     ]),
       record(){
           //this.$store.dispatch('setStartTime', new Date().getTime());
           this.$store.dispatch('setStartTime', this.getCurrentTime);
-          console.log('start time');
-          console.log(this.getCurrentTime);
           this.data_points_count = 0;
-          console.log('recording');
           this.setIsRecording(true);
-          // this.interval_id = setInterval(() => {
-          //       this.plot()
-          //   }, parseFloat(this.time_interval)*1000);
+
+          //update the colour index for plotting in a new colour on graph
+            this.updateColourIndex();
+          
       },
       stopRecording(){
           this.setIsRecording(false);

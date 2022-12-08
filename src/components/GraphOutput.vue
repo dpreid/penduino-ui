@@ -28,7 +28,7 @@
                 <input type='checkbox' class='col-sm' id="errorbars" v-model="areErrorBarsOn" @change='toggleErrorBars'> 
             </div> -->
 
-            <div v-if='areErrorBarsOn'>
+            <!-- <div v-if='areErrorBarsOn'>
                 <label class='m-2 txt-primary' for="xerrorrange">+/- X</label>
                 <input type='number' step='0.01' class='input col-sm-3' id="xerrorrange" v-model="x_error_range" @change='updateErrorBars'> 
             </div>
@@ -36,7 +36,7 @@
             <div v-if='areErrorBarsOn'>
                 <label class='m-2 txt-primary' for="yerrorrange">+/- Y</label>
                 <input type='number' step='0.01' class='input col-sm-3' id="yerrorrange" v-model="y_error_range" @change='updateErrorBars'> 
-            </div>
+            </div> -->
         </div>
         
         <div class='col-sm-6 flex-column'>
@@ -205,6 +205,7 @@ export default {
             areErrorBarsOn: false,
             x_error_range: 0,
             y_error_range: 0.1,
+            previous_t: 0,
         }
     },
     mounted() {
@@ -216,7 +217,8 @@ export default {
         ...mapGetters([
             'getData',
             'getNumData',
-            'getIsRecording'
+            'getIsRecording',
+            'getColourIndex'
         ]),
         getAxisLabel(){
             if(this.currentDataParameter == 'theta'){
@@ -264,10 +266,36 @@ export default {
             var scatterChart = new Chart(ctx, {
             type: _this.getChartType(),
             data: {
+                //6 colours to loop through
                 datasets: [{
-                    label: this.type,
+                    label: 'colour0',
                     data: [],
-                    pointBackgroundColor: 'rgba(20, 51, 186, 1)',
+                    pointBackgroundColor: 'rgba(0, 0, 0, 1)',
+                },
+                {
+                    label: 'colour1',
+                    data: [],
+                    pointBackgroundColor: 'rgba(0, 0, 255, 1)',
+                },
+                {
+                    label: 'colour2',
+                    data: [],
+                    pointBackgroundColor: 'rgba(0, 255, 0, 1)',
+                },
+                {
+                    label: 'colour3',
+                    data: [],
+                    pointBackgroundColor: 'rgba(255, 0, 0, 1)',
+                },
+                {
+                    label: 'colour4',
+                    data: [],
+                    pointBackgroundColor: 'rgba(255, 120, 0, 1)',
+                },
+                {
+                    label: 'colour5',
+                    data: [],
+                    pointBackgroundColor: 'rgba(150, 0, 150, 1)',
                 }]
             },
             options: {
@@ -348,9 +376,9 @@ export default {
                 this.XAxisMax = value;
             }
         },
-        addDataToChart(data) {
+        addDataToChart(data, dataset_index) {
             try{
-                this.chart.data.datasets[0].data.push(data);
+                this.chart.data.datasets[dataset_index].data.push(data);
             } catch(e){
                 console.log(e);
             }
@@ -366,12 +394,13 @@ export default {
         },
         //By default will not clear the graph of previous data
         //If passed true, will clear all data first and then get new data.
-        getAllData(toClear = false){
+        getAllData(toClear = false, colour_index = 0){
                 if(toClear){
                     this.clearData(false);
                 }
                 
                 let data = this.getData;
+                
                 for(let i=this.current_data_index; i<this.getNumData;i++){
                     let x_data = data[i].t;
                     let y_data;
@@ -385,10 +414,16 @@ export default {
 
                     }
 
+                    if(this.previous_t > x_data){
+                        colour_index = (colour_index + 1) % 6
+                    }
+
+                    this.previous_t = x_data;
+
                     if(this.areErrorBarsOn){
-                        this.addDataToChart({x: x_data, y: y_data, xMax: x_data + this.x_error_range, xMin: x_data - this.x_error_range, yMax: y_data + this.y_error_range, yMin: y_data - this.y_error_range});
+                        this.addDataToChart({x: x_data, y: y_data, xMax: x_data + this.x_error_range, xMin: x_data - this.x_error_range, yMax: y_data + this.y_error_range, yMin: y_data - this.y_error_range}, colour_index);
                     } else{
-                        this.addDataToChart({x: x_data, y: y_data});
+                        this.addDataToChart({x: x_data, y: y_data}, colour_index);
                     }
                     
 
@@ -402,7 +437,7 @@ export default {
 
                     if(this.current_data_index < this.getNumData && this.current_data_index <= this.maxDataPoints){
                         this.chart.update(0);
-                        setTimeout(this.getAllData, 20);
+                        setTimeout(this.getAllData(false, colour_index), 20);
                     } else{
                         this.chart.update(0);
                         this.current_data_index = 0;
@@ -428,9 +463,9 @@ export default {
 
                         }
                         if(this.areErrorBarsOn){
-                            this.addDataToChart({x: x_data, y: y_data, xMax: x_data + this.x_error_range, xMin: x_data - this.x_error_range, yMax: y_data + this.y_error_range, yMin: y_data - this.y_error_range});
+                            this.addDataToChart({x: x_data, y: y_data, xMax: x_data + this.x_error_range, xMin: x_data - this.x_error_range, yMax: y_data + this.y_error_range, yMin: y_data - this.y_error_range}, this.getColourIndex);
                         } else{
-                            this.addDataToChart({x: x_data, y: y_data});
+                            this.addDataToChart({x: x_data, y: y_data}, this.getColourIndex);
                     }
                     } else{
                         //console.log("no data");
@@ -453,9 +488,9 @@ export default {
 
                         }
                         if(this.areErrorBarsOn){
-                            this.addDataToChart({x: x_data, y: y_data, xMax: x_data + this.x_error_range, xMin: x_data - this.x_error_range, yMax: y_data + this.y_error_range, yMin: y_data - this.y_error_range});
+                            this.addDataToChart({x: x_data, y: y_data, xMax: x_data + this.x_error_range, xMin: x_data - this.x_error_range, yMax: y_data + this.y_error_range, yMin: y_data - this.y_error_range}, this.getColourIndex);
                         } else{
-                            this.addDataToChart({x: x_data, y: y_data});
+                            this.addDataToChart({x: x_data, y: y_data}, this.getColourIndex);
                     }
                     } else{
                         //console.log("no data");

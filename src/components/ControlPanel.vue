@@ -248,10 +248,13 @@ export default {
 
 			this.dataSocket.onopen = () =>  {
 				//dataOpen = true; 
+                _this.updateInterval(50);
+                _this.updateBrake(50);
+                _this.updateDrive(50);
 				_this.sendInterval()
                 _this.sendDrive()
                 _this.sendBrake()
-				
+                console.log('sent starting parameters');
 				
 			};
 
@@ -363,7 +366,7 @@ export default {
 	width: 100%; /* Width of the outside container */
 }
 .slider {
-	-webkit-appearance: none;
+	/* -webkit-appearance: none; */
 	width: 100%;
 	height: 15px;
 	border-radius: 5px;  

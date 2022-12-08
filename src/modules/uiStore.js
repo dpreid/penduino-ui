@@ -5,7 +5,7 @@ const uiStore = {
     state: () => ({
        isDataRecorderOn: false,    //is the Data Recorder element active
        isDraggable: true,
-
+        colour_index: 0,
        }),
        mutations:{
          SET_DATA_RECORDER(state, set){
@@ -14,6 +14,9 @@ const uiStore = {
          SET_DRAGGABLE(state, draggable){
             state.isDraggable = draggable;
          },
+         SET_COLOUR_INDEX(state, index){
+            state.colour_index = index
+         }
          
 
        },
@@ -24,6 +27,10 @@ const uiStore = {
          setDraggable(context, draggable){
              context.commit('SET_DRAGGABLE', draggable);
          },
+         updateColourIndex(context){
+            let index = (context.state.colour_index + 1) % 6
+            context.commit('SET_COLOUR_INDEX', index);
+         }
 
 
        },
@@ -34,6 +41,9 @@ const uiStore = {
          getDraggable(state){
              return state.isDraggable;
          },
+         getColourIndex(state){
+            return state.colour_index;
+         }
          
          
        },  
