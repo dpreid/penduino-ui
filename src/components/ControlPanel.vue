@@ -355,8 +355,8 @@ export default {
 
 			
 			window.addEventListener('keydown', this.hotkey, false);
-			window.addEventListener('pagehide', this.free);				//closing window
-			window.addEventListener('beforeunload', this.free);			//refreshing page, changing URL
+			//window.addEventListener('pagehide', this.free);				//closing window
+			//window.addEventListener('beforeunload', this.free);			//refreshing page, changing URL
 	
 		
 	},
