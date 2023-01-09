@@ -86,15 +86,20 @@ const commandStore = {
         },
         start(context, value){
             context.commit('START', value)
+            //context.dispatch('logParameters', {log:'speed', data: {set: value, kp: context.rootState.data.p, ki: context.rootState.data.i, kd: context.rootState.data.d}});
+            context.dispatch('log', {"log": "start", "data": {"set": value}})
         },
         brake(context){
             context.commit('BRAKE');
+            context.dispatch('log', {"log": "brake"})
         },
         free(context){
             context.commit('FREE');
+            context.dispatch('log', {"log": "free"})
         },
         load(context){
             context.commit('LOAD');
+            context.dispatch('log', {"log": "load"})
         },
         calibrate(context){
             context.commit('CALIBRATE');
@@ -107,18 +112,21 @@ const commandStore = {
         },
         sendDrive(context){
             context.commit('SEND_DRIVE');
+            context.dispatch('log', {"log": "drive_perc", "data": {"set": context.rootState.drive}})
         },
         updateBrake(context, value){
             context.commit('UPDATE_BRAKE', value);
         },
         sendBrake(context){
             context.commit('SEND_BRAKE');
+            context.dispatch('log', {"log": "brake_perc", "data": {"set": context.rootState.brake}})
         },
         updateInterval(context, value){
             context.commit('UPDATE_INTERVAL', value)
         },
         sendInterval(context){
             context.commit('SEND_INTERVAL');
+            context.dispatch('log', {"log": "sampling", "data": {"set": context.rootState.interval}})
         },
         setCurrentMode(context, mode){
             context.commit("SET_CURRENT_MODE", mode);

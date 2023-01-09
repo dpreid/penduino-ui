@@ -100,6 +100,7 @@ export default {
       addTool(tool){
           this.toggleComponent('workspace');
           setTimeout(() => {this.$emit('add' + tool)}, 100);  //give the workspace time to initialise and then send tool event
+          setTimeout(() => {this.$store.dispatch("log", {"log": "measuring_tools"})}, 500);  //LOGGING OF MEASURING TOOL USE
           
       },
       toggleComponent(component){

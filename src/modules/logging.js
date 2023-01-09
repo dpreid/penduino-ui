@@ -46,32 +46,6 @@ const loggingStore = {
                 
                 
             },  
-            REQUEST(state, payload){
-                if(state.logging_consent_given && state.logSocket != null){
-                    state.logSocket.send(JSON.stringify({
-                        user: state.uuid,
-                        t: Date.now(),          
-                        exp: state.exp,   
-                        course: state.course, 
-                        type: "request", 
-                        payload: payload   
-                    }));
-                }
-            }, 
-            FEEDBACK(state, payload){
-                if(state.logging_consent_given && state.logSocket != null){
-                    state.logSocket.send(JSON.stringify({
-                        user: state.uuid,
-                        t: Date.now(),          
-                        exp: state.exp, 
-                        course: state.course,
-                        type: "feedback",       
-                        payload: payload
-                    }));
-                }
-                
-                
-            },
 
        },
        actions:{
@@ -97,24 +71,6 @@ const loggingStore = {
                 //context.commit('LOG_PARAMETERS', payload.data);
                 context.commit('LOG', payload);
             },
-            request(context, payload){
-                context.commit('REQUEST', payload);
-            },
-            requestAll(context){
-                context.commit('REQUEST', {"content": 'student_graph'});    
-                context.commit('REQUEST', {"content": 'task_identification'});  
-                context.commit('REQUEST', {"content": 'indicators'}); 
-                if(context.state.exp == 'spinner'){
-                    context.commit('REQUEST', {"content": 'comparison_graph', "graph": 'spinner-cie3-all'}); 
-                } else{
-                    context.commit('REQUEST', {"content": 'comparison_graph', "graph": 'pendulum-engdes1-1'}); 
-                }
-                  
-                context.commit('REQUEST', {"content": 'centroids'});  
-            },
-            feedback(context, payload){
-                context.commit('FEEDBACK', payload);
-            }
 
        },
        getters:{
