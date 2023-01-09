@@ -3,7 +3,7 @@
 const loggingStore = {
     state: () => ({
         logSocket: null,
-        uuid: 'david',                      //SET HERE FOR TESTING
+        uuid: 'david-test-pendulum',                      //SET HERE FOR TESTING
         logging_consent_given: true,        //SET HERE FOR TESTING
         exp: 'pendulum',                     //SET HERE FOR TESTING
         course: 'engdes1',                      //needed for differentiating tasks in different classes, 'engdes1'

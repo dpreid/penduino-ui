@@ -112,21 +112,21 @@ const commandStore = {
         },
         sendDrive(context){
             context.commit('SEND_DRIVE');
-            context.dispatch('log', {"log": "drive_perc", "data": {"set": context.rootState.drive}})
+            context.dispatch('log', {"log": "drive_perc", "data": {"set": context.state.drive}})
         },
         updateBrake(context, value){
             context.commit('UPDATE_BRAKE', value);
         },
         sendBrake(context){
             context.commit('SEND_BRAKE');
-            context.dispatch('log', {"log": "brake_perc", "data": {"set": context.rootState.brake}})
+            context.dispatch('log', {"log": "brake_perc", "data": {"set": context.state.brake}})
         },
         updateInterval(context, value){
             context.commit('UPDATE_INTERVAL', value)
         },
         sendInterval(context){
             context.commit('SEND_INTERVAL');
-            context.dispatch('log', {"log": "sampling", "data": {"set": context.rootState.interval}})
+            context.dispatch('log', {"log": "sampling", "data": {"set": context.state.interval}})
         },
         setCurrentMode(context, mode){
             context.commit("SET_CURRENT_MODE", mode);

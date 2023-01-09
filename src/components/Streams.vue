@@ -2,16 +2,19 @@
   <div>
     <!-- <div><webcam-stream /></div>
     <div><data-stream /></div> -->
+    <logging-stream />
 </div>
 </template> 
 
 <script>
 
 import dayjs from "dayjs";
+import LoggingStream from './LoggingStream.vue'
 
 export default {
   name: "Streams",
   components: {
+    LoggingStream
     //WebcamStream,
     //DataStream,
   },
