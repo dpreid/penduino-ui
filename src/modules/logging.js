@@ -39,7 +39,7 @@ const loggingStore = {
                         t: Date.now(),          
                         exp: state.exp, 
                         course: state.course,
-                        type: "log",       
+                        type: "analytics",       
                         payload: payload
                     }));
                 }
