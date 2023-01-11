@@ -2,6 +2,8 @@
   <div id="app" class='container-fluid-sm m-0 background-grey'>
        <navigation-bar @togglesnapshot="toggleSnapshot" @togglegraph="toggleGraph" @toggleautocommands="toggleAutoCommands" @togglestopwatch="toggleStopwatch" @toggletable="toggleTable" @toggleworkspace="addWorkspace" @clearworkspace="clearWorkspace" @addruler="rulerAdded = true" @addprotractor="protractorAdded = true"/>
 
+       <consent v-if='showConsentModal' @consentSet="closeConsentModal"/>
+
         <div v-if="isWorkspaceOn">
           <workspace :protractorAdded="protractorAdded" :rulerAdded="rulerAdded"/>
         </div>
@@ -46,6 +48,7 @@ import AutoCommand from "./components/AutoCommand.vue";
 import NavigationBar from "./components/NavigationBar.vue";
 import Streams from "./components/Streams.vue";
 import Snapshot from "./components/Snapshot.vue"
+import Consent from "./components/Consent.vue"
 
 import { mapGetters } from 'vuex'
 
@@ -63,6 +66,7 @@ export default {
     AutoCommand,
     NavigationBar,
     Snapshot,
+    Consent
 
   },
   mounted(){
@@ -78,12 +82,23 @@ export default {
       isSnapshotOn: false,
       selected_graph_point: null,
       protractorAdded: false,
-      rulerAdded: false
+      rulerAdded: false,
+
+      showConsentModal: true
     }
+  },
+  created(){
+    this.$store.dispatch('setUsesLocalStorage', this.hasStorage());
+    //check if user has a UUID generated already and whether they have consented to take part in the study
+    this.updateUUID();
+    this.checkConsent();
   },
   computed:{
     ...mapGetters([
-      'getDraggable'
+      'getDraggable',
+      'getUsesLocalStorage',
+      'getCourse',
+      'getExperiment'
     ])
   },
   methods:{
@@ -166,7 +181,63 @@ export default {
       this.isWorkspaceOn = false;
       this.protractorAdded = false;
       this.rulerAdded = false;
-    }
+    },
+    // loading and saving data for logging consent and uuid etc.
+    hasStorage(){
+        try {
+            window.localStorage.setItem('test', 'storage');
+            window.localStorage.removeItem('test');
+            return true;
+        } catch (exception) {
+            return false;
+          }
+      },
+    updateUUID(){
+        let stored_uuid;
+        let course = this.getCourse;
+        let exp = this.getExperiment;
+        const item = `uuid-${exp}-${course}`
+
+        if(this.getUsesLocalStorage){
+          stored_uuid = window.localStorage.getItem(item);
+        } else {
+          stored_uuid = null;
+        }
+        
+        if(stored_uuid){
+            this.$store.dispatch('setUUID', stored_uuid);
+        } else{
+            let uuid = uuidv4();
+            this.$store.dispatch('setUUID', uuid);
+            if(this.getUsesLocalStorage){
+              window.localStorage.setItem(item, uuid);
+            }
+            
+        }
+      },
+      checkConsent(){
+        let logging_consent;
+        if(this.getUsesLocalStorage){
+            let course = this.getCourse;
+            let exp = this.getExperiment;
+            const item = `consent-${exp}-${course}`
+          logging_consent = window.localStorage.getItem(item);
+        } else {
+          logging_consent = null;
+        }
+        
+        if(logging_consent == null){
+          this.showConsentModal = true;
+          
+        } else{
+          this.showConsentModal = false;
+          this.$store.dispatch('setLoggingConsent', (logging_consent === 'true'));
+        }
+        
+      },
+      closeConsentModal(){
+        this.showConsentModal = false;
+      }
   },
 }
 </script>

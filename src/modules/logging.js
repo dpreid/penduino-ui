@@ -4,6 +4,7 @@ const loggingStore = {
     state: () => ({
         logSocket: null,
         uuid: 'david-test-pendulum',                      //SET HERE FOR TESTING
+        isLoggingOn: true,                  //set for differencet UI versions
         logging_consent_given: true,        //SET HERE FOR TESTING
         exp: 'pendulum',                     //SET HERE FOR TESTING
         course: 'engdes1',                      //needed for differentiating tasks in different classes, 'engdes1'
