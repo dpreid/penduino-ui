@@ -1,6 +1,6 @@
 <template>
   <div id="app" class='container-fluid-sm m-0 background-grey'>
-       <navigation-bar @togglesnapshot="toggleSnapshot" @togglegraph="toggleGraph" @toggleautocommands="toggleAutoCommands" @togglestopwatch="toggleStopwatch" @toggletable="toggleTable" @toggleworkspace="addWorkspace" @clearworkspace="clearWorkspace" @addruler="rulerAdded = true" @addprotractor="protractorAdded = true"/>
+       <navigation-bar @toggleconsent="showConsentModal = true" @togglesnapshot="toggleSnapshot" @togglegraph="toggleGraph" @toggleautocommands="toggleAutoCommands" @togglestopwatch="toggleStopwatch" @toggletable="toggleTable" @toggleworkspace="addWorkspace" @clearworkspace="clearWorkspace" @addruler="rulerAdded = true" @addprotractor="protractorAdded = true"/>
 
        <consent v-if='showConsentModal' @consentSet="closeConsentModal"/>
 

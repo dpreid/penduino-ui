@@ -40,6 +40,16 @@
               <li class="nav-item">
                   <a class="nav-link" href="#" tabindex="-1" @click='clearWorkspace'>Clear Workspace</a>
               </li>
+
+              <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" id="settingsdropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                   Settings
+                  </a>
+                  <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDropdown2">
+                    <li><a class="dropdown-item" id='toggleconsentbutton' href="#" @click='this.$emit("toggleconsent")'>Change consent</a></li>
+                  </ul>
+              </li>
+
           </ul>
 
           <div class='d-flex'>
@@ -83,7 +93,7 @@ import Clock from "./Clock.vue";
 export default {
 
   name: 'NavigationBar',
-  emits:['clearworkspace', 'togglegraph', 'togglestopwatch', 'toggletable', 'toggleautocommands', 'toggleworkspace', 'addruler', 'addprotractor', 'togglesnapshot'],
+  emits:['toggleconsent', 'clearworkspace', 'togglegraph', 'togglestopwatch', 'toggletable', 'toggleautocommands', 'toggleworkspace', 'addruler', 'addprotractor', 'togglesnapshot'],
   data () {
     return {
         
