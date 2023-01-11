@@ -2,7 +2,7 @@
   <div id="app" class='container-fluid-sm m-0 background-grey'>
        <navigation-bar @toggleconsent="showConsentModal = true" @togglesnapshot="toggleSnapshot" @togglegraph="toggleGraph" @toggleautocommands="toggleAutoCommands" @togglestopwatch="toggleStopwatch" @toggletable="toggleTable" @toggleworkspace="addWorkspace" @clearworkspace="clearWorkspace" @addruler="rulerAdded = true" @addprotractor="protractorAdded = true"/>
 
-       <consent v-if='showConsentModal && getIsLoggingOn' @consentSet="closeConsentModal"/>
+       <consent v-if='showConsentModal && getIsLoggingOn' @consentset="closeConsentModal"/>
 
         <div v-if="isWorkspaceOn">
           <workspace :protractorAdded="protractorAdded" :rulerAdded="rulerAdded"/>
@@ -51,6 +51,7 @@ import Snapshot from "./components/Snapshot.vue"
 import Consent from "./components/Consent.vue"
 
 import { mapGetters } from 'vuex'
+import { v4 as uuidv4 } from 'uuid';
 
 export default {
   name: 'App',

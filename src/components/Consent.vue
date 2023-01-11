@@ -56,7 +56,7 @@ import { mapGetters } from 'vuex';
 export default {
 
   name: 'Consent',
-  emits:['consentSet'],
+  emits:['consentset'],
   data () {
     return {
         logging: false,
@@ -93,7 +93,7 @@ export default {
           }
           
 
-          this.$emit('consentSet');
+          this.$emit('consentset');
           
       }
       
