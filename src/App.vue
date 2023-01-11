@@ -2,7 +2,7 @@
   <div id="app" class='container-fluid-sm m-0 background-grey'>
        <navigation-bar @toggleconsent="showConsentModal = true" @togglesnapshot="toggleSnapshot" @togglegraph="toggleGraph" @toggleautocommands="toggleAutoCommands" @togglestopwatch="toggleStopwatch" @toggletable="toggleTable" @toggleworkspace="addWorkspace" @clearworkspace="clearWorkspace" @addruler="rulerAdded = true" @addprotractor="protractorAdded = true"/>
 
-       <consent v-if='showConsentModal' @consentSet="closeConsentModal"/>
+       <consent v-if='showConsentModal && getIsLoggingOn' @consentSet="closeConsentModal"/>
 
         <div v-if="isWorkspaceOn">
           <workspace :protractorAdded="protractorAdded" :rulerAdded="rulerAdded"/>
@@ -98,7 +98,8 @@ export default {
       'getDraggable',
       'getUsesLocalStorage',
       'getCourse',
-      'getExperiment'
+      'getExperiment',
+      'getIsLoggingOn'
     ])
   },
   methods:{
@@ -217,22 +218,27 @@ export default {
       },
       checkConsent(){
         let logging_consent;
-        if(this.getUsesLocalStorage){
-            let course = this.getCourse;
-            let exp = this.getExperiment;
-            const item = `consent-${exp}-${course}`
-          logging_consent = window.localStorage.getItem(item);
-        } else {
-          logging_consent = null;
+        if(this.getIsLoggingOn){
+            if(this.getUsesLocalStorage){
+                let course = this.getCourse;
+                let exp = this.getExperiment;
+                const item = `consent-${exp}-${course}`
+                logging_consent = window.localStorage.getItem(item);
+            } else {
+                logging_consent = null;
+            }
+            
+            if(logging_consent == null){
+                this.showConsentModal = true;
+            
+            } else{
+                this.showConsentModal = false;
+                this.$store.dispatch('setLoggingConsent', (logging_consent === 'true'));
+            }
+        } else{
+            this.$store.dispatch('setLoggingConsent', false);
         }
         
-        if(logging_consent == null){
-          this.showConsentModal = true;
-          
-        } else{
-          this.showConsentModal = false;
-          this.$store.dispatch('setLoggingConsent', (logging_consent === 'true'));
-        }
         
       },
       closeConsentModal(){

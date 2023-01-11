@@ -41,7 +41,7 @@
                   <a class="nav-link" href="#" tabindex="-1" @click='clearWorkspace'>Clear Workspace</a>
               </li>
 
-              <li class="nav-item dropdown">
+              <li v-if='getIsLoggingOn' class="nav-item dropdown">
                   <a class="nav-link dropdown-toggle" href="#" id="settingsdropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                    Settings
                   </a>
@@ -90,6 +90,8 @@
 
 import Toolbar from './elements/Toolbar.vue';
 import Clock from "./Clock.vue";
+import { mapGetters } from 'vuex';
+
 export default {
 
   name: 'NavigationBar',
@@ -104,7 +106,9 @@ export default {
     Toolbar,
   },
   computed:{
-      
+      ...mapGetters([
+        'getIsLoggingOn'
+      ])
   },
   methods: {
       addTool(tool){
