@@ -6,6 +6,7 @@ const loggingStore = {
         uuid: 'david-test-pendulum',                      //SET HERE FOR TESTING
         isLoggingOn: false,                  //set for difference UI versions
         logging_consent_given: true,        //SET HERE FOR TESTING - SET to false in production
+        hardware: 'pend00',
         exp: 'pendulum',                     //SET HERE FOR TESTING
         course: 'engdes1',                      //needed for differentiating tasks in different classes, 'engdes1'
         saved: [],
@@ -24,6 +25,9 @@ const loggingStore = {
             SET_EXPERIMENT(state, exp){
                 state.exp = exp;
             },
+            SET_HARDWARE(state, hardware){
+                state.hardware = hardware;
+            },
             SET_COURSE(state, course){
                 state.course = course;
             },
@@ -38,7 +42,8 @@ const loggingStore = {
                     state.logSocket.send(JSON.stringify({
                         user: state.uuid,
                         t: Date.now(),          
-                        exp: state.exp, 
+                        exp: state.exp,
+                        hardware: state.hardware, 
                         course: state.course,
                         type: "analytics",       
                         payload: payload
@@ -61,6 +66,9 @@ const loggingStore = {
             },
             setExperiment(context, exp){
                 context.commit('SET_EXPERIMENT', exp);
+            },
+            setHardware(context, hardware){
+                context.commit('SET_HARDWARE', hardware);
             },
             setCourse(context, course){
                 context.commit('SET_COURSE', course);
@@ -86,6 +94,9 @@ const loggingStore = {
             },
             getExperiment(state){
                 return state.exp
+            },
+            getHardware(state){
+                return state.hardware
             },
             getCourse(state){
                 return state.course
