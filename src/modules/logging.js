@@ -3,12 +3,12 @@
 const loggingStore = {
     state: () => ({
         logSocket: null,
-        uuid: 'david-test-pendulum',                      //SET HERE FOR TESTING
-        isLoggingOn: false,                  //set for difference UI versions
-        logging_consent_given: true,        //SET HERE FOR TESTING - SET to false in production
-        hardware: 'pend00',
-        exp: 'pendulum',                     //SET HERE FOR TESTING
-        course: 'engdes1',                      //needed for differentiating tasks in different classes, 'engdes1'
+        uuid: '',                      //set from App.vue
+        isLoggingOn: false,                  //manually set for different UI versions
+        logging_consent_given: true,        //SET to false in production
+        hardware: '',                       //will be set from the LoggingStream.vue component
+        exp: 'pendulum',                     //Hardcoded for this UI
+        course: 'engdes1',                    //defaults here to engdes1, but will be set in Streams.vue from query param
         saved: [],
 
        }),
