@@ -77,7 +77,16 @@
             </toolbar>
           </div>
           <div class='d-flex'>
-              <clock />
+
+            <li class="nav-item">
+              <a class="nav-link" >
+                UUID: {{ getLogUUID }}
+              </a>    
+            </li>
+
+             <li class="nav-item">
+                <clock class='nav-link' />
+            </li>
           </div>
 
       </div>
@@ -107,7 +116,8 @@ export default {
   },
   computed:{
       ...mapGetters([
-        'getIsLoggingOn'
+        'getIsLoggingOn',
+        'getLogUUID'
       ])
   },
   methods: {
