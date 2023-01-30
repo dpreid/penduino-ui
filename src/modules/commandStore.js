@@ -87,19 +87,19 @@ const commandStore = {
         start(context, value){
             context.commit('START', value)
             //context.dispatch('logParameters', {log:'speed', data: {set: value, kp: context.rootState.data.p, ki: context.rootState.data.i, kd: context.rootState.data.d}});
-            context.dispatch('log', {"log": "start", "data": {"set": value}})
+            context.dispatch('logAnalytics', {"log": "start", "data": {"set": value}})
         },
         brake(context){
             context.commit('BRAKE');
-            context.dispatch('log', {"log": "brake"})
+            context.dispatch('logAnalytics', {"log": "brake"})
         },
         free(context){
             context.commit('FREE');
-            context.dispatch('log', {"log": "free"})
+            context.dispatch('logAnalytics', {"log": "free"})
         },
         load(context){
             context.commit('LOAD');
-            context.dispatch('log', {"log": "load"})
+            context.dispatch('logAnalytics', {"log": "load"})
         },
         calibrate(context){
             context.commit('CALIBRATE');
@@ -113,7 +113,7 @@ const commandStore = {
         sendDrive(context, toLog = true){
             context.commit('SEND_DRIVE');
             if(toLog){
-                context.dispatch('log', {"log": "drive_perc", "data": {"set": context.state.drive}})
+                context.dispatch('logAnalytics', {"log": "drive_perc", "data": {"set": context.state.drive}})
             }
             
         },
@@ -123,7 +123,7 @@ const commandStore = {
         sendBrake(context, toLog = true){
             context.commit('SEND_BRAKE');
             if(toLog){
-                context.dispatch('log', {"log": "brake_perc", "data": {"set": context.state.brake}})
+                context.dispatch('logAnalytics', {"log": "brake_perc", "data": {"set": context.state.brake}})
             }
             
         },
@@ -133,7 +133,7 @@ const commandStore = {
         sendInterval(context, toLog = true){
             context.commit('SEND_INTERVAL');
             if(toLog){
-                context.dispatch('log', {"log": "sampling", "data": {"set": context.state.interval}})
+                context.dispatch('logAnalytics', {"log": "sampling", "data": {"set": context.state.interval}})
             }
             
         },
