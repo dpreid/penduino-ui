@@ -38,7 +38,21 @@ const loggingStore = {
                 //only log to server if user has given consent.
                 //Still may require logging internally for achievements etc.
                 if(state.logging_consent_given && state.logSocket != null){
-                    console.log('logged')
+                    state.logSocket.send(JSON.stringify({
+                        user: state.uuid,
+                        t: Date.now(),          
+                        exp: state.exp,
+                        hardware: state.hardware, 
+                        course: state.course,
+                        type: "log",       
+                        payload: payload
+                    }));
+                }
+            },  
+            LOG_ANALYTICS(state, payload){
+                //only log to server if user has given consent.
+                //Still may require logging internally for achievements etc.
+                if(state.logging_consent_given && state.logSocket != null){
                     state.logSocket.send(JSON.stringify({
                         user: state.uuid,
                         t: Date.now(),          
@@ -49,8 +63,6 @@ const loggingStore = {
                         payload: payload
                     }));
                 }
-                
-                
             },  
 
        },
@@ -76,9 +88,20 @@ const loggingStore = {
             setSaved(context, data){
                 context.commit('SET_SAVED', data);
             },
-            log(context, payload){
-                //context.commit('LOG_PARAMETERS', payload.data);
+            logClick(context, payload){
                 context.commit('LOG', payload);
+            },
+            logStart(context, payload){
+                context.commit('LOG', payload);
+            },
+            logEnd(context, payload){
+                context.commit('LOG', payload);
+            },
+            logComponent(context, payload){
+                context.commit('LOG', payload);
+            },
+            logAnalytics(context, payload){
+                context.commit('LOG_ANALYTICS', payload);
             },
 
        },
