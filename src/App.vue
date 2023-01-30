@@ -170,15 +170,19 @@ export default {
     },
     toggleTable(){
       this.isTableOn = !this.isTableOn;
+      this.$store.dispatch('logComponent', {log:'component', name: 'table', open: this.isTableOn});
     },
     toggleStopwatch(){
       this.isStopwatchOn = !this.isStopwatchOn;
+      this.$store.dispatch('logComponent', {log:'component', name: 'stopwatch', open: this.isStopwatchOn});
     },
     toggleAutoCommands(){
       this.isAutoCommandOn = !this.isAutoCommandOn;
+      this.$store.dispatch('logComponent', {log:'component', name: 'autocommands', open: this.isAutoCommandOn});
     },
     toggleSnapshot(){
       this.isSnapshotOn = !this.isSnapshotOn;
+      this.$store.dispatch('logComponent', {log:'component', name: 'snapshot', open: this.isSnapshotOn});
     },
     clearWorkspace(){
       this.isWorkspaceOn = false;
