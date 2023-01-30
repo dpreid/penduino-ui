@@ -4,7 +4,7 @@ const loggingStore = {
     state: () => ({
         logSocket: null,
         uuid: '',                      //set from App.vue
-        isLoggingOn: false,                  //manually set for different UI versions
+        isLoggingOn: true,                  //manually set for different UI versions
         logging_consent_given: true,        //SET to false in production
         hardware: '',                       //will be set from the LoggingStream.vue component
         exp: 'pendulum',                     //Hardcoded for this UI
