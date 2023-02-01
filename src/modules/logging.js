@@ -5,7 +5,7 @@ const loggingStore = {
         logSocket: null,
         uuid: '',                      //set from App.vue
         isLoggingOn: true,                  //manually set for different UI versions
-        logging_consent_given: true,        //SET to false in production
+        logging_consent_given: false,        //SET to false in production
         hardware: '',                       //will be set from the LoggingStream.vue component
         exp: 'pendulum',                     //Hardcoded for this UI
         course: 'engdes1',                    //defaults here to engdes1, but will be set in Streams.vue from query param

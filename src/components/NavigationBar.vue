@@ -54,10 +54,10 @@
 
           <div class='d-flex'>
             
-            <li class="nav-item">
-              <a class="nav-link" >
-                UUID: {{ getLogUUID }}
-              </a>    
+            <li class="nav-item dropdown">
+                <a class="nav-link" >
+                    UUID: {{ getLogUUID }}
+                </a> 
             </li>
 
             <toolbar class='me-5' parentCanvasID="" parentDivID="navbar" parentComponentName="navbar" :showDownload="false" :showOptions="false" :showPopupHelp="true">
@@ -84,7 +84,7 @@
             </toolbar>
           </div>
           <div class='d-flex'>
-             <li class="nav-item">
+             <li class="nav-item dropdown">
                 <clock class='nav-link' />
             </li>
           </div>
