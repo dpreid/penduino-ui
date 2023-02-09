@@ -163,7 +163,7 @@ export default {
     },
     addWorkspace(){
         this.isWorkspaceOn = true;
-        this.$store.dispatch("logAnalytics", {"log": "measuring_tools"});
+        this.$store.dispatch("logAnalytics", {log: "measuring_tools"});
     },
     toggleWorkspace(){
       this.isWorkspaceOn = !this.isWorkspaceOn;
