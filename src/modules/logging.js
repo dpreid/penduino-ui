@@ -97,10 +97,12 @@ const loggingStore = {
             logEnd(context, payload){
                 context.commit('LOG', payload);
             },
-            logComponent(context, payload){
+            async logComponent(context, payload){
+                await helpers.delay(100);
                 context.commit('LOG', payload);
             },
-            logAnalytics(context, payload){
+            async logAnalytics(context, payload){
+                await helpers.delay(100);
                 context.commit('LOG_ANALYTICS', payload);
             },
 
@@ -133,6 +135,12 @@ const loggingStore = {
           
        },  
   
+  }
+
+  let helpers = {
+    delay(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    },
   }
 
   export default loggingStore;
